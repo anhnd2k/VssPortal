@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAllPosts.cshtml";
+}
+
+@*@model List<DBConect.Farmework.ListPost>*@
+@model PagedList.IPagedList<DBConect.model.GetListPosts>
+@using PagedList.Mvc
+
+
+<main id="main">
+    <section id="post" class="team section-bg">
+        <div class="container">
+            <div style="margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div class="arrow2  ">
+                    <p class="text">Bài viết</p>
+                    <div class="arrow-right"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6" style="cursor:pointer" data-aos="fade-up">
+                        <a href="/DetailPost/Index/?id=@item.id">
+                            <div class="member">
+                                <div class="pic"><img src="~/ImageUpload/Thumbnal/@item.ThumbNail" class="img-fluid" alt=""></div>
+                                <div class="info-post">
+                                    <h4>Tin tức: @item.CreateTime</h4>
+                                    <span>@item.PostTitle</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        @Html.PagedListPager(Model, page => Url.Action("index", new { page }))
+    </section>
+</main>
+

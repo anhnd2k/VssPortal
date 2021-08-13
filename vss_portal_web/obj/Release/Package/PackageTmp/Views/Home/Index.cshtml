@@ -1,0 +1,270 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model vss_portal_web.Models.ModelController
+
+<section id="hero">
+    <div class="hero-container">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+
+            <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+
+            <div class="carousel-inner" role="listbox">
+
+                @for (var i = 0; i < Model.OnboadingPost.Count; i++)
+                {
+                    if (i==0)
+                    {
+                        <div class="carousel-item active" style="background-image: url('/ImageUpload/Thumbnal/@Model.OnboadingPost[i].ThumbNail'); ">
+                            <div class="carousel-container">
+                                <div class="carousel-content container">
+                                    <h2>@Model.OnboadingPost[i].PostTitle</h2>
+                                    <p>@Model.OnboadingPost[i].Description</p>
+                                    <a href="/DetailPost/Index/?id=@Model.OnboadingPost[i].id" class="btn-get-started  scrollto">Xem Thêm</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="carousel-item" style="background-image: url('/ImageUpload/Thumbnal/@Model.OnboadingPost[i].ThumbNail'); ">
+                            <div class="carousel-container">
+                                <div class="carousel-content container">
+                                    <h2>@Model.OnboadingPost[i].PostTitle</h2>
+                                    <p>@Model.OnboadingPost[i].Description</p>
+                                    <a href="/DetailPost/Index/?id=@Model.OnboadingPost[i].id" class="btn-get-started  scrollto">Xem Thêm</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+
+            <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon icofont-rounded-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon icofont-rounded-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+
+        </div>
+    </div>
+</section><!-- End Hero -->
+
+<main id="main">
+
+    <!-- ======= Truy cập nhanh======= -->
+    <section id="services" class="services">
+        <div class="container">
+
+            <!-- <div class="section-title">
+              <h2>Truy cập nhanh</h2>
+            </div> -->
+            <div style="margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div class="arrow2  ">
+                    <p class="text">Truy cập nhanh</p>
+                    <div class="arrow-right"></div>
+                </div>
+                @*<a style="" href="/AllPosts" class="see_more">Xem Thêm</a>*@
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
+                    <a href="https://10.60.98.103/">
+                        <div class="icon"><i class="icofont-github"></i></div>
+                        <h4 class="title">GitLab</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                    <a href="https://10.60.98.101:8443/login.jsp">
+                        <div class="icon pointer_hover"><i class="icofont-chart-bar-graph"></i></div>
+                        <h4 class="title">Jira</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                    <a href="http://10.60.98.103:9002/about">
+                        <div class="icon pointer_hover"><i class="icofont-code"></i></div>
+                        <h4 class="title">SonarQube</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
+                    <a href="https://mail.viettel.com.vn/">
+                        <div class="icon pointer_hover"><i class="icofont-email"></i></div>
+                        <h4 class="title">Mail</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                    <a href="http://10.60.98.104:8091/">
+                        <div class="icon pointer_hover"><i class="icofont-blogger"></i></div>
+                        <h4 class="title">Tech Blog</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                    <a href="http://thongtinnhansu.viettel.vn/">
+                        <div class="icon pointer_hover"><i class="icofont-ui-user-group"></i></div>
+                        <h4 class="title">Thông tin nhân sự</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                    <a href="http://voffice.viettel.vn/">
+                        <div class="icon pointer_hover"><i class="icofont-book"></i></div>
+                        <h4 class="title">Voffice</h4>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                    <a href="https://elearning.viettel.vn/">
+                        <div class="icon pointer_hover"><i class="icofont-education"></i></div>
+                        <h4 class="title">Elearning</h4>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- End Truy cập nhanh -->
+    <!-- ======= Tiện ích ======= -->
+    <section id="utilities" class="counts section-bg">
+        <div class="container">
+            <div class="arrow">
+                <p class="text">Tiện ích</p>
+                <div class="arrow-right"></div>
+            </div>
+            <div style="display: flex; justify-content: center" class="row">
+                <a class="col-lg-3 col-md-6 text-center" href="@Url.Action("Index","ThanksCard")">
+                    <div data-aos="fade-up" data-aos-delay="50">
+                        <div class="count-box">
+                            <i class="icofont-card" style="color: #20b38e;"></i>
+                            <span data-toggle="counter-up">@Model.ListhankCard.Count</span>
+                            <p>Thanks Card</p>
+                        </div>
+                    </div>
+                </a>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div data-toggle="modal" data-target="#exampleModalCenter" data-aos="fade-up" data-aos-delay="100">
+                        <div class="count-box">
+                            <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
+                            <span data-toggle="counter-up">521</span>
+                            <p>Nói thật đê...</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="col-lg-3 col-md-6 text-center" href="https://hotro.viettelimex.vn/">
+                    <div data-aos="fade-up" data-aos-delay="150">
+                        <div class="count-box">
+                            <i class="icofont-live-support" style="color: #46d1ff;"></i>
+                            <span data-toggle="counter-up">1,463</span>
+                            <p>Yêu cầu hỗ trợ</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+            Launch demo modal
+        </button>*@
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Tính năng đang được phát triển!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Counts Section -->
+    <!-- ======= Bài viết ======= -->
+    <section id="post" class="team">
+        <div class="container">
+            <div style="margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div class="arrow2  ">
+                    <p class="text">Bài viết</p>
+                    <div class="arrow-right"></div>
+                </div>
+                <a style="" href="/AllPosts" class="see_more">Xem Thêm</a>
+            </div>
+
+            <div class="row">
+                @foreach (var item in Model.ListPost)
+                {
+                    if(item.Category == 1)
+                    { 
+                        <div class="col-lg-4 col-md-6" style="cursor:pointer" data-aos="fade-up" data-aos-delay="50">
+                            <a href="/DetailPost/Index/?id=@item.id">
+                                <div class="member">
+                                    <div class="pic"><img src="~/ImageUpload/Thumbnal/@item.ThumbNail" class="img-fluid" alt=""></div>
+                                    <div class="info-post">
+                                        <h4>Tin tức: @item.CreateTime</h4>
+                                        <span>@item.PostTitle</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+
+        </div>
+    </section><!-- End Our Team Section -->
+    <!-- ======= About Lists Section ======= -->
+    <section id="recruitment" class="about-lists section-bg">
+        <div class="container">
+            <div style="margin-bottom: 50px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div class="arrow2  ">
+                    <p class="text">Tuyển dụng</p>
+                    <div class="arrow-right"></div>
+                </div>
+                @*<a style="" href="/AllPosts" class="see_more">Xem Thêm</a>*@
+            </div>
+            <div class="row no-gutters">
+                @*@foreach (var item in Model.ListPost)
+        {
+            if (item.Category == 2)
+            {
+                <div class="col-lg-4 col-md-6 content-item" data-aos="fade-up" data-aos-delay="50">
+                    <span>01</span>
+                    <h4>@item.PostTitle</h4>
+                    <p>
+                        @item.Description
+                    </p>
+                </div>
+            }
+        }*@
+                @for (var i = 0; i < Model.ListPost.Count; i++)
+                {
+                    if (@Model.ListPost[i].Category == 2)
+                    {
+                <div style="cursor:pointer" class="col-lg-4 col-md-6 content-item" data-aos="fade-up" data-aos-delay="50">
+                    <a href="/DetailPost/Index/?id=@Model.ListPost[i].id">
+                        <span>@(i+1)</span>
+                        <h4>@Model.ListPost[i].PostTitle</h4>
+                        <p>
+                            @Model.ListPost[i].Description
+                        </p>
+                    </a>
+                </div>
+                    }
+                }
+            </div>
+
+        </div>
+    </section><!-- End About Lists Section -->
+</main>

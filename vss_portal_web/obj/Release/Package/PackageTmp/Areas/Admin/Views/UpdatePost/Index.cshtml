@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
+}
+@model vss_portal_web.Areas.Admin.Models.ModelControllerAdmin
+
+<form method="post" action="" enctype="multipart/form-data" class="box">
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, null, new { @style = "color: red" })
+
+    <div style="padding: 10px 0" class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold" style="color: #dc0c2c"><a href="@Url.Action("Index","HomeAdmin")">Quản lý bài viết  </a>>>  Chỉnh sửa bài viết</h6>
+    </div>
+    <div class="marginBottom-20">post Title</div>
+    <input style="width: 100%" placeholder="Enter your title " name="PostTitle" value="@Model.ListPost.PostTitle" />
+    <div class="marginBottom-20" style="margin-top: 10px">Description</div>
+    <input style="width: 100%" placeholder="Enter your Description " name="Description" value="@Model.ListPost.Description" />
+    @*<div style="margin-top: 20px; display:flex; align-items:center">
+            <div style="display:flex; align-items:center; margin-right: 30px">
+                <div style="margin-right: 20px">Hiển thị bài viết lên Onboading :</div>
+                <input type="checkbox" name="checkBox" value="true" @(Model.ListPost.Status == 1 ? "checked=\"checked\"" : "") />
+            </div>
+            <div style="display:flex; align-items:center">
+                <label style="margin:0 10px 0 30px" for="cars">Thể loại bài viết:</label>
+
+                <select name="CheckValueCategory" style="height: 34px; border-radius: 10px;" id="cars">
+                    @foreach (var item in Model.Category)
+                    {
+                        <option selected=@(Model.ListPost.Category == item.CategoryId ? "selected" : null) value="@item.CategoryId">@item.CategoryName</option>
+                    }
+                </select>
+            </div>
+        </div>*@
+    <div class="form-row" style="margin-top: 25px">
+        <div class="form-group col-sm-6">
+            <div style="display:flex; align-items:center; margin-right: 30px">
+                <div style="margin-right: 20px">Hiển thị bài viết lên Onboading :</div>
+                <input type="checkbox" name="checkBox" value="true" @(Model.ListPost.Status == 1 ? "checked=\"checked\"" : "") />
+            </div>
+        </div>
+        <div style="display:flex; align-items:center" class="form-group col-sm-6">
+            <label>Thể loại bài viết:</label>
+            <div class="col-sm-4">
+                <select name="CheckValueCategory" class="form-control">
+                    @foreach (var item in Model.Category)
+                    {
+                        <option selected=@(Model.ListPost.Category == item.CategoryId ? "selected" : null) value="@item.CategoryId">@item.CategoryName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="marginHorizontal">
+        <div class="marginBottom-20">Thubnail</div>
+        <div style="display:flex">
+            <label for="pickImg"><i style="cursor: pointer; color: red; font-size: 30px; margin: 0 19px;" class="fas fa-arrow-circle-up"></i></label>
+            <div id="display-img">@Model.ListPost.ThumbNail</div>
+            <input onchange="getImg(this.value);" style="visibility:hidden" id="pickImg" name="ThumbNail" type="file" accept=".jpg,.png,.jpeg, gif" />
+        </div>
+    </div>
+    <textarea name="PostConten">@Model.ListPost.PostConten</textarea>
+    <input type="submit" value="Cập nhật" class="btn-input" />
+</form>
+
+@section scripts{
+    <script src="~/Areas/plugins/ckeditor/ckeditor.js"></script>
+    <script src="~/Areas/plugins/ckfinder/ckfinder.js"></script>
+
+    <script type="text/javascript">
+
+        CKEDITOR.replace('PostConten')
+
+        function getImg(nameimg) {
+            var img = nameimg.replace(/^.*\\/, "");
+            $('#display-img').html(img);
+
+        }
+    </script>
+}

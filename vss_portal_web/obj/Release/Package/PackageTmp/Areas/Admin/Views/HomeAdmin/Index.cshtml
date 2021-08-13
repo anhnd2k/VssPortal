@@ -1,0 +1,63 @@
+﻿@model PagedList.IPagedList<DBConect.model.GetListPosts>
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
+}
+
+
+<div class="row table_post">
+    <div class="col-lg-12 mb-4">
+        <!-- Quản lý bài viết -->
+        <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Quản lý bài viết</h6>
+                <div style="display:flex; flex:1; align-items:center; justify-content:center">
+                    <h5 style="color: #6777ef">@TempData["MessSuccess"]</h5>
+                    <h5 style="color: #6777ef">@TempData["UpdateSuccess"]</h5>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Post Title</th>
+                            <th>Thể loại</th>
+                            <th>Hiển thị trên Onboading</th>
+                            <th>Authen</th>
+                            <th>Create Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="row_@item.id" class="col-tr-post">
+                                <td>@item.id</td>
+                                <td>@item.PostTitle</td>
+                                <td>@item.CategoryName</td>
+                                <td>@item.ShowPostOnboading</td>
+                                <td>@item.Author</td>
+                                <td>@item.CreateTime</td>
+                                <td>
+                                    <a href="UpdatePost/?id=@item.id" class="btn btn-sm btn-primary">Chỉnh sửa</a>
+                                    @Ajax.ActionLink("Detele", "Delete", new { @id = item.id }, new AjaxOptions
+                               {
+                                   Confirm = "Bạn có muốn xoá bài đăng này không?",
+                                   OnComplete = "$('#row_" + @item.id + "').remove()",
+                                   HttpMethod = "Delete"
+                               }, new { @class = "btn btn-sm btn-danger" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @Html.PagedListPager(Model, page => Url.Action("index", new { page }))
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
+</div>
+

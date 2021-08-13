@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
+}
+@model DBConect.Farmework.OnboadingPost
+
+<div class="postContainer">
+
+    <form method="post" action="" enctype="multipart/form-data" class="box">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, null, new { @style = "color: red" })
+        <div class="marginBottom-20">Onboading Title</div>
+        <input style="width: 100%" placeholder="Enter your title " name="OnboadingTitle" value="@Model.OnboadingTitle" />
+        <div class="marginBottom-20" style="margin-top: 10px">Description</div>
+        <input style="width: 100%" placeholder="Enter your Description " name="Description" value="@Model.Description" />
+        <div class="marginBottom-20" style="margin-top: 10px">Button Action</div>
+        <input style="width: 100%" placeholder="Enter Button Action " name="ButtonTitle" value="@Model.ButtonTitle" />
+        <div class="marginHorizontal">
+            <div class="marginBottom-20">Thubnail</div>
+            <div style="display:flex">
+                <label for="pickImg"><i style="cursor: pointer; color: red; font-size: 30px; margin: 0 19px;" class="fas fa-arrow-circle-up"></i></label>
+                <div id="display-img">@Model.Thumbnail</div>
+                <input onchange="getImg(this.value);" style="visibility:hidden" id="pickImg" name="ThumbNail" type="file" accept=".jpg,.png,.jpeg, gif" />
+            </div>
+        </div>
+        <textarea name="OnboadingConten">@Model.OnboadingConten</textarea>
+        <input type="submit" value="Update" class="btn-input" />
+    </form>
+</div>
+
+@section scripts{
+    <script src="~/Areas/plugins/ckeditor/ckeditor.js"></script>
+    <script src="~/Areas/plugins/ckfinder/ckfinder.js"></script>
+
+    <script type="text/javascript">
+
+        CKEDITOR.replace('OnboadingConten')
+
+        function getImg(nameimg) {
+            var img = nameimg.replace(/^.*\\/, "");
+            $('#display-img').html(img);
+
+        }
+    </script>
+}
+

@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model DBConect.Farmework.ListPost
+
+<div style="margin-top: 20px" class="container">
+    @Html.Raw(Model.PostConten);
+</div>
+

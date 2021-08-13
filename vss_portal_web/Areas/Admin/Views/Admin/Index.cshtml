@@ -1,0 +1,40 @@
+﻿
+@{
+    Layout = null;
+}
+@model  vss_portal_web.Areas.Admin.Models.LoginModel
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/Areas/Admin/assets_admin/styles.css" />
+</head>
+<body style="background-image: url(/Areas/Admin/assets_admin/assets/img/vt-background.jpg); background-position: center center; background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+
+    <div class="container">
+        <div class="img_logo">
+            <a href="/">
+                <img src="~/assets/img/logo_vt.png" />
+            </a>
+        </div>
+    <form method="post" action="" style=" padding: 14px 0; background-color: #fff; margin-top: 50px; height: 295px; border-radius: 20px; border: 2px solid #fff; display: flex; justify-content: center; align-items: center; ">
+        @Html.AntiForgeryToken()
+        <div style="display: flex; flex-direction: column; width: 325px; padding: 0 15px; align-items: center;">
+            <label style=" margin-bottom: 15px; font-weight: bold; color: #272424; font-size: 15px; " for="myEmail">Tên đăng nhập</label>
+            <input name="UserName" style="border: 3px solid #ccc; width: 80%; height: 25px; margin-bottom: 15px; border-radius: 20px; outline: none; padding: 10px 20px;" class="form-control" placeholder="Vui lòng nhập tên đăng nhập">
+            <label style=" margin-bottom: 15px; font-weight: bold; color: #272424; font-size: 15px; " for="myPassword">Mật khẩu</label>
+            <input name="PassWord" style="border: 3px solid #ccc; width: 80%; height: 25px; margin-bottom: 15px; border-radius: 20px; outline: none; padding: 10px 20px;" type="password" id="myPassword" class="form-control" placeholder="Vui lòng nhập mật khẩu">
+            @Html.ValidationSummary(true, null, new { @style = "color: red" })
+            <input style="padding: 12px 49px; border-radius: 20px; outline: none; border: none; cursor: pointer; cursor: pointer; font-weight: bold; background-color: #eb0729; color: #fff; " type="submit" name="" value="Đăng nhập">
+        </div>
+    </form>
+    </div>
+    <script>
+        function onClickBtn() {
+            window.location = "/Admin/AddPosts/Index"
+        }
+    </script>
+</body>
+</html>

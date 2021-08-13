@@ -1,0 +1,62 @@
+﻿/*post css*/
+.postContainer {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+    display:flex;
+    justify-content:center;
+    min-height: 67vh;
+    padding-top: 10px
+}
+
+.btn-input {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    background-color: #dc0c2c;
+    border: none;
+    color: #fff
+}
+
+.marginHorizontal{
+    margin-top: 30px;
+    margin-bottom: 30px
+}
+
+.marginBottom-20{
+    margin-bottom: 20px
+}
+
+#cke_1_contents {
+    min-height: 67vh
+}
+
+#cke_editor1{
+    width: 60%
+}
+
+
+@media only screen and (min-width: 480px)
+{
+    #cke_editor1 {
+        width: 100%
+    }
+}
+
+
+@media only screen and (min-width: 300px) {
+    #cke_editor1 {
+        width: 100%
+    }
+}
+
+
+@media only screen and (min-width: 768px) 
+{
+    #cke_editor1 {
+        width: 80%
+    }
+}
+
+

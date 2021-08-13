@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
+}
+
+@model PagedList.IPagedList<DBConect.model.GetListThankCard>
+@using PagedList.Mvc
+
+<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <h6 class="m-0 font-weight-bold text-primary">Quản lý Thank card</h6>
+    <div style="display:flex; flex:1; align-items:center; justify-content:center">
+        <h5 style="color: #6777ef">@TempData["MessSuccess"]</h5>
+        <h5 style="color: #6777ef">@TempData["UpdateSuccess"]</h5>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Người gửi</th>
+                <th>Email người giử</th>
+                <th>Thời gian gửi</th>
+                <th>Người nhận</th>
+                <th>Email người nhận</th>
+                <th>Phòng ban</th>
+                <th>Tiêu đề</th>
+                <th>Ảnh</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+                {
+
+            <tr id="row_@item.id" class="col-tr-post">
+                <td>@item.id</td>
+                <td>@(item.Incognito == true ? "ẩn danh" : item.Sender)</td>
+                <td>@(item.Incognito == true ? "ẩn danh" : item.MailSender)</td>
+                <td>@item.SendTime</td>
+                <td>@item.Receiver</td>
+                <td>@item.MailReceiver</td>
+                <td>@item.NameDepartment</td>
+                <td>@item.TitleCard</td>
+                <td>@item.CardImg</td>
+                <td>
+                    @Ajax.ActionLink("Detele", "DeleteFeedBack", new { @id = item.id }, new AjaxOptions
+                        {
+                            Confirm = "Bạn có muốn xoá thank card này không?",
+                            OnComplete = "$('#row_" + @item.id + "').remove()",
+                            HttpMethod = "Delete"
+                        }, new { @class = "btn btn-sm btn-danger" })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    @Html.PagedListPager(Model, page => Url.Action("index", new { page }))
+</div>
+

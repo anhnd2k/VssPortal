@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "ThanksForSendIdea";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .mainStep {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0px 0px 20px #00000020;
+        background-color: #FFFFFF;
+        overflow: hidden;
+        margin-bottom: 100px;
+        margin-top: 50px
+    }
+    .step {
+        width: 100%;
+        margin-bottom: 40px;
+    }
+    .stepStart {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 45px 0;
+    }
+    .textTitle {
+        font-weight: bold;
+        font-size: 32px;
+    }
+
+    .text_chid {
+        font-size: 22px;
+        text-align: center
+    }
+    .btn_idea {
+        padding: 10px 58px;
+        color: #fff;
+        font-size: 22px;
+        font-weight: bold;
+        background-color: #EE0033;
+        margin-top: 70px;
+        border-radius: 10px
+    }
+    .textTitle1 {
+        text-align: center;
+        margin: 0;
+        color: #dc3545;
+        font-weight: bold;
+        margin-bottom: 15px
+    }
+
+    .soluction {
+        text-align: center
+    }
+</style>
+
+<main id="main">
+    <div class="container">
+        <div class="titlePage">
+            <h4 class="textTitle1">ĐĂNG KÝ Ý TƯỞNG</h4>
+            <h6 class="soluction"><i>"IDEA - THEO MỌI CÁCH, CHO MỌI NGƯỜI"</i></h6>
+        </div>
+        <div class="mainStep">
+            <div id="step_06" class="step">
+                <div class="stepStart">
+                    <img src="~/assets/img/success_regester.png" />
+                    <div class="textTitle">Cám ơn bạn nhiều!</div>
+                    <div class="text_chid">Đừng ngần ngại gửi đăng ký ý tưởng cho chúng tôi cùng nhau vì công ty phát triển thịnh vượng nha</div>
+                    <a href="@Url.Action("Index","Idea")">
+                        <div class="btn_idea">
+                            Đăng ký mới nào
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

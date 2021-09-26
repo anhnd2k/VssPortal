@@ -1,0 +1,164 @@
+﻿
+@{
+    Layout = null;
+}
+@model List<DBConect.Farmework.ListPost>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Trang tin nội bộ VSS</title>
+    <link href="~/assets/img/vt.png" rel="icon">
+    <link rel="stylesheet" href="~/Areas/Admin/assets_admin/styles.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        .borderCustom::after {
+            content: '';
+            display: block;
+            height: 2px;
+            background-color: #ccc;
+            width: 300px
+        }
+
+        .swiper {
+            width: 628px;
+        }
+
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+            .swiper-slide img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+    </style>
+</head>
+
+<body style="background-image: url(/Areas/Admin/assets_admin/assets/img/vt-background.jpg);position:relative; background-position: center center; background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+    <div style="height: 100vh; display:flex; align-items:center; justify-content:center; box-sizing:border-box">
+        <div style="max-width: 1200px; max-height: 800px; background-color: #fff; border-radius: 20px;box-shadow: 0px 0px 20px #00000020; display:flex; overflow:hidden">
+            <div style="display: flex; flex: 2; background-color: #ccc;">
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        @foreach (var item in Model)
+                        {
+                            if (item.Status == 1)
+                            {
+                                <div style="position: relative" class="swiper-slide">
+                                    <img src="/ImageUpload/Thumbnal/@item.ThumbNail" />
+                                    <div style="position: absolute; bottom: 99px; left: 39px">
+                                        <div style="font-weight: bold; font-size: 24px; color: #fff; text-align:left">@item.PostTitle</div>
+                                        <div style="font-size: 16px; color: #fff; text-align: left; margin-top: 20px">@item.PostTitle</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            <div style="display: flex; flex: 1.5; align-items:center; flex-direction: column; margin: 30px 50px; justify-content:center">
+                <a style="margin-top: 20px" href="/">
+                    <img src="~/assets/img/logo_vt.png" />
+                </a>
+                <div style="margin-top: 20px; font-size: 20px; font-weight: bold; color: black">Đăng nhập vào tài khoản Viettel hoặc SSO</div>
+                <form method="post" onsubmit="return checkvalue()" action="" style="width: 100%">
+                    @Html.AntiForgeryToken()
+                    <div style="width: 100%; margin-top: 50px; border: 1px solid #ccc; border-radius: 10px; padding: 17px 11px; position: relative; box-sizing: border-box;">
+                        <input id="username" name="UserName" style="outline: none; border: none; width: 100%; font-size: 17px" placeholder="Nhập tên đăng nhập" />
+                        <div id="notiUsername" style="position: absolute; font-size: 16px; top: -9px; background-color: #fff; padding: 0 8px;">
+                            Tên đăng nhập
+                        </div>
+                    </div>
+                    <span id="checkUsername" style="font-size: 14px; color: red; margin-top: 5px; visibility: hidden">Vui lòng điền tên đăng nhập</span>
+                    <div style="width: 100%; margin-top: 12px; border: 1px solid #ccc; border-radius: 10px; padding: 17px 11px; position: relative; box-sizing: border-box;">
+                        <input id="pass" name="PassWord" style="outline: none; border: none; width: 100%; font-size: 17px" placeholder="Mật khẩu" type="password" />
+                        <div id="notiPass" style="position: absolute; font-size: 16px; top: -9px; background-color: #fff; padding: 0 8px;">
+                            Mật khẩu
+                        </div>
+                    </div>
+                    <span id="checkPass" style="font-size: 14px; color: red; margin-top: 5px; visibility:hidden">Vui lòng điền mật khẩu</span>
+                    <div style="margin-bottom: 10px ">
+                        @Html.ValidationSummary(true, null, new { @style = "color: red" })
+                    </div>
+                    <button id="btnLogin" style="cursor: pointer; color: #fff; outline: none; border: none; font-size: 17px; width: 100%; margin-top: 40px; border: 1px solid #ccc; border-radius: 10px; padding: 17px 11px; background-color: #EE0033" type="submit">
+                        Đăng nhập
+                    </button>
+                </form>
+                <div style="margin-top: 60px; position: relative" class="borderCustom">
+                    <div style=" position: absolute; right: 40%; top: -8px; background-color: #fff; padding: 0 10px; height: 20px; width: max-content;">
+                        Hoặc
+                    </div>
+                </div>
+                <div style="margin-top: 50px; font-size: 15px; ">
+                    Liên hệ hỗ trợ kỹ thuật số 1789 nhánh số 2
+                </div>
+                <div style="margin-top: 20px; font-size: 15px; ">
+                    © 2021 Bản quyền thuộc về Viettel Software Service
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        pagination: {
+            el: ".swiper-pagination",
+        },
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+    });
+</script>
+<script type="text/javascript">
+
+    function checkvalue() {
+        var username = document.getElementById("username").value;
+        var pass = document.getElementById("pass").value;
+        console.log(username)
+        if (username == "") {
+            document.getElementById("checkUsername").style.visibility = "visible"
+            return false
+        } else {
+            document.getElementById("checkUsername").style.visibility = "hidden"
+        }
+        if (pass == "") {
+            document.getElementById("checkPass").style.visibility = "visible"
+            return false
+        } else {
+            document.getElementById("checkPass").style.visibility = "hidden"
+        }
+        document.getElementById("btnLogin").style.pointerEvents = "none";
+        return true
+    }
+</script>

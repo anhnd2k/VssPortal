@@ -108,7 +108,7 @@ namespace vss_portal_web.Areas.Admin.Code
 
         public override bool ValidateUser(string username, string password)
         {
-            return new AccountModel().Login(username, password);
+            return new LdapAuthentication().AuthenticateUserV2(username, password);
         }
     }
 }

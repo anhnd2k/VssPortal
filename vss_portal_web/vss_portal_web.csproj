@@ -34,6 +34,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,6 +86,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=5.7.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.5.7.4\lib\net45\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
       <HintPath>..\packages\Facebook.6.4.2\lib\net45\Facebook.dll</HintPath>
@@ -136,6 +141,9 @@
     </Reference>
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net46\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Client.Policy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.6621.1200\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
@@ -239,7 +247,11 @@
     <Reference Include="PayPal, Version=1.8.0.0, Culture=neutral, PublicKeyToken=5b4afc1ccaef40fb, processorArchitecture=MSIL">
       <HintPath>..\packages\PayPal.1.8.0\lib\net451\PayPal.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.HashFunction.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80c9288e394c1322, processorArchitecture=MSIL">
@@ -251,6 +263,8 @@
     <Reference Include="System.Data.HashFunction.Interfaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80c9288e394c1322, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.HashFunction.Interfaces.2.0.0\lib\net45\System.Data.HashFunction.Interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.Protocols" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
@@ -287,6 +301,7 @@
     <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -305,6 +320,7 @@
     <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -373,28 +389,45 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Code\CustomMermbershipProvider.cs" />
+    <Compile Include="Areas\Admin\Code\LdapAuthentication.cs" />
     <Compile Include="Areas\Admin\Code\SessionHelper.cs" />
     <Compile Include="Areas\Admin\Code\UserSession.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BaseAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DetailIdeaRegesterController.cs" />
+    <Compile Include="Areas\Admin\Controllers\HandleTruthController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManageIdeaRegisterController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManageInitativeRegisterController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManageTalkRealController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageThankcardController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeAdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreatePostsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UpdatePostController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ViewDetailRealTalkController.cs" />
     <Compile Include="Areas\Admin\Models\AddPostsModel.cs" />
     <Compile Include="Areas\Admin\Models\LoginModel.cs" />
     <Compile Include="Areas\Admin\Models\ModelControllerAdmin.cs" />
     <Compile Include="Areas\Admin\Models\OnboadingModel.cs" />
     <Compile Include="Controllers\AllPostsController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DetailPostController.cs" />
-    <Compile Include="Controllers\FeedBackUserController.cs" />
+    <Compile Include="Controllers\ErrViewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IdeaController.cs" />
+    <Compile Include="Controllers\InitiativeController.cs" />
+    <Compile Include="Controllers\LoginForGuestController.cs" />
     <Compile Include="Controllers\RealTalkController.cs" />
     <Compile Include="Controllers\ThanksCardController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EmailService.cs" />
+    <Compile Include="Models\IdeaPlus.cs" />
     <Compile Include="Models\ModelController.cs" />
+    <Compile Include="Models\PathImgConten.cs" />
+    <Compile Include="Models\RealTalkUser.cs" />
+    <Compile Include="Models\RedirectModel.cs" />
+    <Compile Include="Models\TextareaModel.cs" />
     <Compile Include="Models\ThankCardUser.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -402,6 +435,9 @@
   <ItemGroup>
     <Content Include="Areas\Admin\assets_admin\assets\css\ruang-admin.css" />
     <Content Include="Areas\Admin\assets_admin\assets\css\styles.min.css" />
+    <Content Include="Areas\Admin\assets_admin\assets\img\delete.png" />
+    <Content Include="Areas\Admin\assets_admin\assets\img\ic_arrow_right.png" />
+    <Content Include="Areas\Admin\assets_admin\assets\img\ic_home.png" />
     <Content Include="Areas\Admin\assets_admin\assets\img\user_while.png" />
     <Content Include="Areas\Admin\assets_admin\assets\img\vt-background.jpg" />
     <Content Include="Areas\Admin\assets_admin\assets\js\ruang-admin.js" />
@@ -3437,28 +3473,24 @@
     <Content Include="assets\css\style.css" />
     <Content Include="assets\img\about.jpg" />
     <Content Include="assets\img\apple-touch-icon.png" />
+    <Content Include="assets\img\arrow-left.png" />
+    <Content Include="assets\img\arrow-right.png" />
     <Content Include="assets\img\banner.jpg" />
     <Content Include="assets\img\banner2.jpg" />
     <Content Include="assets\img\banner3.jpg" />
+    <Content Include="assets\img\checkmark.png" />
+    <Content Include="assets\img\cmt_ccc.png" />
+    <Content Include="assets\img\cmt_ver1.png" />
     <Content Include="assets\img\favicon.png" />
+    <Content Include="assets\img\heart_red.png" />
+    <Content Include="assets\img\idea_img.png" />
+    <Content Include="assets\img\like_ic.png" />
+    <Content Include="assets\img\like_ic_active.png" />
     <Content Include="assets\img\logo_vt.png" />
-    <Content Include="assets\img\portfolio\portfolio-1.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-2.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-3.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-4.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-5.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-6.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-7.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-8.jpg" />
-    <Content Include="assets\img\portfolio\portfolio-9.jpg" />
-    <Content Include="assets\img\slide\slide-1.jpg" />
-    <Content Include="assets\img\slide\slide-2.jpg" />
-    <Content Include="assets\img\slide\slide-3.jpg" />
-    <Content Include="assets\img\team\team-1.jpg" />
-    <Content Include="assets\img\team\team-2.jpg" />
-    <Content Include="assets\img\team\team-3.jpg" />
-    <Content Include="assets\img\team\team-4.jpg" />
+    <Content Include="assets\img\success_regester.png" />
     <Content Include="assets\img\thanks_card.jpg" />
+    <Content Include="assets\img\upload_file.png" />
+    <Content Include="assets\img\user_avata_defau.png" />
     <Content Include="assets\img\vt.png" />
     <Content Include="assets\js\main2.js" />
     <Content Include="assets\js\main.js" />
@@ -3588,8 +3620,6 @@
     <Content Include="ImageUpload\ThankCard\thankscard_new2.jpg" />
     <Content Include="ImageUpload\ThankCard\thankscard_new3.jpg" />
     <Content Include="ImageUpload\_thumbs\Images\aa.png" />
-    <Content Include="ImageUpload\_thumbs\Images\iu.jpg" />
-    <Content Include="ImageUpload\_thumbs\Images\nk.jpg" />
     <Content Include="obj\Debug\vss_portal_web.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\vss_portal_web.dll" />
     <Content Include="obj\Debug\vss_portal_web.pdb" />
@@ -3856,6 +3886,14 @@
     <Content Include="Areas\Admin\Views\CreatePosts\Index.cshtml" />
     <Content Include="Areas\Admin\Views\UpdateOnBoadingPosts\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ManageThankcard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageTalkReal\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ViewDetailRealTalk\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageIdeaRegister\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageInitativeRegister\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DetailIdeaRegester\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageInitativeRegister\DetailInitative.cshtml" />
+    <Content Include="Areas\Admin\Views\HandleTruth\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageTalkReal\ManagePersionEditTruth.cshtml" />
     <None Include="bin\vss_portal_web.dll.config" />
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\vss_portal_web.csproj.AssemblyReference.cache" />
@@ -4235,15 +4273,30 @@
     <Content Include="Views\DetailPost\OnboadingPost.cshtml" />
     <Content Include="Views\Shared\_LayoutAllPosts.cshtml" />
     <Content Include="Views\ThanksCard\Index.cshtml" />
-    <Content Include="Views\FeedBackUser\Index.cshtml" />
     <Content Include="Views\RealTalk\Index.cshtml" />
+    <Content Include="Views\ErrView\PageNotFound.cshtml" />
+    <Content Include="Views\Idea\Index.cshtml" />
+    <Content Include="Views\Initiative\Index.cshtml" />
+    <Content Include="Views\LoginForGuest\Index.cshtml" />
+    <Content Include="Views\Idea\IdeaRegestered.cshtml" />
+    <Content Include="Views\Idea\DetailIdeaRegester.cshtml" />
+    <Content Include="Views\Initiative\InitativeRegestered.cshtml" />
+    <Content Include="Views\Initiative\DetailIntativeRegester.cshtml" />
+    <Content Include="Views\RealTalk\NewFeedTruth.cshtml" />
+    <Content Include="Views\Idea\ThanksForSendIdea.cshtml" />
+    <Content Include="Views\Initiative\ThanksForSendInitative.cshtml" />
+    <Content Include="Views\RealTalk\TruthRegestered.cshtml" />
+    <Content Include="Views\RealTalk\DetailTruthRegester.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Views\BaseAdmin\" />
     <Folder Include="ImageUpload\images\" />
     <Folder Include="ImageUpload\Thumbnal\" />
     <Folder Include="obj\Debug\TempPE\" />
-    <Folder Include="UploadFiles\" />
+    <Folder Include="UploadFiles\fileIdea\" />
+    <Folder Include="UploadFiles\FileInitative\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

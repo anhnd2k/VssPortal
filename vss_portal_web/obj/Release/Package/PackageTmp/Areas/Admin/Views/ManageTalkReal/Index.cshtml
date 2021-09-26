@@ -1,0 +1,317 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
+}
+
+@model PagedList.IPagedList<DBConect.model.GetListRealTalk>
+@using PagedList.Mvc
+@using DBConect.Farmework
+@{
+    IEnumerable<FieldRealTalk> ListFields = ViewData["FiendList"] as IEnumerable<FieldRealTalk>;    IEnumerable<TruthStatu> ListTruth = ViewData["TruthStatus"] as IEnumerable<TruthStatu>;}
+<style>
+    .pagination-container .pagination li.active {
+        background-color: #ccc
+    }
+    .disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.4;
+    }
+    .imgRedirect {
+        margin-right: 10px
+    }
+    select {
+        flex: 1;
+        padding: 7px 33px 7px 9px;
+        color: #5a4949;
+        cursor: pointer;
+        border-radius: 11px;
+    }
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        appearance: none;
+        outline: 0;
+        box-shadow: none;
+        border: 0 !important;
+        background: #f5f5f5;
+        background-image: none;
+    }
+    .table td.name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 300px;
+        height: 1.2em;
+        white-space: nowrap;
+    }
+    .nocontent {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #ccc;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background-image: linear-gradient(to right, #f56383, #ff7524);
+        max-width: max-content;
+        margin: 69px auto 0 auto;
+    }
+</style>
+<div class="row table_post">
+    <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px">
+        <a href="@Url.Action("Index", "HomeAdmin")" class="imgRedirect">
+            <img src="~/Areas/Admin/assets_admin/assets/img/ic_home.png" />
+        </a>
+        <div class="imgRedirect">
+            <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+        </div>
+        <div style="color: black; font-size: 20px">Quản lý nói thật đi</div>
+    </div>
+    <div style="margin-top: 40px; padding: 0 24px;" class="col-lg-12 mb-4">
+        <div class="card" style="min-height: 65vh">
+            <div style="width: 100%; margin: 20px 0; padding: 10px 0; display: flex; align-items:center">
+                <h4 style=" margin: 0 0 0 20px; color: #dc3545; font-weight:bold; margin-bottom: 15px; flex: 1">Quản lý nói thật đi</h4>
+                @using (Html.BeginForm("Index", "ManageTalkReal", FormMethod.Get, new { style = "flex: 4" }))
+                {
+                    <div style="display: flex; align-items:center; margin-right: 30px; flex: 4; justify-content: flex-end">
+
+                        <div style="width: 40%;position: relative; margin-right: 30px">
+                            <input value="@ViewData["searchString"]" id="search_input" name="searchString" style=" width: 100%; border: none; background-color: #F5F5F5; border-radius: 17px; padding: 7px 0 6px 35px; outline: none;" placeholder="Tìm kiếm..." />
+                            <i style="position: absolute; left: 10px; top: 11px; color: #999999;" class="fas fa-search"></i>
+                        </div>
+                        <div style="margin-right: 30px; background-color: #5d9866; padding: 7px 10px; border-radius: 13px; display: flex; align-items: center">
+                            <i style=" color: #fff; margin-right: 10px;" class="fas fa-user-edit"></i>
+                            <a style="color: #fff" href="@Url.Action("ManagePersionEditTruth", "ManageTalkReal")">Quản lý người xét duyệt</a>
+                        </div>
+                        <div style="position:relative">
+                            <select name="idFinterTruth" class="truthStatusClass" style="border: none" id="truthIdStatus">
+                                <option value=0>Tất cả trạng thái</option>
+                                @foreach (TruthStatu item in ListTruth)
+                                {
+                                    <option selected=@(ViewData["idSelectedTruth"].ToString() == item.IdTruth.ToString() ? "selected" : null) value=@item.IdTruth>@item.NameStatus</option>
+                                }
+                            </select>
+                            <i style="position: absolute; position: absolute; top: 11px; right: 10px;" class="fas fa-chevron-down"></i>
+                        </div>
+                        <div>
+
+                        </div>
+                        <button id="btnFinterTruth" type="submit" style="visibility: hidden; display: none"></button>
+
+                    </div>
+                }
+            </div>
+            @if (Model.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Stt</th>
+                                <th>Lời nói thật</th>
+                                <th>Người gửi</th>
+                                <th>Phong ban</th>
+                                <th>Lĩnh vực</th>
+                                <th>Trạng thái tiến trình</th>
+                                <th>Thời gian gửi</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var data in Model.Select((value, i) => new { value, i }))
+                            {
+                                var item = data.value;
+                                <tr id="row_@item.id" class="col-tr-post">
+                                    <td>@(Math.Abs(data.i + 1))</td>
+                                    <td class="name">@item.TitleRealTalk</td>
+                                    <td>@item.NameSender</td>
+                                    <td>@(item.DepartmentSender != null ? item.DepartmentSender : "Không có dữ liệu")</td>
+                                    <td>
+                                        @if (item.Status == 1)
+                                        {
+                                            <div style="position: relative">
+                                                <select name="Field" style="height: 34px; min-width: 122px; background-color: #f5f5f5 " class="form-control myState" id="@item.id">
+                                                    @foreach (FieldRealTalk items in ListFields)
+                                                    {
+                                                        <option id="option_field" selected=@(item.Field == items.IdFieldRealTalk ? "selected" : null) value=@items.IdFieldRealTalk>@items.NameFieldRealTalk</option>
+                                                    }
+                                                </select>
+                                                <i style="position: absolute; position: absolute; top: 11px; right: 10px;" class="fas fa-chevron-down"></i>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @item.NameFieldRealTalk
+                                        }
+                                    </td>
+
+                                    <td style=" min-width: 202px">
+                                        <div class="statusTruth_@item.TruthStatus" style="padding: 7px; display:flex; align-items:center; justify-content:center; border-radius: 10px; color: #fff">
+                                            @item.TruthStatusName
+                                        </div>
+                                    </td>
+                                    <td>@item.TimeSend</td>
+                                    <td style="min-width: 300px">
+                                        <a href="ViewDetailRealTalk/?id=@item.id" class="btn btn-sm btn-primary">Chi Tiết</a>
+                                        <div onclick="ApproveTruth(@item.id)" class="@(item.Status != 1 ? "btn btn-sm btn-success disabled" : "btn btn-sm btn-success")">
+                                            Phê duyệt
+                                        </div>
+                                        <div onclick="RejectTruth(@item.id)" class="@(item.Status != 1 ? "btn btn-sm btn btn-sm btn-danger disabled" : "btn btn-sm btn-danger")">
+                                            Từ chối
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @* spinner *@
+                    <div class="spinner">
+                        <div class="spinner-border text-danger center-div" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body contenModels">
+                                    Xét duyệt ý tưởng thành công!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.PagedListPager(Model, page => Url.Action("index", new { page, idFinterTruth = ViewData["idSelectedTruth"], searchString = ViewData["searchString"] }))
+                </div>
+            }
+            else
+            {
+                <div class="nocontent">
+                    Không có dữ liệu
+                </div>
+            }
+        </div>
+    </div>
+</div>
+            @section scripts{
+                <script type="text/javascript">
+
+                $(".statusTruth_5").css("background-color", "#FF375F")
+                $(".statusTruth_1").css("background-color", "#B5A13D")
+                $(".statusTruth_2").css("background-color", "#4267B2")
+                $(".statusTruth_3").css("background-color", "#32A4D7")
+                $(".statusTruth_4").css("background-color", "#32D74B")
+
+                    // người dùng xác nhận form model và reload lại trang
+                    $("#exampleModalCenter").on('hidden.bs.modal', function () {
+                        location.reload()
+                    });
+
+                    var truthStatus = document.querySelectorAll(".truthStatusClass");
+                    truthStatus.forEach(itemTruth => {
+                        itemTruth.addEventListener('change', function () {
+                            var idTruth = $("#truthIdStatus option:selected").val();
+                            console.log("===>>", idTruth)
+                            $("#btnFinterTruth").click();
+                        })
+                    })
+
+                    $(function () {
+                        $('input[id=search_input]').keydown(function (e) {
+                            if (e.keyCode == 13) {
+                                $("#btnFinterTruth").click();
+                            }
+                        });
+                    });
+
+                    var select_option = document.querySelectorAll(".myState");
+                    select_option.forEach(item => {
+                        item.addEventListener('change', function () {
+                            if ($(`#${item.id} option:selected`).val() != 0) {
+                                //console.log(item.id, $(`#${item.id} option:selected`).val())
+                                var idNewField = $(`#${item.id} option:selected`).val();
+                                $.ajax({
+                                    url: "/ManageTalkReal/updateField",
+                                    type: "POST",
+                                    dataType: "json",
+                                    contentType: "application/json; charset=utf-8",
+                                    data: `{"idPost": "${item.id}", "idNewField": "${idNewField}"}`,
+                                    success: function (data) {
+                                        $('.spinner').css('display', 'none');
+                                        if (data) {
+                                            $('.contenModels').text(`Cập nhật lĩnh vực ý kiến thành công`)
+                                            $('#exampleModalCenter').modal('show');
+                                        } else {
+                                            $('.contenModels').text("Có lỗi xảy ra, xét duyệt không thành công. Vui lòng thử lại sau ít phút!")
+                                            $('#exampleModalCenter').modal('show');
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    })
+
+                    function ApproveTruth(id) {
+                        if (confirm("Bạn có muốn phê duyệt Truth này?")) {
+                            $('.spinner').css('display', 'block');
+                            $.ajax({
+                                url: "/ManageTalkReal/ApproveTruth",
+                                type: "POST",
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                data: `{"id": "${id}"}`,
+                                success: function (data) {
+                                    $('.spinner').css('display', 'none');
+                                    if (data) {
+                                        $('.contenModels').text(`Xét duyệt Truth - nói thật đê thành công. Ý kiến sẽ được bàn giao đến `)
+                                        $('#exampleModalCenter').modal('show');
+                                    } else {
+                                        $('.contenModels').text("Có lỗi xảy ra, xét duyệt không thành công. Vui lòng thử lại sau ít phút!")
+                                        $('#exampleModalCenter').modal('show');
+                                    }
+                                }
+                            })
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    function RejectTruth(id) {
+                        if (confirm("Bạn có muốn từ chối Truth - nói thật đê này?")) {
+                            $('.spinner').css('display', 'block');
+                            $.ajax({
+                                url: "/ManageTalkReal/RejectTruth",
+                                type: "POST",
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                data: `{"id": "${id}"}`,
+                                success: function (data) {
+                                    $('.spinner').css('display', 'none');
+                                    if (data) {
+                                        $('.contenModels').text("Từ chối yêu cầu Truth - nói thật đi thành công")
+                                        $('#exampleModalCenter').modal('show');
+                                    } else {
+                                        $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                                        $('#exampleModalCenter').modal('show');
+                                    }
+                                }
+                            })
+                        } else {
+                            return false;
+                        }
+                    }
+                </script>
+            }

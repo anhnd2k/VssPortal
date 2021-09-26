@@ -22,6 +22,8 @@ namespace DBConect.model
         [StringLength(50)]
         public string Author { get; set; }
 
+        public int? Category { get; set; }
+
         public string ThumbNail { get; set; }
 
         public DateTime? CreateTime { get; set; }

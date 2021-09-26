@@ -5,31 +5,25 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using vss_portal_web.Areas.Admin.Models;
+using vss_portal_web.Controllers;
 
 namespace vss_portal_web.Areas.Admin.Controllers
 {
-    public class HomeAdminController : Controller
+    public class HomeAdminController : BaseAdminController
     {
-        [Authorize]
-        // GET: Admin/HomeAdmin
-        public ActionResult Index(int page = 1, int pageSize = 10)
+        public ActionResult Index(string searchString, int idStatus=0, int page = 1, int pageSize = 10)
         {
-            string UserName = "";
-            string cookieName = FormsAuthentication.FormsCookieName;
-            if (HttpContext.Request.Cookies[cookieName] != null)
-            {
-                HttpCookie authCookie = HttpContext.Request.Cookies[cookieName];
-                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                UserName = ticket.Name;
-
-            }
-
-            ViewData["UserName"] = UserName;
+            //create customer ridirect
+            TempData["myDataRedirect"] = CustomerRedirectLogin.CustomRedirects("Index", "Admin/HomeAdmin");
 
             var list = new ActionPost();
+            var listcategory = list.getCategory();
+            ViewData["tabBarSelection"] = "Post";
+            ViewData["finterCategory"] = listcategory;
+            ViewData["IdStatusFinterHomeAdmin"] = idStatus;
+            ViewData["searchStringHomeAdmin"] = searchString;
 
-            var allListPostNews = list.GetListPostsNew(page, pageSize);
+            var allListPostNews = list.GetListPostsNew(searchString, idStatus, page, pageSize);
 
             return View(allListPostNews);
         }

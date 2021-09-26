@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "DetailIntativeRegester";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model DBConect.model.GetListInitativeRegester
+<style>
+    .imgRedirect {
+        margin-right: 10px
+    }
+</style>
+<main id="main">
+    <div class="container">
+        <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px; margin: 30px 0">
+            <a href="@Url.Action("Index", "Home")" class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_home.png" />
+            </a>
+            <div class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+            </div>
+            <a href="@Url.Action("InitativeRegestered", "Initiative")" class="imgRedirect" style="color: black; font-size: 20px">Danh sách sáng kiến bạn đã đóng góp</a>
+            <div class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+            </div>
+            <div style="color: black; font-size: 20px">Chi tiết sáng kiến @Model.NameInitative</div>
+        </div>
+        <div style="margin-top: 40px; padding: 0 24px;" class="col-lg-12 mb-4">
+            <div class="card" style="min-height: 65vh; display:flex; align-items:center">
+                <div style="width: 950px; margin-top: 30px">
+                    <p style="text-align:center"><span style="font-size:28px"><strong>CỘNG HO&Agrave; X&Atilde; HỘI CHỦ NGHĨA VIỆT NAM</strong></span></p>
+
+                    <div class="soluction">
+                        <p style="text-align:center"><span style="font-size:20px"><strong>Độc lập - Tự do - Hạnh Ph&uacute;c</strong></span></p>
+                    </div>
+
+                    <p style="text-align:center">&nbsp;</p>
+
+                    <p style="text-align:center"><span style="font-size:24px"><strong>ĐƠN ĐĂNG KÝ SÁNG KIẾN</strong></span></p>
+
+                    <p style="text-align:center"><span style="font-size:20px">K&iacute;nh gửi: Ban thường trực v&agrave; hội đồng S&aacute;ng kiến &Yacute; tưởng</span></p>
+
+                    <p><span style="font-size:16px"><strong>1. &Yacute; tưởng</strong></span></p>
+
+                    <p><span style="font-size:14px"><strong>T&ecirc;n &yacute; tưởng:&nbsp;</strong> @Model.NameInitative</span></p>
+
+                    <p><span style="font-size:16px"><strong>2. T&aacute;c giả</strong></span></p>
+
+                    <div style="display: flex; align-items:center;">
+                        <span style="font-size:14px; flex:1"><strong>Họ v&agrave; t&ecirc;n:&nbsp;</strong> @Model.UserSendFullName</span>
+                        <span style="font-size:14px; flex:1"><strong>Email người gửi:</strong> @Model.EmailUserSend</span>
+                    </div>
+                    <p></p>
+
+                    <p><span style="font-size:14px"><strong>&Yacute; tưởng n&agrave;y của: </strong>@(Model.PersonalInitative ? "Cá nhân" : (Model.InitativeOfDepartment != null ? Model.NameDepartmentSendInitative : "Tập thể nhiều cá nhân"))</span></p>
+
+                    <p><span style="font-size:16px"><strong>3. M&ocirc; tả giải ph&aacute;p</strong></span></p>
+
+                    <div style="display: flex; align-items:center">
+                        <div style="flex:1"><span style="font-size:14px"><strong>3.1 Đơn vị áp dụng:</strong> @Model.NameUnitApply</span></div>
+
+                        <div style="flex: 1"><span style="font-size:14px"><strong>3.2 Lĩnh vực:</strong> @Model.NameField</span></div>
+                    </div>
+                    <p></p>
+
+                    <p><span style="font-size:16px"><strong>4. Tình trạng hiện tại</strong></span></p>
+
+                    <p>- @Model.Applicability</p>
+
+                    <p><span style="font-size:16px"><strong>5. Điểm mới của sáng kiến</strong></span></p>
+
+                    <p>- @Model.NewPoint</p>
+
+                    <p><span style="font-size:16px"><strong>6. Hiệu quả khi áp dụng sáng kiến</strong></span></p>
+
+                    <p>- @Model.EffectiveApply</p>
+
+                    <p><span style="font-size:16px"><strong>7. Nội dung chi tiết sáng kiến</strong></span></p>
+
+                    <p>- @Model.ContentInitative</p>
+
+                    <p><span style="font-size:16px"><strong>8.&nbsp; Nội dung bổ sung</strong></span></p>
+
+                    <p>- @Model.DetailMore</p>
+
+                    <p><span style="font-size:16px"><strong>9. T&agrave;i liệu k&egrave;m theo</strong></span></p>
+
+                    <p>
+                        @if (Model.NameDocument != null)
+                        {
+                            @Html.ActionLink("Tải xuông file đính kèm (Click để tải xuống)", "Download", new { imgName = Model.NameDocument.ToString() })
+                        }
+                        else
+                        {
+                            <span>Không có tài liệu đi kèm</span>
+                        }
+                    </p>
+
+                    <p><span style="font-size:16px"><strong>10 Th&ocirc;ng tin kh&aacute;c</strong></span></p>
+
+                    <div style="display: flex; align-items:center;">
+                        <span style="font-size:14px; flex:1"><strong>Thời gian đăng k&yacute;:&nbsp;</strong> @(String.Format("{0:dd/MM/yyyy}", Model.TimeSendInitative))</span>
+                        <span style="font-size:14px; flex:1"><strong>Trạng th&aacute;i:&nbsp;</strong> @Model.NameStauts</span>
+                    </div>
+                    <p></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

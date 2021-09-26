@@ -4,64 +4,120 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
 }
 @model vss_portal_web.Areas.Admin.Models.ModelControllerAdmin
+<style>
+    .titleCategory {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 20px;
+        margin: 0;
+        color: #fff
+    }
 
-<form method="post" action="" enctype="multipart/form-data" class="box">
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, null, new { @style = "color: red" })
+    .fontweight {
+        font-weight: bold;
+        font-size: 14px
+    }
+</style>
+@if (@ViewData["errUpdatePost"] == "err")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('#contenPopUpValidate').text("Có lỗi trong quá trình xử lý. Vui lòng thử lại sau ít phút")
+            $('#popupCheckValiadate').modal('show');
+        };
 
-    <div style="padding: 10px 0" class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold" style="color: #dc0c2c"><a href="@Url.Action("Index","HomeAdmin")">Quản lý bài viết  </a>>>  Chỉnh sửa bài viết</h6>
+    </script>
+}
+<main id="main">
+    <div style="margin: 0 50px 0 50px">
+        <div style="width: 100%; margin: 20px 0; padding: 10px 0">
+            <h4 style="text-align: center; margin: 0; color: #dc3545; font-weight:bold; margin-bottom: 15px">CHỈNH SỬA BÀI VIẾT</h4>
+        </div>
+        <form method="post" action="" enctype="multipart/form-data" class="box" onsubmit="return validateInputUpdate()">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, null, new { @style = "color: red" })
+
+            @*<div style="padding: 10px 0" class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold" style="color: #dc0c2c"><a href="@Url.Action("Index","HomeAdmin")">Quản lý bài viết  </a>>>  Chỉnh sửa bài viết</h6>
+                </div>*@
+            <div class="col-md-2 col-sm-4 col-8" style="margin: 50px 0 30px 0; height: 30px; background-color: #dc0c2c; position: relative; display: flex; align-items: center; justify-content: center; ">
+                <p class="titleCategory">Tiêu đề bài viết</p>
+                <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
+            </div>
+            <textarea maxlength="255" style="width: 100%" placeholder="Tiêu đề bài viết" class="form-control" rows="3" name="PostTitle" id="titlePostUpdate">@Model.ListPost.PostTitle</textarea>
+            <div class="col-md-2 col-sm-4 col-8" style="margin: 50px 0 30px 0; height: 30px; background-color: #dc0c2c; position: relative; display: flex; align-items: center; justify-content: center; ">
+                <p class="titleCategory">Mô tả bài viết</p>
+                <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
+            </div>
+            <textarea maxlength="500" style="width: 100%" placeholder="Mô tả bài đăng" name="Description" id="descriptionPostUpdate" class="form-control" rows="3">@Model.ListPost.Description</textarea>
+            <div class="col-md-2 col-sm-4 col-8" style="margin: 50px 0 30px 0; height: 30px; background-color: #dc0c2c; position: relative; display: flex; align-items: center; justify-content: center; ">
+                <p class="titleCategory">Chi tiết bài viết</p>
+                <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
+            </div>
+            <div class="form-row" style="margin-top: 25px">
+                <div class="form-group col-sm-6">
+                    <label class="fontweight">Tải lên ảnh nền bài viết <span style="color:red">*</span></label>
+                    <div style="width: 100%; height: 43px; border: 1px solid #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px;">
+                        <div id="display-img" style="color: #707070; font-size: 16px">
+                            @Model.ListPost.ThumbNail
+                        </div>
+                        <label for="pickImg" style="border-left: 2px solid #ccc; margin-right: 10px; padding-left: 20px; cursor:pointer">
+                            <img style="margin-top: 6px;" src="~/assets/img/upload_file.png" />
+                        </label>
+                        <input onchange="getImg(this.value);" style="visibility:hidden; display: none" id="pickImg" name="ThumbNail" type="file" accept=".jpg,.png,.jpeg, gif" />
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="fontweight">Thể loại bài viết</label>
+                    <select name="CheckValueCategory" class="form-control">
+                        @foreach (var item in Model.Category)
+                        {
+                            <option selected=@(Model.ListPost.Category == item.CategoryId ? "selected" : null) value="@item.CategoryId">@item.CategoryName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="marginHorizontal">
+                <div style="display:flex; align-items:center; margin-right: 30px">
+                    <div class="fontweight" style="margin-right: 20px">Hiển thị bài viết lên slile :</div>
+                    <input style="width: 20px; height: 20px;" type="checkbox" name="checkBox" value="true" @(Model.ListPost.Status == 1 ? "checked=\"checked\"" : "") />
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-8" style="margin: 50px 0 30px 0; height: 30px; background-color: #dc0c2c; position: relative; display: flex; align-items: center; justify-content: center; ">
+                <p class="titleCategory">Nội dung bài viết</p>
+                <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
+            </div>
+            <textarea id="PostConten" name="PostConten">@Model.ListPost.PostConten</textarea>
+            <input type="submit" value="Cập nhật" class="btn-input" />
+            @* spinner *@
+            <div class="spinner">
+                <div class="spinner-border text-danger center-div" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="marginBottom-20">post Title</div>
-    <input style="width: 100%" placeholder="Enter your title " name="PostTitle" value="@Model.ListPost.PostTitle" />
-    <div class="marginBottom-20" style="margin-top: 10px">Description</div>
-    <input style="width: 100%" placeholder="Enter your Description " name="Description" value="@Model.ListPost.Description" />
-    @*<div style="margin-top: 20px; display:flex; align-items:center">
-            <div style="display:flex; align-items:center; margin-right: 30px">
-                <div style="margin-right: 20px">Hiển thị bài viết lên Onboading :</div>
-                <input type="checkbox" name="checkBox" value="true" @(Model.ListPost.Status == 1 ? "checked=\"checked\"" : "") />
-            </div>
-            <div style="display:flex; align-items:center">
-                <label style="margin:0 10px 0 30px" for="cars">Thể loại bài viết:</label>
+</main>
 
-                <select name="CheckValueCategory" style="height: 34px; border-radius: 10px;" id="cars">
-                    @foreach (var item in Model.Category)
-                    {
-                        <option selected=@(Model.ListPost.Category == item.CategoryId ? "selected" : null) value="@item.CategoryId">@item.CategoryName</option>
-                    }
-                </select>
+<!-- Modal check -->
+<div class="modal fade" id="popupCheckValiadate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div>*@
-    <div class="form-row" style="margin-top: 25px">
-        <div class="form-group col-sm-6">
-            <div style="display:flex; align-items:center; margin-right: 30px">
-                <div style="margin-right: 20px">Hiển thị bài viết lên Onboading :</div>
-                <input type="checkbox" name="checkBox" value="true" @(Model.ListPost.Status == 1 ? "checked=\"checked\"" : "") />
+            <div id="contenPopUpValidate" class="modal-body">
+                Vui lòng nhập tiêu đề bài viết
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">Đồng ý</button>
             </div>
         </div>
-        <div style="display:flex; align-items:center" class="form-group col-sm-6">
-            <label>Thể loại bài viết:</label>
-            <div class="col-sm-4">
-                <select name="CheckValueCategory" class="form-control">
-                    @foreach (var item in Model.Category)
-                    {
-                        <option selected=@(Model.ListPost.Category == item.CategoryId ? "selected" : null) value="@item.CategoryId">@item.CategoryName</option>
-                    }
-                </select>
-            </div>
-        </div>
     </div>
-    <div class="marginHorizontal">
-        <div class="marginBottom-20">Thubnail</div>
-        <div style="display:flex">
-            <label for="pickImg"><i style="cursor: pointer; color: red; font-size: 30px; margin: 0 19px;" class="fas fa-arrow-circle-up"></i></label>
-            <div id="display-img">@Model.ListPost.ThumbNail</div>
-            <input onchange="getImg(this.value);" style="visibility:hidden" id="pickImg" name="ThumbNail" type="file" accept=".jpg,.png,.jpeg, gif" />
-        </div>
-    </div>
-    <textarea name="PostConten">@Model.ListPost.PostConten</textarea>
-    <input type="submit" value="Cập nhật" class="btn-input" />
-</form>
+</div>
 
 @section scripts{
     <script src="~/Areas/plugins/ckeditor/ckeditor.js"></script>
@@ -75,6 +131,39 @@
             var img = nameimg.replace(/^.*\\/, "");
             $('#display-img').html(img);
 
+        }
+
+        function validateInputUpdate() {
+            var titlePost = document.getElementById("titlePostUpdate").value;
+            var descriptionPost = document.getElementById("descriptionPostUpdate").value;
+            var imgThumbnail = document.getElementById("display-img").innerHTML;
+            var contenPost = CKEDITOR.instances.PostConten.document.getBody().getText();
+
+            console.log("===>>", contenPost.trim())
+
+            if (titlePost == "") {
+                $('#contenPopUpValidate').text("Vui lòng nhập tiêu đề bài viết!")
+                $('#popupCheckValiadate').modal('show');
+                return false
+            }
+            if (descriptionPost == "") {
+                $('#contenPopUpValidate').text("Vui lòng nhập mô tả bài viết!")
+                $('#popupCheckValiadate').modal('show');
+                return false
+            }
+            if (imgThumbnail == "") {
+                $('#contenPopUpValidate').text("Vui lòng chọn ảnh bìa bài viết!")
+                $('#popupCheckValiadate').modal('show');
+                return false
+            }
+            if (contenPost.trim() == "") {
+                $('#contenPopUpValidate').text("Vui lòng nhập nội dung bài viết!")
+                $('#popupCheckValiadate').modal('show');
+                return false
+            }
+
+            $('.spinner').css('display', 'block');
+            return true
         }
     </script>
 }

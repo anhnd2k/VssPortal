@@ -9,7 +9,7 @@ namespace DBConect.Farmework
     [Table("Employee")]
     public partial class Employee
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int id { get; set; }
 
         [StringLength(255)]
@@ -18,7 +18,6 @@ namespace DBConect.Farmework
         [StringLength(255)]
         public string Name { get; set; }
 
-        [Key]
         [StringLength(255)]
         public string Email { get; set; }
 

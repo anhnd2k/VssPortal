@@ -12,7 +12,9 @@ namespace vss_portal_web.Controllers
         // GET: AllPosts
         public ActionResult Index(string searchString, int page = 1, int pageSize = 10)
         {
-             var list = new ActionPost().GetListPostsAllPostHome(searchString, page, pageSize);
+            ViewData["fullNameUser"] = CheckLoginRole.getUserName();
+            ViewData["checkRoleLogin"] = CheckLoginRole.check();
+            var list = new ActionPost().GetListPostsAllPostHome(searchString, page, pageSize);
 
             return View(list);
         }

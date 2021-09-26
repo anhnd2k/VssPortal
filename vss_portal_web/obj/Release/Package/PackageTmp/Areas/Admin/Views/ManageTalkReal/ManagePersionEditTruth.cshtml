@@ -1,0 +1,384 @@
+﻿
+@{
+    ViewBag.Title = "ManagePersionEditTruth";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
+}
+@model vss_portal_web.Areas.Admin.Models.ModelControllerAdmin
+@if (TempData["statusAddNewPersion"] == "duplicate")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.contenModels').text("Đã tồn tại người quản lý trong lĩnh vực")
+            $('#exampleModalCenter').modal('show');
+        };
+
+    </script>
+}
+@if (TempData["statusAddNewPersion"] == "success")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.contenModels').text("Thêm mới người quản lý thành công")
+            $('#exampleModalCenter').modal('show');
+        };
+
+    </script>
+}
+@if (TempData["statusAddNewPersion"] == "err")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.contenModels').text("Có lỗi xảy ra trong quá trình xử lý, vui lòng thử lại sau ít phút")
+            $('#exampleModalCenter').modal('show');
+        };
+
+    </script>
+}
+<style>
+    .pagination-container .pagination li.active {
+        background-color: #ccc
+    }
+
+    .disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.4;
+    }
+
+    .imgRedirect {
+        margin-right: 10px
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        transition: opacity 500ms;
+        visibility: hidden;
+        opacity: 0;
+        z-index: 99
+    }
+
+        .overlay:target {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    .popup {
+        margin: 200px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        position: relative;
+        transition: all 2s ease-in-out;
+        width: 50%;
+    }
+
+        .popup h2 {
+            margin-top: 0;
+            color: #333;
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        .popup .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            transition: all 200ms;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+
+            .popup .close:hover {
+                color: red;
+            }
+
+        .popup .content {
+            max-height: 30%;
+            overflow: auto;
+        }
+</style>
+@* popup regerter *@
+<div id="popup1" class="overlay">
+    <div class="popup">
+        <h2>Thêm mới người quản lý</h2>
+        <a class="close" href="#">&times;</a>
+        <div class="content">
+            @using (Html.BeginForm("addNewManagePersion", "ManageTalkReal", FormMethod.Get, new { onsubmit = "return validateInput()" }))
+            {
+                @Html.AntiForgeryToken()
+                <div style="display: flex; height: 100px; justify-content: space-between; align-items: center; margin-top: 50px">
+                    <div style="width: 50%" class="form-group col-sm-6">
+                        <label for="myPassword">Lĩnh vực thêm mới người quản lý <strong style="color:red">*</strong></label>
+                        <select name="IdField" style="height: 52px" class="form-control">
+                            @foreach (var item in Model.ListFieldRealTalk)
+                            {
+                                <option value=@item.IdFieldRealTalk>@item.NameFieldRealTalk</option>
+                            }
+                        </select>
+                    </div>
+                    <div style="width: 50%" class="form-group col-sm-6">
+                        <label for="myPassword">Mail Viettel <strong style="color:red">*</strong></label>
+                        <input style="position: relative; padding:25px 35px;" type="text" class="form-control"
+                               id="emailPersion" placeholder="Email Viettel" name="EmailManage">
+                        <i style="position: absolute; top: 50px; left: 24px;" class="fas fa-pen"></i>
+                    </div>
+                </div>
+                <div style="display: flex; height: 100px; justify-content: space-between; align-items: center; margin-top: 30px">
+                    <div style="width: 50%" class="form-group col-sm-6">
+                        <label for="myPassword">Họ và tên <strong style="color:red">*</strong></label>
+                        <input style="position: relative; padding:25px 35px;" type="text" class="form-control"
+                               id="namePersion" placeholder="Email Viettel" name="FullNameManage">
+                        <i style="position: absolute; top: 50px; left: 24px;" class="fas fa-pen"></i>
+                    </div>
+                    <div style="width: 50%" class="form-group col-sm-6">
+                        <label for="myPassword">Phòng ban người quản lý <strong style="color:red">*</strong></label>
+                        <select name="departmentCustom" style="height: 52px" id="department" class="form-control">
+                            @foreach (var item in Model.ListDepartment)
+                            {
+                                <option value=@item.Id>@item.NameDepartment</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div style="display: flex; height: 100px; justify-content: center; align-items: center; margin-top: 30px; flex-direction: column">
+                    <div id="notyfiText" style="font-size: 14px; color: red; margin: 10px 0; display: none"> Vui lòng điền email Viettel người quản lý</div>
+                    <button type="submit" style="padding: 10px 40px; cursor:pointer; border: none; outline: none;background-color: darkred; color: #fff; display: flex; justify-content:center; align-items:center" class="form-group col-sm-6">
+                        Thêm mới
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row table_post" style="position: relative">
+    <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px">
+        <a href="@Url.Action("Index", "HomeAdmin")" class="imgRedirect">
+            <img src="~/Areas/Admin/assets_admin/assets/img/ic_home.png" />
+        </a>
+        <div class="imgRedirect">
+            <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+        </div>
+        <a href="@Url.Action("Index", "ManageTalkReal")" class="imgRedirect" style="color: black; font-size: 20px">Quản lý nói thật đi</a>
+        <div class="imgRedirect">
+            <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+        </div>
+        <div style="color: black; font-size: 20px">Quản lý người xét duyệt Truth</div>
+    </div>
+    <div style="margin-top: 40px; padding: 0 24px;" class="col-lg-12 mb-4">
+        <div class="card" style="min-height: 70vh">
+            <div style="width: 100%; margin: 20px 0; padding: 10px 0; display: flex; align-items:center; justify-content:space-between">
+                <h4 style=" margin: 0 0 0 20px; color: #dc3545; font-weight:bold; margin-bottom: 15px; flex: 1">Quản lý người xét duyệt Truth</h4>
+                <a href="#popup1" id="openPopUp" style="width: max-content;cursor:pointer; padding: 5px 10px; background-color: #254646; border-radius: 10px; display: flex; align-items:center; margin-right: 20px">
+                    <i style="color: #fff" class="fas fa-user-plus"></i>
+                    <div style="color: #fff; margin-left: 10px">Thêm mới người quản lý</div>
+                </a>
+
+            </div>
+
+
+            @* một lĩnh vực *@
+            @foreach (var Field in Model.ListFieldRealTalk)
+            {
+                <div style="width: 100%; padding: 0 20px">
+                    <div style="width: 100%; padding: 10px 20px; align-items: center; display: flex; justify-content: space-between; box-shadow: 0px 0px 20px #00000020; border-radius: 10px">
+                        <div style="font-size: 20px; font-weight: bold; color: #dc3545; ">@Field.NameFieldRealTalk</div>
+
+                    </div>
+                    <div style="float: right; width: 90% ">
+                        <table class="table" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%">
+                                        Tên người quản lý
+                                    </th>
+                                    <th style="width: 20%">
+                                        Email Viettel
+                                    </th>
+                                    <th style="width: 20%">
+                                        Phòng ban
+                                    </th>
+                                    <th style="width: 20%">
+                                        Hành động
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var itemPersion in Model.ListPersionManageRealTalk)
+                                {
+                                    if (itemPersion.IdField == Field.IdFieldRealTalk)
+                                    {
+                                        <tr class="col-tr-post">
+                                            <td>
+                                                @itemPersion.FullNameManage
+                                            </td>
+                                            <td>
+                                                @itemPersion.EmailManage
+                                            </td>
+                                            <td>
+                                                @itemPersion.Department
+                                            </td>
+                                            <td>
+                                                <div onclick="DeletePersion(@itemPersion.id)" style="margin-left: 20px">
+                                                    <img style="width: 36px" src="~/Areas/Admin/assets_admin/assets/img/delete.png" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@* spinner *@
+<div style="z-index: 9999999" class="spinner">
+    <div class="spinner-border text-danger center-div" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<!-- Modal -->
+<div style="z-index: 9999999" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body contenModels">
+                Xét duyệt ý tưởng thành công!
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+
+        function DeletePersion(id) {
+            if (confirm("Bạn có muốn xoá người này ra khỏi danh sách người xử lý?")) {
+                $('.spinner').css('display', 'block');
+                $.ajax({
+                    url: "/ManageTalkReal/DeletePersion",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: `{"idpersiondelete": "${id}"}`,
+                    success: function (data) {
+                        $('.spinner').css('display', 'none');
+                        if (data) {
+                            $('.contenModels').text("Xoá người xử lý thành công")
+                            $('#exampleModalCenter').modal('show');
+                        } else {
+                            $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                            $('#exampleModalCenter').modal('show');
+                        }
+                    }
+                })
+            } else {
+                return false;
+            }
+        }
+
+        $("#exampleModalCenter").on('hidden.bs.modal', function () {
+            location.reload()
+        });
+        function callAjaxAutocompelete(id) {
+            $(`#${id}`).autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/ThanksCard/autocompeleteMail",
+                        type: "POST",
+                        dataType: "json",
+                        data: { value: $(`#${id}`).val() },
+                        success: function (data) {
+                            response($.map(data, function (item, index) {
+                                if (index < 6) {
+                                    return { label: item.Email, value: item.Email };
+                                }
+                            }))
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        }
+
+        function autoFindNameWhenOnBlur(idName, idemail) {
+            var ListDepartments = @Html.Raw(Json.Encode(Model.ListDepartment));
+            $(`#${idemail}`).blur(function () {
+                const email = $(`#${idemail}`).val()
+                const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+                if (regex.test(email)) {
+                    $.ajax({
+                        url: "/ThanksCard/findName",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: `{"e": "${email}"}`,
+                        success: function (data) {
+                            $(`#${idName}`).val(data.Name);
+                            if (idemail == "emailPersion") {
+                                let idDepaerment
+                                ListDepartments.map(item => {
+                                    if (item.NameDepartment == data.Department) {
+                                        idDepaerment = item.Id
+                                    }
+                                })
+                                $("#department").val(idDepaerment);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            callAjaxAutocompelete("emailPersion")
+            autoFindNameWhenOnBlur("namePersion", "emailPersion")
+        })
+
+        function validateInput() {
+            var mailPersion = document.getElementById("emailPersion").value;
+            var namePersion = document.getElementById("namePersion").value
+
+            const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+
+            if (mailPersion == "") {
+                $("#notyfiText").html("Vui lòng nhập email Viettel")
+                $("#notyfiText").css("display", "block")
+                return false
+            }
+            if (!regex.test(mailPersion)) {
+                $('#notyfiText').html("Vui lòng nhập đúng định dạng email Viettel (vd: nguoixuly@viettel.com.vn)")
+                $('#notyfiText').css("display", "block");
+                return false
+            }
+            if (namePersion == "") {
+                $("#notyfiText").html("Vui lòng nhập Họ Và Tên")
+                $("#notyfiText").css("display", "block")
+                return false;
+            }
+            $('.spinner').css('display', 'block');
+            return true
+        }
+    </script>
+}

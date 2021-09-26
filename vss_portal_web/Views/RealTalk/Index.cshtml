@@ -4,9 +4,278 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model vss_portal_web.Models.ModelController
+
+@if (ViewData["oke"] == "ok")
+{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            $('#exampleModalCenter').modal('show');
+        };
+
+    </script>
+}
+@if (ViewData["oke"] == "false")
+{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            $('#contenPopUp').text("Có lỗi xảy ra trong qua trình xử lý, vui lòng thử lại sau ít phút!")
+            $('#popupCheckRegex').modal('show');
+        };
+
+    </script>
+}
+
+<style>
+    .titleCategory {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 20px;
+        margin: 0;
+        color: #fff
+    }
+    .fontweight {
+        font-weight: bold;
+        font-size: 14px
+    }
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="conten_popup" class="modal-body">
+                Cảm ơn bạn đã gửi email Nói thật đê!
+            </div>
+            <div class="modal-footer">
+                <button id="btn" type="button" data-dismiss="modal" class="btn btn-primary">Tiếp tục gửi</button>
+                <a href="@Url.Action("Index","Home")"><button type="button" class="btn btn-danger">Trang chủ</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <main id="main">
-    <div style="min-height: 53vh; display:flex; justify-content:center; align-items:center" class="container">
-        <h1>Tính năng đang được phát triển</h1>
+    <div class="container">
+        <div style="width: 100%; margin: 20px 0; padding: 10px 0">
+            <h4 style="text-align: center; margin: 0; color: #dc3545; font-weight:bold; margin-bottom: 15px">VSS TRUTH</h4>
+            <h6 style="text-align: center; margin: 0; color: black;"><i>"NÓI THẬT ĐÊÊÊÊÊÊ"</i></h6>
+        </div>
+        <div class="mt-3" style="margin-bottom: 100px">
+            <form method="post" onsubmit="return validate()">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, null, new { @style = "color: red" })
+                @* người gửi *@
+                <div style="margin: 20px 0 20px 0; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="col-md-3 col-sm-6 col-8" style="margin-top: 20px; height: 30px; background-color: #dc0c2c; position: relative; display: flex; align-items: center; justify-content: center; ">
+                        <p class="titleCategory">Người gửi</p>
+                        <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
+                    </div>
+                </div>
+                <div class="mt-3" style="margin-bottom: 20px">
+                    @* thông tin người gửi *@
+                    <div id="boxInfoUser" class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label class="fontweight" for="myPassword">Mail Viettel <strong style="color:red">*</strong></label>
+                            <input style="position: relative; padding:25px 35px;" type="text" class="form-control"
+                                   id="senderMail" placeholder="Email Viettel" name="MailSender">
+                            <i style="position: absolute; top: 50px; left: 17px;" class="icofont-mail"></i>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="fontweight" for="myEmail">Họ Tên <strong style="color:red">*</strong></label>
+                            <input style="position: relative; padding: 25px 35px;" type="text" class="form-control"
+                                   id="senderName" name="NameSender" placeholder="Cho chúng tôi biết tên của bạn...">
+                            <i style="position: absolute; top: 50px; left: 17px;" class="icofont-pen-alt-4"></i>
+                        </div>
+                    </div>
+                </div>
+                @* người nhận *@
+                <div class="form-row">
+                    <div style="margin-bottom: 20px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="col-md-3 col-sm-6 col-8" style="margin-top: 20px; height: 30px; background-color: #dc0c2c; position: relative; display: flex; align-items: center; justify-content: center; ">
+                            <p class="titleCategory">Lời nói thật</p>
+                            <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="fontweight" for="myPassword">Lời nói thật<strong style="color:red">*</strong></label>
+                        <input style="position: relative; padding:25px 35px;" type="text" class="form-control"
+                               id="titleRealTalk" placeholder="Lời nói thật" name="TitleRealTalk">
+                        <i style="position: absolute; top: 50px; left: 17px;" class="icofont-pen-alt-4"></i>
+                    </div>
+                    @* chủ đề *@
+                    <div id="FieldRealTalk" class="form-group col-sm-6">
+                        <label class="fontweight" for="myEmail">Lĩnh vực <strong style="color:red">*</strong></label>
+                        <select name="Field" style="height: 52px" id="myState" class="form-control">
+                            @foreach (var item in Model.ListFieldRealTalk)
+                            {
+                                <option value=@item.Id>@item.NameFieldRealTalk</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="fontweight" for="inputAddress2">Thực trạng<strong style="color:red">*</strong></label>
+                    <textarea name="Reality" class="form-control" rows="12" cols="60"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="fontweight" for="inputAddress2">Đề xuất<strong style="color:red">*</strong></label>
+                    <textarea name="Suggestion" class="form-control" rows="12" cols="60"></textarea>
+                </div>
+                <button style="padding: 15px" type="submit" class="btn btn-danger">Gửi yêu cầu</button>
+                @* spinner *@
+                <div class="spinner">
+                    <div class="spinner-border text-danger center-div" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </main>
 
+<!-- Modal check -->
+<div class="modal fade" id="popupCheckRegex" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="contenPopUp" class="modal-body">
+                Vui lòng điền thông tin email Viettel
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('Reality')
+
+        CKEDITOR.replace('Suggestion')
+
+        function validate() {
+            var senderMail = document.getElementById("senderMail").value;
+            var senderName = document.getElementById("senderName").value;
+            var titleRealTalk = document.getElementById("titleRealTalk").value;
+            var ContentReality = CKEDITOR.instances.Reality.getData();
+            var Contentsuggestion = CKEDITOR.instances.Suggestion.getData();
+
+            const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+
+            $('.spinner').css('display', 'none');
+
+            //if (!regex.test(senderMail)) {
+            //    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoigui@viettel.com.vn)")
+            //    $('#popupCheckRegex').modal('show');
+            //    return false
+            //}
+            if (senderName == '') {
+                $('#contenPopUp').text("Vui lòng nhập tên người gửi")
+                $('#popupCheckRegex').modal('show');
+                return false
+            }
+
+            if (titleRealTalk == '') {
+                $('#contenPopUp').text("Vui lòng nhập tiêu đề")
+                $('#popupCheckRegex').modal('show');
+                return false
+            }
+            if (ContentReality == '') {
+                $('#contenPopUp').text("Vui lòng nhập thực trạng Nói thật đê ")
+                $('#popupCheckRegex').modal('show');
+                return false
+            }
+            if (Contentsuggestion == '') {
+                $('#contenPopUp').text("Vui lòng nhập ý kiến đề xuất Nói thật đê")
+                $('#popupCheckRegex').modal('show');
+                return false
+            }
+
+            $('.spinner').css('display', 'block');
+            return true
+        }
+
+        function autocompleteEmail(idCompelete) {
+            $(`#${idCompelete}`).autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/RealTalk/autocompeleteMail",
+                        type: "POST",
+                        dataType: "json",
+                        data: { value: $(`#${idCompelete}`).val() },
+                        success: function (data) {
+                            response($.map(data, function (item, index) {
+                                if (index < 6) {
+                                    return { label: item.Email, value: item.Email };
+                                }
+                            }))
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        }
+
+        function onBlurAutoCompelete(idCompelete, idEmail) {
+            var ListDepartments = @Html.Raw(Json.Encode(Model.ListDepartments));
+            $(`#${idEmail}`).blur(function () {
+                const email = $(`#${idEmail}`).val()
+                const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+                if (regex.test(email)) {
+                    $.ajax({
+                        url: "/RealTalk/findName",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: `{"e": "${email}"}`,
+                        success: function (data) {
+                            $(`#${idCompelete}`).val(data.Name);
+                            if (idEmail == "receiverMail") {
+                                let idDepaerment
+                                ListDepartments.map(item => {
+                                    if (item.NameDepartment == data.Department) {
+                                        idDepaerment = item.Id
+                                    }
+                                })
+                                $("#myState").val(idDepaerment);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        $(document).ready(function () {
+
+            autocompleteEmail("senderMail")
+
+            onBlurAutoCompelete("senderName", "senderMail")
+
+            $('#btnSubmit').click(function () {
+                $('.spinner').css('display', 'block');
+            });
+
+
+        })
+    </script>
+}

@@ -1,0 +1,825 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model vss_portal_web.Models.ModelController
+
+<style>
+    .textTitle1 {
+        text-align: center;
+        margin: 0;
+        color: #dc3545;
+        font-weight: bold;
+        margin-bottom: 15px
+    }
+
+    .soluction {
+        text-align: center
+    }
+
+    .mainStep {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0px 0px 20px #00000020;
+        background-color: #FFFFFF;
+        overflow: hidden;
+        margin-bottom: 100px;
+        margin-top: 50px
+    }
+
+    .stepStart {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 45px 0;
+    }
+
+    .textTitle {
+        font-weight: bold;
+        font-size: 32px;
+    }
+
+    .text_chid {
+        font-size: 22px;
+        text-align: center
+    }
+
+    .text_chid2 {
+        font-size: 22px;
+        color: #707070
+    }
+
+    .btn_idea {
+        padding: 10px 58px;
+        color: #fff;
+        font-size: 22px;
+        font-weight: bold;
+        background-color: #EE0033;
+        margin-top: 70px;
+        border-radius: 10px
+    }
+
+    .step1 {
+        padding: 50px 75px;
+        position: relative;
+        min-height: 492px;
+        display: none
+    }
+
+    .area_prev_next {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-image: linear-gradient(to right, #EE0033, #FF5E00);
+        height: 77px;
+        padding: 0 40px;
+        align-items: center
+    }
+
+    .btn_next,
+    .btn_prev {
+        cursor: pointer;
+        display: flex;
+    }
+
+    .checkBox {
+        border-radius: 10px;
+        height: 60px;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        margin-bottom: 10px
+    }
+
+    .checkBoxChid {
+        padding: 8px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        margin-right: 15px
+    }
+
+    .step {
+        display: none;
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+        .step.active {
+            display: block
+        }
+
+    .prverStyle {
+        margin-left: 20px;
+        color: #fff;
+        font-size: 16px
+    }
+
+    .nextStyle {
+        margin-right: 20px;
+        color: #fff;
+        font-size: 16px
+    }
+
+    .mar_bottom {
+        margin-bottom: 30px
+    }
+
+    .process {
+        width: 100%;
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin: 0 120px 0 80px;
+    }
+
+    .process_line {
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        background-color: #FF6C00
+    }
+
+    .dotProcess {
+        display: flex;
+        flex: 1;
+        position: relative
+    }
+
+    .dotItemPro {
+        width: 40px;
+        height: 40px;
+        background-color: #fff;
+        border-radius: 20px;
+        position: relative;
+        z-index: 150;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #ccc;
+        display: flex;
+        cursor: pointer
+    }
+
+        .dotItemPro.active {
+            background-color: #0EB100;
+            color: #fff
+        }
+
+        .dotItemPro.displayNone {
+            pointer-events: none;
+            cursor: default;
+        }
+
+    .process_active {
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        background-color: #707070;
+        display: block;
+        top: 19px;
+        z-index: 100;
+    }
+
+        .process_active.active {
+            background-color: #0EB100
+        }
+
+    .textDotStep {
+        color: #707070;
+        font-size: 10px;
+        text-align: center;
+        position: absolute;
+        bottom: -39px;
+        left: -44px;
+        max-width: 133px;
+    }
+
+    .imgChecked.hidden {
+        display: none
+    }
+
+    .numberStep.blocks {
+        display: none
+    }
+    .fontweight{
+        font-weight: bold
+    }
+</style>
+
+@if (ViewBag.successInitative == "FALSE")
+{
+    <script type="text/javascript">
+
+        window.onload = function () {
+            $('#contenModel').text("Có lỗi trong quá trình xử lý, vui lòng thử lại sau ít phút!")
+            $('#exampleModalCenter').modal('show');
+        };
+    </script>
+}
+
+<main id="main">
+    <div class="container">
+        <div class="titlePage">
+            <h4 class="textTitle1">ĐĂNG KÝ SÁNG KIẾN</h4>
+            <h6 class="soluction"><i>"INITATIVE - THEO MỌI CÁCH, CHO MỌI NGƯỜI"</i></h6>
+        </div>
+        <form method="post" onsubmit="return validateForm()" enctype="multipart/form-data" style="margin-top: 43px">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, null, new { @style = "color: red" })
+
+            <div style="height: 80px; width: 100%; display: flex; align-items: center; justify-content:center">
+                <div id="process" class="process">
+                    <div class="dotProcess">
+
+                        <div class="dotItemPro active displayNone" style="visibility:hidden; display: none"></div>
+                        <div class="numberStep" style="visibility:hidden; display: none">1</div>
+                        <img class="imgChecked hidden" style="visibility:hidden; display: none" src="~/assets/img/checkmark.png" />
+                        <div class="process_active active" style="visibility:hidden; display: none"></div>
+                        <div class="process_active active" style="visibility:hidden; display: none"></div>
+
+                        <div class="dotItemPro active" data-electronic="step_01">
+                            <div class="numberStep ">1</div>
+                            <img class="imgChecked hidden" src="~/assets/img/checkmark.png" />
+                        </div>
+                        <div class="textDotStep">Sáng kiến này của Cá nhân <br /> hay Tập thể </div>
+                        <div class="process_active"></div>
+                    </div>
+                    <div class="dotProcess">
+                        <div class="dotItemPro displayNone" data-electronic="step_02">
+                            <div class="numberStep ">2</div>
+                            <img class="imgChecked hidden" src="~/assets/img/checkmark.png" />
+                        </div>
+                        <div class="textDotStep">Lĩnh vực và đơn vị áp dụng sáng kiến</div>
+                        <div class="process_active"></div>
+                    </div>
+                    <div class="dotProcess">
+                        <div class="textDotStep">Tên sáng kiến và Tình trạng hiện tại </div>
+                        <div class="dotItemPro displayNone" data-electronic="step_03">
+                            <div class="numberStep ">3</div>
+                            <img class="imgChecked hidden" src="~/assets/img/checkmark.png" />
+                        </div>
+                        <div class="process_active"></div>
+                    </div>
+                    <div class="dotProcess">
+                        <div class="textDotStep">Điểm mới và nội dung sáng kiến</div>
+                        <div class="dotItemPro displayNone" data-electronic="step_04">
+                            <div class="numberStep ">4</div>
+                            <img class="imgChecked hidden" src="~/assets/img/checkmark.png" />
+                        </div>
+                        <div class="process_active"></div>
+                    </div>
+                    <div class="dotProcess" style="justify-content:space-between">
+                        <div class="textDotStep">Hiệu quả và khả năng áp dụng</div>
+                        <div class="dotItemPro displayNone" data-electronic="step_05">
+                            <div class="numberStep ">5</div>
+                            <img class="imgChecked hidden" src="~/assets/img/checkmark.png" />
+                        </div>
+                        <div class="dotItemPro" data-electronic="step_06" style="margin-right: -40px">
+                            <div class="numberStep ">6</div>
+                            <img class="imgChecked hidden" src="~/assets/img/checkmark.png" />
+                        </div>
+                        <div class="process_active"></div>
+                    </div>
+                    <div style="color: #707070; font-size: 10px; text-align: center; position: absolute; bottom: -39px; right: -57px;">Tải lên tập tin và <br />chi tiết thêm</div>
+                    <div class="process_line"></div>
+                </div>
+            </div>
+            @* steps *@
+            <div class="mainStep">
+                <div class="step active">
+                    <div class="stepStart">
+                        <img src="~/assets/img/idea_img.png" />
+                        <div class="textTitle">Đăng ký sáng kiến của bạn</div>
+                        <div class="text_chid">Bạn có thể giúp chúng tôi cải thiện lợi ích của công ty không?</div>
+                        <div class="btn_idea btn_next">Hãy bắt đầu nào</div>
+                    </div>
+                </div>
+                <div class="step1">
+                    <div id="step_01" class="step">
+                        <div style="margin-bottom: 70px" class="textTitle">1: Sáng kiến này của Cá nhân hay Tập thể ?</div>
+                        <div class="checkBox">
+                            <div class="checkBoxChid">
+                                <input onclick="ideaIndividual(checked)"
+                                       id="onlyRegester"
+                                       checked
+                                       style="width: 32px; height: 32px"
+                                       type="checkbox"
+                                       value="true"
+                                       class="slectOne"
+                                       name="individualClick" />
+                            </div>
+                            <div style=" font-size: 19px;">
+                                Cá nhân
+                            </div>
+                        </div>
+                        <div class="checkBox">
+                            <div class="checkBoxChid">
+                                <input onclick="collective(checked)"
+                                       id="collectiveChecked"
+                                       style="width: 32px;
+                                       height: 32px"
+                                       type="checkbox"
+                                       value="true"
+                                       class="slectOne"
+                                       name="collectiveClick" />
+                            </div>
+                            <div style=" font-size: 19px;">
+                                Tập thể
+                            </div>
+                        </div>
+                        <div id="emailMorePersion" class="disPlayNone" style="position:relative">
+                            <div style="display:flex; align-items:center; padding: 0 10px; margin-bottom: 20px">
+                                <div style="flex: 1; display:flex">
+                                    <div style="display: flex; align-items:center">
+                                        <input onclick="MuchPersionClick(checked)"
+                                               id="onlyMuchPersion"
+                                               style="width: 20px;
+                                               height: 20px"
+                                               type="checkbox"
+                                               value="true"
+                                               checked
+                                               class="selectDetail" />
+                                    </div>
+                                    <div style=" font-size: 19px; margin-left: 15px;">
+                                        Sáng kiến của nhiều cá nhân
+                                    </div>
+                                </div>
+                                <div style="flex: 1; display:flex">
+                                    <div style="display: flex; align-items:center">
+                                        <input onclick="DepartmentClick(checked)" 
+                                               id="departmentInitative"
+                                               style="width: 20px;
+                                                height: 20px"
+                                               type="checkbox"
+                                               value="true"
+                                               class="selectDetail" 
+                                               name="InitativeDepartment"/>
+                                    </div>
+                                    <div style=" font-size: 19px; margin-left: 15px;">
+                                        Sáng kiến của một phòng ban
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="inputMuchEmail" class="">
+                                <label class="fontweight">Email Viettel của từng cá nhân đóng góp sáng kiến (tab hoặc enter để hoàn thành thêm mới) <strong style="color:red">*</strong></label>
+                                <div style="position: relative; ">
+                                    <input style="padding:25px 35px;"
+                                           type="text"
+                                           class="form-control mailReceiver"
+                                           id="Mailindividual"
+                                           placeholder="Email"
+                                           name="MailOfEach">
+                                    <i class="icofont-pen-alt-4" style="position: absolute; top: 18px; left: 12px;"></i>
+                                </div>
+                            </div>
+                            <div id="selectPersionInDepartment" class="disPlayNone">
+                                <label class="fontweight">Chọn phòng ban <strong style="color:red">*</strong></label>
+                                <select name="InitativeOfDepartment" style="height: 52px" class="form-control">
+                                    @foreach (var item in Model.ListDepartments)
+                                    {
+                                        <option value="@item.Id">@item.NameDepartment</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="step_02" class="step">
+                        <div class="textTitle">2: Đơn vị áp dụng và lĩnh vực</div>
+                        <div style="padding: 0; margin-top: 30px" class="form-group col-sm-12">
+                            <label class="fontweight"> Lĩnh vực  <strong style="color:red">*</strong></label>
+                            <select name="IdField" style="height: 52px" class="form-control">
+                                @foreach (var item in Model.FieldIdea)
+                                {
+                                    <option value="@item.IdField">@item.NameField</option>
+                                }
+                            </select>
+                        </div>
+                        <div style="padding: 0; margin-top: 30px" class="form-group col-sm-12">
+                            <label class="fontweight">Đơn vị áp dụng <strong style="color:red">*</strong></label>
+                            <select name="IdUnitApply" style="height: 52px" class="form-control">
+                                @foreach (var item in Model.UnitApplyModel)
+                                {
+                                    <option value="@item.IdUnitApply">@item.NameUnitApply</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    @* tên sáng kiến và tình trạng hiện tại *@
+                    <div id="step_03" class="step">
+                        <div class="textTitle">3: Tên sáng kiến và Tình trạng hiện tại</div>
+                        <label style="margin-top:30px" class="fontweight">Tên sáng kiến <strong style="color:red">*</strong></label>
+                        <textarea name="NameInitative" id="nameInitative" class="form-control" rows="3" placeholder="Tên sáng kiến"></textarea>
+                        <label style="margin-top:30px" class="fontweight">Tình trạng hiện tại trước khi áp dụng sáng kiến<strong style="color:red">*</strong></label>
+                        <textarea id="statusInitative" name="TechnicalCondition" class="form-control" rows="3" placeholder="Tình trạng hiện tại"></textarea>
+                    </div>
+                    @* Điểm mới và nội dung sáng kiến *@
+                    <div id="step_04" class="step">
+                        <div class="textTitle">4: Điểm mới và nội dung sáng kiến</div>
+                        <label style="margin-top:30px" class="fontweight">Điểm mới sáng kiến <strong style="color:red">*</strong></label>
+                        <textarea id="NewPoint" name="NewPoint" class="form-control" rows="2" placeholder="Điểm mới sáng kiến"></textarea>
+                        <label style="margin-top:30px" class="fontweight">Nội dung sáng kiến <strong style="color:red">*</strong></label>
+                        <textarea id="contenInitative" name="ContentInitative" class="form-control" rows="4" placeholder="Nội dung sáng kiến"></textarea>
+                    </div>
+                    @* Hiệu quả và khả năng áp dụng *@
+                    <div id="step_05" class="step">
+                        <div class="textTitle">4: Hiệu quả và khả năng áp dụng</div>
+                        <label style="margin-top:30px" class="fontweight">Hiệu quả <strong style="color:red">*</strong></label>
+                        <textarea id="EffectiveApply" name="EffectiveApply" class="form-control" rows="2" placeholder="Hiệu quả"></textarea>
+                        <label style="margin-top:30px" class="fontweight">Khả năng áp dụng <strong style="color:red">*</strong></label>
+                        <textarea id="Applicability" name="Applicability" class="form-control" rows="4" placeholder="Khả năng áp dụng"></textarea>
+                    </div>
+                    @* Tải lên tập tin và chi tiết thêm *@
+                    <div id="step_06" class="step">
+                        <div class="textTitle">5: Tải lên tập tin và chi tiết thêm</div>
+                        <label style="margin-top:30px" class="fontweight">Tài liệu kèm theo (Nếu có)</label>
+                        <div style="width: 100%; height: 58px; border: 1px solid #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px;">
+                            <div id="display-img" style="color: #707070; font-size: 16px">
+                                Tải lên tập tin định dạng doc, docx, img
+                            </div>
+                            <label for="chooseFile" style="border-left: 2px solid #ccc; margin-right: 10px; padding-left: 20px; cursor:pointer">
+                                <img src="~/assets/img/upload_file.png" />
+                            </label>
+                        </div>
+                        <input onchange="getImg(this.value);" style="visibility:hidden" id="chooseFile" name="fileUpload" type="file" accept=".jpg,.png,.jpeg, gif, .doc, .docx" />
+                        <br />
+                        <label style="margin-top:25px" class="fontweight">Nội dung bổ sung</label>
+                        <textarea name="DetailMore" class="form-control" rows="4" placeholder="Nội dung bổ sung"></textarea>
+                    </div>
+                    <div class="area_prev_next">
+                        <div class="btn_prev">
+                            <img src="~/assets/img/arrow-left.png" />
+                            <div style="margin-left: 20px; color: #fff; font-size: 16px">Trở lại</div>
+                        </div>
+                        <div class="btn_next">
+                            <div id="nextStep" class="nextStyle">Tiếp theo</div>
+                            <img id="imgNext" src="~/assets/img/arrow-right.png" />
+                        </div>
+                        <input id="btn_submit" onclick="onChangeAndCheckSize()" class="btn btn-danger" style="display:none" type="submit" value="Đăng ký sáng kiến" />
+                    </div>
+                </div>
+                <div id="step_07" class="step">
+
+                </div>
+            </div>
+
+            @* spinner *@
+            <div class="spinner">
+                <div class="spinner-border text-danger center-div" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <!-- Modal check -->
+            <div class="modal fade" id="popupCheckRegex" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="contenPopUp" class="modal-body">
+                            Vui lòng tên ý tưởng
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn btn-primary">Đồng ý</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal success -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="contenModel" class="modal-body">
+                            Cảm ơn bạn đã đóng góp ý tưởng
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn btn-primary">Tiếp tục đóng góp ý tưởng</button>
+                            <a href="@Url.Action("Index","Home")"><button type="button" class="btn btn-danger">Trang chủ</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+@section scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+
+        const steps = Array.from(document.querySelectorAll('form .step'));
+        const btnSteps = Array.from(document.querySelectorAll('.dotItemPro'));
+        const process_active = Array.from(document.querySelectorAll('.process_active'));
+
+        const numberStep = Array.from(document.querySelectorAll('.numberStep'));
+        const imgChecked = Array.from(document.querySelectorAll('.imgChecked'));
+
+        const nextbtn = document.querySelectorAll("form .btn_next");
+        const prevbtn = document.querySelectorAll("form .btn_prev");
+
+        nextbtn.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                changeStep('next')
+            })
+        })
+
+        prevbtn.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                changeStep('prev')
+            })
+        })
+
+        function changeStep(btn) {
+            let index = 0;
+
+            const active = document.querySelector('form .step.active');
+            index = steps.indexOf(active);
+
+            if (btn == 'next') {
+                index++
+            }
+
+            if (btn == 'prev') {
+                index--
+            }
+
+            let idStep = steps[index].id
+            var MailSendMore = document.getElementById("Mailindividual").value;
+            var arrMailSendMore = document.getElementById("Mailindividual").value.trim().split(',');
+            var checkBoxSendMorePersion = document.getElementById("collectiveChecked").checked;
+            var departmentInitativeChecked = document.getElementById("departmentInitative").checked;
+            if (idStep == 'step_02') {
+                const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+                if (MailSendMore == "" && checkBoxSendMorePersion == true && departmentInitativeChecked == false) {
+                    $('#contenPopUp').text("Vui lòng nhập email Viettel của từng cá nhân")
+                    $('#popupCheckRegex').modal('show');
+                    return
+                }
+                if (checkBoxSendMorePersion == true && departmentInitativeChecked == false) {
+                    for (var i = 0; i < arrMailSendMore.length; i++) {
+                        if (!regex.test(arrMailSendMore[i].trim())) {
+                            $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@Viettel.com.vn)")
+                            $('#popupCheckRegex').modal('show');
+                            return
+                        }
+                    }
+                }
+            }
+
+            var nameInitative = document.getElementById("nameInitative").value;
+            var statusInitative = document.getElementById("statusInitative").value;
+            if (idStep == 'step_04' && nameInitative == "") {
+                $('#contenPopUp').text("Vui lòng điền tên sáng kiến")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+            if (idStep == 'step_04' && statusInitative == "") {
+                $('#contenPopUp').text("Vui lòng cho biết tình trạng hiện tại khi chưa áp dụng sáng kiến")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+            var NewPoint = document.getElementById("NewPoint").value;
+            var contenInitative = document.getElementById("contenInitative").value;
+            if (idStep == 'step_05' && NewPoint == "") {
+                $('#contenPopUp').text("Vui lòng cho biết điểm mới của sáng kiến")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+            if (idStep == 'step_05' && contenInitative == "") {
+                $('#contenPopUp').text("Vui lòng cho biết nội dung sáng kiến")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+            var EffectiveApply = document.getElementById("EffectiveApply").value;
+            var Applicability = document.getElementById("Applicability").value;
+            if (idStep == 'step_06' && EffectiveApply == "") {
+                $('#contenPopUp').text("Vui lòng cho biết hiệu quả của sáng kiến")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+            if (idStep == 'step_06' && Applicability == "") {
+                $('#contenPopUp').text("Vui lòng cho biết khả năng áp dụng của sáng kiến")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+
+            if (idStep == 'step_06') {
+                $(".btn_next").css("display", "none")
+                $("#btn_submit").css("display", "block")
+            } else {
+                $(".btn_next").css("display", "flex")
+                $("#btn_submit").css("display", "none")
+            }
+            if (idStep == 'step_07') {
+                //check data file tari len
+            }
+
+            steps[steps.indexOf(active)].classList.remove('active');
+
+
+            if (index == 0 || index == 7) {
+                $('.step1').css('display', 'none');
+                $('#process').css('display', 'none');
+            } else {
+                $('.step1').css('display', 'flex');
+                $('#process').css('display', 'flex');
+            }
+            steps[index].classList.add('active')
+            // check value step
+
+            for (var i = index; i < btnSteps.length; i++) {
+                btnSteps[i].classList.remove('active')
+                process_active[i].classList.remove('active')
+                btnSteps[i].classList.add('displayNone')
+                numberStep[i - 1].classList.remove('blocks');
+                imgChecked[i - 1].classList.add('hidden')
+            }
+            if (index < btnSteps.length) {
+                btnSteps[index].classList.add('active')
+                btnSteps[index].classList.remove('displayNone')
+                numberStep[index - 1].classList.add('blocks');
+                imgChecked[index - 1].classList.remove('hidden')
+            }
+            if (index < process_active.length) {
+                process_active[index].classList.add('active')
+            }
+        }
+
+        //step click
+
+        const dotProces = document.querySelectorAll(".dotItemPro");
+        const steps2 = document.querySelectorAll(".step")
+        dotProces.forEach(e => {
+            e.addEventListener('click', opentabRegester)
+        })
+
+        function opentabRegester(el) {
+            let btn = el.currentTarget;
+            var electronic = btn.dataset.electronic;
+            steps2.forEach(function (el) {
+                el.classList.remove('active')
+            })
+
+            if (electronic == "step_06") {
+                $(".btn_next").css("display", "none")
+                $("#btn_submit").css("display", "block")
+            } else {
+                $(".btn_next").css("display", "flex")
+                $("#btn_submit").css("display", "none")
+            }
+
+            document.querySelector("#" + electronic).classList.add("active");
+        }
+
+        function onChangeAndCheckSize() {
+            var sizefile = null;
+            $('#chooseFile').bind('change', function () {
+                sizefile = this.files[0].size;
+            });
+            if (sizefile > 26214400) {
+                $('#contenPopUp').text("Dung lượng file tải lên không được quá 25Mb")
+                $('#popupCheckRegex').modal('show');
+                return
+            }
+            $('.spinner').css('display', 'block');
+        }
+
+        $(document).ready(function () {
+            $('.slectOne').on('change', function () {
+                $('.slectOne').not(this).prop('checked', false);
+                if ($(this).is(":checked")) { }
+                else
+                    $('#onlyRegester').prop('checked', true);
+            });
+            $('.selectDetail').on('change', function () {
+                $('.selectDetail').not(this).prop('checked', false);
+                if ($(this).is(":checked")) { }
+                else
+                    $('#onlyMuchPersion').prop('checked', true);
+            });
+        });
+
+        ///////////
+
+
+        $('#chooseFile').bind('change', function () {
+            var _size = this.files[0].size;
+            var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
+                i = 0; while (_size > 900) { _size /= 1024; i++; }
+            var exactSize = (Math.round(_size * 100) / 100) + ' ' + fSExt[i];
+            $('#size-img').html(exactSize);
+        });
+
+        function getImg(nameimg) {
+            var img = nameimg.replace(/^.*\\/, "");
+            $('#display-img').html(img);
+        }
+
+        function deleteFile() {
+            $('#display-img').html("");
+            document.getElementById("chooseFile").value = ""
+        }
+        function autocompeleteMail(id) {
+            $(`#${id}`).autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Idea/autocompeleteMail",
+                        type: "POST",
+                        dataType: "json",
+                        data: { value: $(`#${id}`).val() },
+                        success: function (data) {
+                            response($.map(data, function (item, index) {
+                                if (index < 6) {
+                                    return { label: item.Email, value: item.Email };
+                                }
+                            }))
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            autocompeleteMail("Mailindividual-tokenfield")
+
+        });
+
+        //tokenfield
+
+        $('#Mailindividual').on('tokenfield:createdtoken', function (e) {
+            const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+            var valid = regex.test(e.attrs.value)
+            if (!valid) {
+                $(e.relatedTarget).addClass('invalid')
+            }
+        })
+
+        $('#Mailindividual').tokenfield()
+
+        $('.mailReceiver').on('tokenfield:createtoken', function (event) {
+            var tokens = $(this).tokenfield('getTokens');
+            $.each(tokens, function (index, token) {
+                if (token.value === event.attrs.value)
+                    event.preventDefault();
+            });
+        });
+
+        // end tokenfield
+
+        // show input email ideaIndividual
+        function ideaIndividual(value) {
+            if (value == true) {
+                document.getElementById("emailMorePersion").classList.add("disPlayNone")
+            }
+        }
+
+        function collective(value) {
+            if (value == true) {
+                document.getElementById("emailMorePersion").classList.remove("disPlayNone")
+            } else {
+                document.getElementById("emailMorePersion").classList.add("disPlayNone")
+            }
+        }
+
+        function MuchPersionClick(value) {
+            if (value == true) {
+                document.getElementById("selectPersionInDepartment").classList.add("disPlayNone")
+                document.getElementById("inputMuchEmail").classList.remove("disPlayNone")
+            }
+        }
+
+        function DepartmentClick(value) {
+            if (value == true) {
+                document.getElementById("selectPersionInDepartment").classList.remove("disPlayNone")
+                document.getElementById("inputMuchEmail").classList.add("disPlayNone")
+            } else {
+                document.getElementById("selectPersionInDepartment").classList.add("disPlayNone")
+                document.getElementById("inputMuchEmail").classList.remove("disPlayNone")
+            }
+        }
+
+    </script>
+}
+

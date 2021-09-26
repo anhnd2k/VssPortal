@@ -31,24 +31,24 @@ namespace vss_portal_web.Controllers
             return View(postDetail);
         }
 
-        public ActionResult OnboadingPost(int id)
-        {
-            string UserName = "";
-            string cookieName = FormsAuthentication.FormsCookieName;
-            if (HttpContext.Request.Cookies[cookieName] != null)
-            {
-                HttpCookie authCookie = HttpContext.Request.Cookies[cookieName];
-                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                UserName = ticket.Name;
+        //public ActionResult OnboadingPost(int id)
+        //{
+        //    string UserName = "";
+        //    string cookieName = FormsAuthentication.FormsCookieName;
+        //    if (HttpContext.Request.Cookies[cookieName] != null)
+        //    {
+        //        HttpCookie authCookie = HttpContext.Request.Cookies[cookieName];
+        //        FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
+        //        UserName = ticket.Name;
 
-            }
+        //    }
 
-            ViewData["UserName"] = UserName;
+        //    ViewData["UserName"] = UserName;
 
-            var action = new ActionPost();
-            var OnboadingDeatail = action.DetailOnBoadingPost(id);
+        //    var action = new ActionPost();
+        //    var OnboadingDeatail = action.DetailOnBoadingPost(id);
 
-            return View(OnboadingDeatail);
-        }
+        //    return View(OnboadingDeatail);
+        //}
     }
 }

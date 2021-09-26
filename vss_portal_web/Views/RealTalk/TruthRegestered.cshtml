@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "TruthRegestered";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<DBConect.model.GetListRealTalk>
+
+<style>
+    .pagination-container .pagination li.active {
+        background-color: #ccc
+    }
+
+    .disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.4;
+    }
+
+    .imgRedirect {
+        margin-right: 10px
+    }
+    .table td.name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 300px;
+        height: 1.2em;
+        white-space: nowrap;
+    }
+    .nocontent {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #ccc;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background-image: linear-gradient(to right, #f56383, #ff7524);
+        max-width: max-content;
+        margin: 69px auto 0 auto;
+    }
+    .btn_createTruth {
+        width: max-content;
+        margin: 28px auto 0 auto;
+        background-color: #ec0b2d;
+        border-radius: 10px;
+        height: 43px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<main style="min-height: 68vh" id="main">
+    <div class="container">
+        <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px; margin-top: 30px">
+            <a href="@Url.Action("Index", "Home")" class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_home.png" />
+            </a>
+            <div class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+            </div>
+            <div style="color: black; font-size: 20px">Danh sách nói thật đi bạn đã đóng góp</div>
+        </div>
+        <div style="box-shadow: 0px 0px 20px #00000020; padding: 10px; margin: 50px 0; min-height: 65vh;">
+            <h4 style="text-align: center; margin-top: 20px; margin-bottom: 30px; color: #dc3545; font-weight: bold">Danh sách nói thật đi đã đóng góp</h4>
+            @if (Model.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Stt</th>
+                                <th>Lời nói thật</th>
+                                <th>Người gửi</th>
+                                <th>Lĩnh vực</th>
+                                <th>Trạng thái tiến trình</th>
+                                <th>Thời gian gửi</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var data in Model.Select((value, i) => new { value, i }))
+                            {
+                                var item = data.value;
+                                <tr id="row_@item.id" class="col-tr-post">
+                                    <td>@(Math.Abs(data.i + 1))</td>
+                                    <td class="name">@item.TitleRealTalk</td>
+                                    <td>@item.NameSender</td>
+                                    <td>@item.NameFieldRealTalk</td>
+                                    <td>
+                                        <div class="statusTruth_@item.TruthStatus" style="padding: 7px; display:flex; align-items:center; justify-content:center; border-radius: 10px; color: #fff">
+                                            @item.TruthStatusName
+                                        </div>
+                                    </td>
+                                    <td>@item.TimeSend</td>
+                                    <td>
+                                        <a href="DetailTruthRegester/?regesterTruth=@item.id" class="btn btn-sm btn-primary">Chi Tiết</a>
+                                    </td>
+                                </tr>
+                            }
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="nocontent">
+                    Opps. Bạn chưa gửi ý kiến "Nói thật đê" nào cho chúng tôi! 
+                </div>
+                <div class="btn_createTruth">
+                    <a style="color: #fff; font-weight: bold; padding: 10px 31px; " href="@Url.Action("Index", "RealTalk")"> Gửi ngay</a>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+        @section scripts{
+            <script type="text/javascript">
+                $(".statusTruth_5").css("background-color", "#FF375F")
+                $(".statusTruth_1").css("background-color", "#B5A13D")
+                $(".statusTruth_2").css("background-color", "#4267B2")
+                $(".statusTruth_3").css("background-color", "#32A4D7")
+                $(".statusTruth_4").css("background-color", "#32D74B")
+            </script>
+        }
+
+

@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
+  <parameter name="myConnectionString-Web.config Connection String" description="myConnectionString Connection String used in web.config by the application to access the database." defaultValue="Server=myServerAddress;Database=10.30.190.3:389 ;User ID=itbu\ssomanagement;Password=VLMT@321qaz!@#;Trusted_Connection=False;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Admin\\Desktop\\c\#\\vss_portal_web\\vss_portal_web\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='myConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="ADConnectionString-Web.config Connection String" description="ADConnectionString Connection String used in web.config by the application to access the database." defaultValue="LDAP://10.30.190.3:389/DC=itbu,DC=local" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Admin\\Desktop\\c\#\\vss_portal_web\\vss_portal_web\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ADConnectionString']/@connectionString" />
+  </parameter>
   <parameter name="VssDbContext-Web.config Connection String" description="VssDbContext Connection String used in web.config by the application to access the database." defaultValue="data source=ADMIN;initial catalog=VssPortal_db;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework" tags="SqlConnectionString">
     <parameterEntry kind="XmlFile" scope="C:\\Users\\Admin\\Desktop\\c\#\\vss_portal_web\\vss_portal_web\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='VssDbContext']/@connectionString" />
   </parameter>

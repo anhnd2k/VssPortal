@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 
 namespace vss_portal_web.Areas.Admin.Code
 {
@@ -10,6 +11,11 @@ namespace vss_portal_web.Areas.Admin.Code
         public static void SetSecssion(UserSession session)
         {
             HttpContext.Current.Session["loginSession"] = session;
+        }
+
+        public static void SetSessionRoleAdmin(UserSession sess)
+        {
+            HttpContext.Current.Session["loginSessionRoleAdmin"] = sess;
         }
         public static UserSession GetSession()
         {
@@ -22,6 +28,23 @@ namespace vss_portal_web.Areas.Admin.Code
             {
                 return session as UserSession;
             }
+        }
+
+        public static UserSession GetSessionRoleAdmin()
+        {
+            var session = HttpContext.Current.Session["loginSessionRoleAdmin"];
+            if (session == null)
+            {
+                return null;
+            }
+            else
+            {
+                return session as UserSession;
+            }
+        }
+        public static void resetSession()
+        {
+            HttpContext.Current.Session.Abandon();
         }
     }
 }

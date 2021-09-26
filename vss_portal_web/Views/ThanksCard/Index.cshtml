@@ -8,7 +8,7 @@
 
 @model vss_portal_web.Models.ModelController
 
-@if (ViewData["oke"] != null)
+@if (ViewData["oke"] == "ok")
 {
     <script type="text/javascript">
 
@@ -17,9 +17,18 @@
         };
 
     </script>
-    ViewData.Clear();
 }
+@if (ViewData["oke"] == "false")
+{
+    <script type="text/javascript">
 
+        window.onload = function () {
+            $('#contenPopUp').text("Có lỗi xảy ra trong quá trình xử lý yêu cầu. Vui lòng thử lại sau ít phút!")
+            $('#popupCheckRegex').modal('show');
+        };
+
+    </script>
+}
 <!-- Modal check -->
 <div class="modal fade" id="popupCheckRegex" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -75,7 +84,7 @@
                 <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
             </div>
         </div>
-        
+
         <form method="post" onsubmit="return validateTextInput()">
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, null, new { @style = "color: red" })
@@ -159,15 +168,15 @@
                         <i style="position: absolute; top: 50px; left: 17px;" class="icofont-pen-alt-4"></i>
                     </div>
                     @*</div>
-        <div class="form-row">*@
+                        <div class="form-row">*@
                     <div id="department" class="form-group col-sm-6">
                         <label for="myEmail">Phòng ban <strong style="color:red">*</strong></label>
-                        <select name="TextDepartment" style="height: 52px" id="myState" class="form-control">
+                        <select name="Department" style="height: 52px" id="myState" class="form-control">
                             @foreach (var item in Model.ListDepartments)
                             {
                                 if (item.Id != 11)
                                 {
-                                    <option>@item.NameDepartment</option>
+                                    <option value=@item.Id>@item.NameDepartment</option>
                                 }
                             }
                         </select>
@@ -220,11 +229,110 @@
 </main>
 
 @section scripts{
-    <script src="~/Areas/plugins/ckeditor/ckeditor.js"></script>
-    <script src="~/Areas/plugins/ckfinder/ckfinder.js"></script>
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         CKEDITOR.replace('ContenCard')
+
+        function callAjaxAutocompelete(id) {
+            $(`#${id}`).autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/ThanksCard/autocompeleteMail",
+                        type: "POST",
+                        dataType: "json",
+                        data: { value: $(`#${id}`).val() },
+                        success: function (data) {
+                            response($.map(data, function (item, index) {
+                                if (index < 6) {
+                                    return { label: item.Email, value: item.Email };
+                                }
+                            }))
+                        }
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        }
+
+        function autoFindNameWhenFocus(idName, idemail) {
+            var ListDepartments = @Html.Raw(Json.Encode(Model.ListDepartments));
+            $(`#${idName}`).focus(function () {
+                const email = $(`#${idemail}`).val()
+                const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+                if (regex.test(email)) {
+                    $.ajax({
+                        url: "/ThanksCard/findName",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: `{"e": "${email}"}`,
+                        success: function (data) {
+                            $(`#${idName}`).val(data.Name);
+                            if (idemail == "MailReceiver") {
+                                let idDepaerment
+                                ListDepartments.map(item => {
+                                    if (item.NameDepartment == data.Department) {
+                                        idDepaerment = item.Id
+                                    }
+                                })
+                                $("#myState").val(idDepaerment);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function autoFindNameWhenOnBlur(idName, idemail) {
+            var ListDepartments = @Html.Raw(Json.Encode(Model.ListDepartments));
+            $(`#${idemail}`).blur(function () {
+                const email = $(`#${idemail}`).val()
+                const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+                if (regex.test(email)) {
+                    $.ajax({
+                        url: "/ThanksCard/findName",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: `{"e": "${email}"}`,
+                        success: function (data) {
+                            $(`#${idName}`).val(data.Name);
+                            if (idemail == "MailReceiver") {
+                                let idDepaerment
+                                ListDepartments.map(item => {
+                                    if (item.NameDepartment == data.Department) {
+                                        idDepaerment = item.Id
+                                    }
+                                })
+                                $("#myState").val(idDepaerment);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        $(document).ready(function () {
+
+            //sender mail autocompelete
+            callAjaxAutocompelete("emailSender")
+            //receiver mail autocompelete
+            callAjaxAutocompelete("MailReceiver")
+
+            callAjaxAutocompelete("MailSendMore-tokenfield")
+
+            autoFindNameWhenFocus("Sender", "emailSender")
+
+            autoFindNameWhenFocus("nameReceiver", "MailReceiver")
+
+            autoFindNameWhenOnBlur("Sender", "emailSender")
+
+            autoFindNameWhenOnBlur("nameReceiver", "MailReceiver")
+
+        })
         //auto fil
         $('#emailSender').on('input', function (e) {
             const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@$/i);
@@ -236,7 +344,7 @@
         $(document).ready(function () {
             $('.slectOne').on('change', function () {
                 $('.slectOne').not(this).prop('checked', false);
-                if ($(this).is(":checked")) {}
+                if ($(this).is(":checked")) { }
                 else
                     $('#sendOnly').prop('checked', true);
             });
@@ -291,32 +399,32 @@
 
             $('.spinner').css('display', 'none');
 
+            if (MailSendMore == "" && checkBoxSendMorePersion == true) {
+                $('#contenPopUp').text("Vui lòng nhập email Viettel người nhận")
+                $('#popupCheckRegex').modal('show');
+                return false
+            }
+
             if (checkBoxSendMorePersion == true) {
-                if (MailSendMore == "") {
-                    $('#contenPopUp').text("Vui lòng nhập email Viettel người nhận")
-                    $('#popupCheckRegex').modal('show');
-                    return false
-                }
                 for (var i = 0; i < arrMailSendMore.length; i++) {
-                    if (!regex.test(arrMailSendMore[i].trim())) {
-                        $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@viettel.com.vn)")
-                        $('#popupCheckRegex').modal('show');
-                        console.log(arrMailSendMore[i])
-                        return false
-                    }
                     if (checkBox == false) {
-                        if (emailSender == arrMailSendMore[i]) {
-                            $('#contenPopUp').text("Email người gửi đang trùng với email người nhận!")
+                        if (emailSender == arrMailSendMore[i].trim()) {
+                            $('#contenPopUp').text("Email người gửi đang trùng với Email người nhận!")
                             $('#popupCheckRegex').modal('show');
-                            console.log(arrMailSendMore[i])
                             return false
                         }
+                    }
+                    if (!regex.test(arrMailSendMore[i].trim())) {
+                        $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@Viettel.com.vn)")
+                        $('#popupCheckRegex').modal('show');
+                        return false
                     }
                 }
             }
 
             if (checkBox == false) {
                 if (emailSender == "") {
+                    $('#contenPopUp').text("Vui lòng nhập email người gửi")
                     $('#popupCheckRegex').modal('show');
                     return false
                 }
@@ -343,11 +451,11 @@
                     $('#popupCheckRegex').modal('show');
                     return false
                 }
-                if (!regex.test(mailReceiver)) {
-                    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@viettel.com.vn)")
-                    $('#popupCheckRegex').modal('show');
-                    return false
-                }
+                //if (!regex.test(mailReceiver)) {
+                //    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@viettel.com.vn)")
+                //    $('#popupCheckRegex').modal('show');
+                //    return false
+                //}
                 if (nameReceiver == "") {
                     $('#contenPopUp').text("Vui lòng điền tên người nhận!")
                     $('#popupCheckRegex').modal('show');
@@ -358,7 +466,7 @@
                     $('#popupCheckRegex').modal('show');
                     return false
                 }
-                if (emailSender == mailReceiver) {
+                if (emailSender == mailReceiver && checkBox == false) {
                     $('#contenPopUp').text("Email người gửi đang trùng với email người nhận!")
                     $('#popupCheckRegex').modal('show');
                     return false

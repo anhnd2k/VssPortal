@@ -6,27 +6,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using vss_portal_web.Areas.Admin.Code;
 using vss_portal_web.Areas.Admin.Models;
 
 namespace vss_portal_web.Areas.Admin.Controllers
 {
-    public class UpdatePostController : Controller
+    public class UpdatePostController : BaseAdminController
     {
+      
         // GET: Admin/UpdatePost
         public ActionResult Index(int id)
         {
-            string UserName = "";
-            string cookieName = FormsAuthentication.FormsCookieName;
-            if (HttpContext.Request.Cookies[cookieName] != null)
-            {
-                HttpCookie authCookie = HttpContext.Request.Cookies[cookieName];
-                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                UserName = ticket.Name;
-
-            }
-
-            ViewData["UserName"] = UserName;
-
+            ViewData["UserName"] = SessionHelper.GetSessionRoleAdmin()?.fullName;
+            ViewData["tabBarSelection"] = "Post";
             var action = new ActionPost();
             var postDetail = action.DetailPost(id);
             var listCategory = action.getCategory();
@@ -47,10 +39,7 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var ListCategory = action.getCategory();
             TempData["imgPath"] = postDetail.ThumbNail;
 
-            string cookieName = FormsAuthentication.FormsCookieName;
-            HttpCookie authCookie = HttpContext.Request.Cookies[cookieName];
-            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-            string UserName = ticket.Name;
+            string UserName = SessionHelper.GetSessionRoleAdmin()?.fullName;
             model.Status = model.checkBox == true ? 1 : 0;
             foreach (var i in ListCategory)
             {
@@ -59,30 +48,42 @@ namespace vss_portal_web.Areas.Admin.Controllers
                     model.Category = (int)i.CategoryId;
                 }
             }
-
+            //cập nhật khi người dùng thay đổi ảnh nền post
             if (ModelState.IsValid && ThumbNail != null && model.PostTitle != null && model.PostConten != null)
             {
+                try
+                {
+                    FileInfo imgPath = new FileInfo(ThumbNail.FileName);
+                    string pathConver = Guid.NewGuid().ToString("N") + imgPath.Extension;
+                    ThumbNail.SaveAs(Server.MapPath("~/ImageUpload/Thumbnal/" + pathConver));
+                    model.ThumbNail = pathConver;
 
-                FileInfo imgPath = new FileInfo(ThumbNail.FileName);
-                string pathConver = Guid.NewGuid().ToString("N") + imgPath.Extension;
-                ThumbNail.SaveAs(Server.MapPath("~/ImageUpload/Thumbnal/" + pathConver));
-                model.ThumbNail = pathConver;
 
-
-                new ActionPost().UpdatePost(model.id, model.PostTitle, model.PostConten, model.Description,UserName, model.ThumbNail, model.Status, model.Category);
-                TempData["UpdateSuccess"] = "CẬP NHẬT BÀI VIẾT THÀNH CÔNG!";
-                return RedirectToAction("Index", "HomeAdmin");
+                    new ActionPost().UpdatePost(model.id, model.PostTitle, model.PostConten, model.Description, UserName, model.ThumbNail, model.Status, model.Category);
+                    TempData["UpdateSuccess"] = "successUpdate";
+                    return RedirectToAction("Index", "HomeAdmin");
+                }
+                catch
+                {
+                    ViewData["errUpdatePost"] = "err";
+                    return View(model);
+                }
             }
+            //cập nhật khi người dùng ko thay đổi ảnh nền
             if(ModelState.IsValid && ThumbNail == null && model.PostTitle != null && model.PostConten != null)
             {
-                model.ThumbNail = TempData["imgPath"].ToString();
-                new ActionPost().UpdatePost(model.id, model.PostTitle, model.PostConten, model.Description, UserName, model.ThumbNail, model.Status, model.Category);
-                TempData["UpdateSuccess"] = "CẬP NHẬT BÀI VIẾT THÀNH CÔNG!";
-                return RedirectToAction("Index", "HomeAdmin");
-            }
-            else
-            {
-                ModelState.AddModelError("", "Vui lòng điền đủ thông tin!");
+                try
+                {
+                    model.ThumbNail = TempData["imgPath"].ToString();
+                    new ActionPost().UpdatePost(model.id, model.PostTitle, model.PostConten, model.Description, UserName, model.ThumbNail, model.Status, model.Category);
+                    TempData["UpdateSuccess"] = "successUpdate";
+                    return RedirectToAction("Index", "HomeAdmin");
+                }
+                catch
+                {
+                    ViewData["errUpdatePost"] = "err";
+                    return View(model);
+                }
             }
             return View(model);
         }

@@ -1,4 +1,5 @@
 ﻿using DBConect;
+using DBConect.conmon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,15 @@ namespace vss_portal_web.Areas.Admin.Controllers
         public ActionResult Index()
         {
             //check người dùng đã đăng nhập chưa và điểu hướng bỏ qua màn hình login
-            string cookieName = FormsAuthentication.FormsCookieName;
-
-            if (HttpContext.Request.Cookies[cookieName] != null)
+            var cookieAdmin = SessionHelper.GetSessionRoleAdmin();
+            var cookie = SessionHelper.GetSession();
+            if (cookieAdmin != null)
             {
                 return RedirectToAction("Index", "HomeAdmin");
+            }
+            if(cookie == null)
+            {
+                return RedirectToAction("Index", "LoginForGuest", new { area = "" });
             }
             return View();
         }
@@ -30,14 +35,22 @@ namespace vss_portal_web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index (LoginModel model)
         {
+            var action = new AccountModel();
             //var res = new AccountModel().Login(model.UserName, model.PassWord);
             if (Membership.ValidateUser(model.UserName, model.PassWord) && ModelState.IsValid)
             {
-
+                //SessionHelper.resetSession();
                 //SessionHelper.SetSecssion(new UserSession() { UserName = model.UserName });
-                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                //admin 
+                FormsAuthentication.SetAuthCookie(model.UserName, false);
                 return RedirectToAction("Index", "HomeAdmin");
             }
+            //if(action.AuthenticateUserV2(model.UserName, model.PassWord) && ModelState.IsValid)
+            //{
+            //    SessionHelper.resetSession();
+            //    SessionHelper.SetSecssion(new UserSession() { UserName = model.UserName });
+            //    return RedirectToAction("Index", "HomeAdmin");
+            //}
             else
             {
                 ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng");
@@ -47,8 +60,8 @@ namespace vss_portal_web.Areas.Admin.Controllers
 
         public ActionResult LogOut()
         {
-            FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Admin");
+            SessionHelper.resetSession();
+            return RedirectToAction("Index", "LoginForGuest", new { area = "" });
         }
     }
 }

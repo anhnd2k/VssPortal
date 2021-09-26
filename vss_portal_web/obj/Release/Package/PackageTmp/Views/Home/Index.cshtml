@@ -6,6 +6,108 @@
 
 @model vss_portal_web.Models.ModelController
 
+@if (@ViewBag.showModel == true)
+{
+    <script>
+        window.onload = function () {
+            $('#LoginModel').modal('show');
+        }
+    </script>
+}
+
+<style>
+    .hoverInfo:hover .info {
+        transform: translateY(0);
+    }
+
+    .info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: 0.5s ease-in-out;
+        background-color: #dedddd;
+        opacity: 0.93
+    }
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide {
+        font-size: 18px;
+        background: #fff;
+         Center slide text vertically 
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .swiper-horizontal > .swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
+        bottom: -33px;
+        left: 0;
+        width: 100%;
+    }
+
+    .swiper-button-prev, .swiper-rtl .swiper-button-next {
+        left: -14px;
+        right: auto;
+        top: 164px;
+    }
+
+    .swiper-button-next, .swiper-rtl .swiper-button-prev {
+        right: -14px;
+        left: auto;
+        top: 164px;
+    }
+    .nocontent {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #ccc;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background-image: linear-gradient(to right, #f56383, #ff7524);
+        max-width: max-content;
+        margin: 29px auto 0 auto;
+        text-align:center
+    }
+
+    .btn_createTruth {
+        width: max-content;
+        margin: 28px auto 0 auto;
+        background-color: #ec0b2d;
+        border-radius: 10px;
+        height: 43px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
 <section id="hero">
     <div class="hero-container">
         <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
@@ -16,7 +118,7 @@
 
                 @for (var i = 0; i < Model.OnboadingPost.Count; i++)
                 {
-                    if (i==0)
+                    if (i == 0)
                     {
                         <div class="carousel-item active" style="background-image: url('/ImageUpload/Thumbnal/@Model.OnboadingPost[i].ThumbNail'); ">
                             <div class="carousel-container">
@@ -136,25 +238,103 @@
                 <div class="arrow-right"></div>
             </div>
             <div style="display: flex; justify-content: center" class="row">
-                <a class="col-lg-3 col-md-6 text-center" href="@Url.Action("Index","ThanksCard")">
+                <a class="col-lg-3 col-md-6 text-center "
+                   href=@Url.Action("Index","ThanksCard")>
                     <div data-aos="fade-up" data-aos-delay="50">
-                        <div class="count-box">
+                        <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
                             <i class="icofont-card" style="color: #20b38e;"></i>
                             <span data-toggle="counter-up">@Model.ListhankCard.Count</span>
                             <p>Thanks Card</p>
+
+                            <div class="info">
+                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Thanks Card</div>
+                                Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
+                            </div>
+                        </div>
+                    </div>
+
+                </a>
+
+                @*<a href="@Url.Action("NewFeedTruth","RealTalk")" class="col-lg-3 col-md-6 text-center">
+                    <div data-target="#exampleModalCenter" data-aos="fade-up" data-aos-delay="100">
+                        <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
+                            <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
+                            <span data-toggle="counter-up">@Model.ListTalkReal.Count</span>
+                            <p>Nói thật đê...</p>
+
+                            <div class="info">
+                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Nói thật đê...</div>
+                                Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
+                            </div>
+                        </div>
+
+                    </div>
+
+                </a>*@
+                <a class="col-lg-3 col-md-6 text-center"
+                   data-toggle=@(ViewBag.checkPermision == null ? "modal" : "")
+                   data-target="#LoginModel"
+                   href=@(ViewBag.checkPermision != null ? @Url.Action("NewFeedTruth","RealTalk") : "#")
+                   onclick="setNameRedirect('NewFeedTruth','RealTalk')">
+                    <div data-aos="fade-up" data-aos-delay="150">
+                        <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
+                            <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
+                            <span data-toggle="counter-up">@Model.ListTalkReal.Count</span>
+                            <p>Nói thật đê...</p>
+
+                            <div class="info">
+                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Nói thật đê...</div>
+                                Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
+                            </div>
                         </div>
                     </div>
                 </a>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div data-toggle="modal" data-target="#exampleModalCenter" data-aos="fade-up" data-aos-delay="100">
-                        <div class="count-box">
-                            <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
-                            <span data-toggle="counter-up">521</span>
-                            <p>Nói thật đê...</p>
+                @*<div class="col-lg-3 col-md-6 text-center">
+            <div data-toggle="modal" data-target="#exampleModalCenter" data-aos="fade-up" data-aos-delay="100">
+                <div class="count-box">
+                    <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
+                    <span data-toggle="counter-up">521</span>
+                    <p>Nói thật đê...</p>
+                </div>
+            </div>
+        </div>*@
+                <a class="col-lg-3 col-md-6 text-center"
+                   data-toggle=@(ViewBag.checkPermision == null ? "modal" : "")
+                   data-target="#LoginModel"
+                   href=@(ViewBag.checkPermision != null ? @Url.Action("Index","Idea") : "#")
+                   onclick="setNameRedirect('Index','Idea')">
+                    <div data-aos="fade-up" data-aos-delay="150">
+                        <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
+                            <i class="icofont-unique-idea" style="color: #46d1ff"></i>
+                            <span data-toggle="counter-up">@Model.ListIdea.Count</span>
+                            <p>Đăng ký ý tưởng</p>
+
+                            <div class="info">
+                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Đăng ký ý tưởng</div>
+                                Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a class="col-lg-3 col-md-6 text-center" href="https://hotro.viettelimex.vn/">
+                </a>
+                <a class="col-lg-3 col-md-6 text-center"
+                   data-toggle=@(ViewBag.checkPermision == null ? "modal" : "")
+                   data-target="#LoginModel"
+                   href=@(ViewBag.checkPermision != null ? @Url.Action("Index","Initiative") : "#")
+                   onclick="setNameRedirect('Index','Initiative')">
+                    <div data-aos="fade-up" data-aos-delay="150">
+                        <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
+                            <i class="icofont-brand-slideshare" style="color: #46d1ff"></i>
+                            <span data-toggle="counter-up">@Model.ListInitative.Count</span>
+                            <p>Đăng ký sáng kiến</p>
+
+                            <div class="info">
+                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Đăng ký sáng kiến</div>
+                                Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="col-lg-3 col-md-6 text-center" href=" https://hotro.viettelsoftware.net/">
                     <div data-aos="fade-up" data-aos-delay="150">
                         <div class="count-box">
                             <i class="icofont-live-support" style="color: #46d1ff;"></i>
@@ -166,10 +346,6 @@
             </div>
 
         </div>
-        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-            Launch demo modal
-        </button>*@
-
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -189,8 +365,134 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="LoginModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="font-size:16px" id="exampleModalLongTitle">Vui lòng đăng nhập để sử dụng tính năng này</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div style="padding: 30px;" class="modal-body">
+                        <form onsubmit="return checkValidate()" method="post" action="" style="background-color: #fff; height: 295px; border-radius: 20px; border: 2px solid #fff; display: flex; justify-content: center; align-items: center; ">
+                            @Html.AntiForgeryToken()
+                            <div style="display: flex; flex-direction: column; width: 325px; align-items: center;">
+                                <label style=" margin:20px 0 15px 0; font-weight: bold; color: #272424; font-size: 15px"
+                                       for="myEmail">
+                                    Tên đăng nhập
+                                </label>
+                                <input id="myUsername"
+                                       name="UserName"
+                                       style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;" class="form-control"
+                                       placeholder="Vui lòng nhập tên đăng nhập">
+                                <div id="errUsername" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
+                                <label style=" margin-bottom: 15px; font-weight: bold; color: #272424; font-size: 15px "
+                                       for="myPassword">
+                                    Mật khẩu
+                                </label>
+                                <input name="PassWord"
+                                       style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;"
+                                       type="password"
+                                       id="myPassword"
+                                       class="form-control"
+                                       placeholder="Vui lòng nhập mật khẩu">
+                                <div id="errPassword" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
+                                @Html.ValidationSummary(true, null, new { @style = "color: red" })
+                                <input style=" margin-top: 23px; padding: 12px 49px; border-radius: 14px; outline: none; border: none; cursor: pointer; cursor: pointer; font-weight: bold; background-color: #eb0729; color: #fff; width: 100%;"
+                                       type="submit"
+                                       name=""
+                                       value="Đăng nhập">
+                                <input style="visibility:hidden" name="RedirectName" id="RedirectName" type="text">
+                                <input style="visibility:hidden" name="RedirectAction" id="RedirectAction" type="text">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- End Counts Section -->
+    @* SÁNG KIẾN Ý TƯỞNG ONBOADING *@
+    <div class="team" style=" min-height: 34vh;">
+        <div class="container" style=" position:relative">
+            <p style="font-size: 20px; font-weight: bold; line-height: 20px; margin: 0; color: #dc0c2c; text-align: center; ">SÁNG KIẾN Ý TƯỞNG ĐƯỢC CÔNG NHẬN</p>
+
+            <div data-aos="fade-up" data-aos-delay="150" style="margin-top: 30px; padding-top: 20px;" class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @{
+                        bool checkIdeaInitative = false;
+                        foreach (var item in Model.ListIdea)
+                        {
+                            if (item.Status == 2)
+                            {
+                                checkIdeaInitative = true;
+                                <div class="swiper-slide">
+                                    <div style="width: 95%; height: 200px; background-color: #fff; padding: 20px; border: 1px solid #ccc; border-radius: 20px; box-shadow: 2px 2px 5px 0 rgb(0 0 0 / 20%); margin-bottom: 10px; display: flex; flex-direction: column; justify-content: space-between">
+                                        <div style="display: flex">
+                                            <i class="icofont-unique-idea" style="color: #46d1ff; font-size: 35px; padding-top: 10px;"></i>
+                                            <div style="margin-left: 10px"><strong style="font-size: 15px">Ý tưởng: </strong><a style="font-size: 15px" href="@Url.Action("DetailIdeaRegester","Idea",new { @id = item.Id })">@item.NameIdea</a></div>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <i class="icofont-user-alt-2" style=" color: #46d1ff; font-size: 35px; padding-top: 6px; margin-right: 11px; padding-left: 6px; "></i>
+                                            <div style="display:flex; flex-direction:column">
+                                                <strong style="font-size: 15px">@item.AuthorFullName</strong>
+                                                <div style="font-size: 15px">Mail: @item.AuthorEmail</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        foreach (var item in Model.ListInitative)
+                        {
+                            if (item.Status == 2)
+                            {
+                                checkIdeaInitative = true;
+                                <div class="swiper-slide">
+                                    <div style="width: 95%; height: 200px; background-color: #fff; padding: 20px; border: 1px solid #ccc; border-radius: 20px; box-shadow: 2px 2px 5px 0 rgb(0 0 0 / 20%); margin-bottom: 10px; display: flex; flex-direction:column; justify-content:space-between">
+                                        <div style="display: flex">
+                                            <i class="icofont-brand-slideshare" style="color: #46d1ff; font-size: 35px; padding-top: 10px;"></i>
+                                            <div style="margin-left: 10px"><strong style="font-size: 15px">Giải pháp: </strong><a style="font-size: 15px" href="@Url.Action("DetailIntativeRegester","Initiative",new { @id = item.Id })">@item.NameInitative</a></div>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <i class="icofont-user-alt-2" style=" color: #46d1ff; font-size: 35px; padding-top: 6px; margin-right: 11px; padding-left: 6px; "></i>
+                                            <div style="display:flex; flex-direction:column">
+                                                <strong style="font-size: 15px">@item.UserSendFullName</strong>
+                                                <div style="font-size: 15px">Mail: @item.EmailUserSend</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        if (checkIdeaInitative == false)
+                        {
+                            <div style="margin: auto">
+                                <div class="nocontent">
+                                    Opps. Chưa có ý tưởng, sáng kiến nào được công nhận. <br /> Hãy là một trong những người đầu tiên đăng ký ý tưởng, sáng kiến được chúng tôi công nhận ngay nào!
+                                </div>
+                                <div style="display: flex">
+                                    <div class="btn_createTruth">
+                                        <a style="color: #fff; font-weight: bold; padding: 10px 31px; " href="@Url.Action("Index", "Idea")"> Đăng ký ý tưởng</a>
+                                    </div>
+                                    <div class="btn_createTruth">
+                                        <a style="color: #fff; font-weight: bold; padding: 10px 31px; " href="@Url.Action("Index", "Initiative")"> Đăng ký sáng kiến</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
     <!-- ======= Bài viết ======= -->
     <section id="post" class="team">
         <div class="container">
@@ -205,12 +507,12 @@
             <div class="row">
                 @foreach (var item in Model.ListPost)
                 {
-                    if(item.Category == 1)
-                    { 
+                    if (item.Category == 1)
+                    {
                         <div class="col-lg-4 col-md-6" style="cursor:pointer" data-aos="fade-up" data-aos-delay="50">
                             <a href="/DetailPost/Index/?id=@item.id">
                                 <div class="member">
-                                    <div class="pic"><img src="~/ImageUpload/Thumbnal/@item.ThumbNail" class="img-fluid" alt=""></div>
+                                    <div class="pic"><img style=" width: 100%; height: 100%; object-fit: cover;" src="~/ImageUpload/Thumbnal/@item.ThumbNail" class="img-fluid" alt=""></div>
                                     <div class="info-post">
                                         <h4>Tin tức: @item.CreateTime</h4>
                                         <span>@item.PostTitle</span>
@@ -236,35 +538,86 @@
             </div>
             <div class="row no-gutters">
                 @*@foreach (var item in Model.ListPost)
-        {
-            if (item.Category == 2)
-            {
-                <div class="col-lg-4 col-md-6 content-item" data-aos="fade-up" data-aos-delay="50">
-                    <span>01</span>
-                    <h4>@item.PostTitle</h4>
-                    <p>
-                        @item.Description
-                    </p>
-                </div>
-            }
-        }*@
+                    {
+                        if (item.Category == 2)
+                        {
+                            <div class="col-lg-4 col-md-6 content-item" data-aos="fade-up" data-aos-delay="50">
+                                <span>01</span>
+                                <h4>@item.PostTitle</h4>
+                                <p>
+                                    @item.Description
+                                </p>
+                            </div>
+                        }
+                    }*@
                 @for (var i = 0; i < Model.ListPost.Count; i++)
                 {
                     if (@Model.ListPost[i].Category == 2)
                     {
-                <div style="cursor:pointer" class="col-lg-4 col-md-6 content-item" data-aos="fade-up" data-aos-delay="50">
-                    <a href="/DetailPost/Index/?id=@Model.ListPost[i].id">
-                        <span>@(i+1)</span>
-                        <h4>@Model.ListPost[i].PostTitle</h4>
-                        <p>
-                            @Model.ListPost[i].Description
-                        </p>
-                    </a>
-                </div>
+                        <div style="cursor:pointer" class="col-lg-4 col-md-6 content-item" data-aos="fade-up" data-aos-delay="50">
+                            <a href="/DetailPost/Index/?id=@Model.ListPost[i].id">
+                                <span>@(i+1)</span>
+                                <h4>@Model.ListPost[i].PostTitle</h4>
+                                <p>
+                                    @Model.ListPost[i].Description
+                                </p>
+                            </a>
+                        </div>
                     }
                 }
             </div>
 
         </div>
     </section><!-- End About Lists Section -->
+    @* spinner *@
+    <div class="spinner" style="z-index: 9999">
+        <div class="spinner-border text-danger center-div" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 </main>
+
+@section scripts{
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            slidesPerGroup: 3,
+            loop: true,
+            loopFillGroupWithBlank: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    </script>
+    <script type="text/javascript">
+
+        function setNameRedirect(actionName,name) {
+            document.getElementById("RedirectName").value = name; 
+            document.getElementById("RedirectAction").value = actionName;
+        }
+
+        function checkValidate() {
+            var username = document.getElementById("myUsername").value;
+            var password = document.getElementById("myPassword").value;
+            if (username == "") {
+                document.getElementById("errUsername").classList.remove("disPlayNone")
+                return false
+            }
+            document.getElementById("errUsername").classList.add("disPlayNone")
+            if (password == "") {
+                document.getElementById("errPassword").classList.remove("disPlayNone")
+                return false
+            }
+            $('.spinner').css('display', 'block');
+            console.log("vv")
+            return true;
+        }
+    </script>
+}

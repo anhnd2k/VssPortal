@@ -219,3 +219,8 @@ C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\obj\Release\vss_portal_w
 C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\obj\Release\vss_portal_web.CMSResources.CMS.resources
 C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\obj\Release\vss_portal_web.CMSResources.Hotfix.resources
 C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\obj\Release\vss_portal_web.csproj.GenerateResource.cache
+C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\bin\EPPlus.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\bin\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\bin\System.ComponentModel.Annotations.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\bin\EPPlus.xml
+C:\Users\Admin\Desktop\c#\vss_portal_web\vss_portal_web\bin\Microsoft.IO.RecyclableMemoryStream.xml

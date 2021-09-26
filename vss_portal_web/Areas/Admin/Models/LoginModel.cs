@@ -13,5 +13,7 @@ namespace vss_portal_web.Areas.Admin.Models
         public string PassWord { get; set; }
         public string FullName { get; set; }
         public bool RememberMe { get; set; }
+        public string RedirectName { get; set; }
+        public string RedirectAction { get; set; }
     }
 }

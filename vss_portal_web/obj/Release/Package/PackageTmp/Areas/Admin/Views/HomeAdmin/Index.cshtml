@@ -5,43 +5,102 @@
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
 }
+@using DBConect.Farmework
+@{
+    IEnumerable<CategoryPost> listcategory = ViewData["finterCategory"] as IEnumerable<CategoryPost>;
+}
 
+<style>
+    .StatusClass {
+        padding: 12px
+    }
 
+    .table td.name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 450px;
+        height: 1.2em;
+        white-space: nowrap;
+    }
+</style>
+@if (@TempData["MessSuccess"] == "success")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.contenModels').text("Thêm mới bài viết thành công")
+            $('#exampleModalCenter').modal('show');
+        };
+
+    </script>
+}
+@if (@TempData["UpdateSuccess"] == "successUpdate")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            $('.contenModels').text("Cập nhật bài viết thành công")
+            $('#exampleModalCenter').modal('show');
+        };
+
+    </script>
+}
 <div class="row table_post">
-    <div class="col-lg-12 mb-4">
-        <!-- Quản lý bài viết -->
-        <div class="card">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Quản lý bài viết</h6>
+    <div style=" padding: 0 24px;" class="col-lg-12 mb-4">
+        <div class="card" style="min-height: 80vh">
+            <div style="width: 100%; margin: 20px 0; padding: 10px 0; display: flex; align-items:center">
+                <h4 style=" margin: 0 0 0 20px; color: #dc3545; font-weight:bold; margin-bottom: 15px; flex: 1">Quản lý bài viết</h4>
+                @using (Html.BeginForm("Index", "HomeAdmin", FormMethod.Get, new { style = "flex: 4" }))
+                {
+                    <div style="display: flex; align-items:center; margin-right: 30px; flex: 4; justify-content: flex-end">
+
+                        <div style="width: 40%;position: relative; margin-right: 30px">
+                            <input value="@ViewData["searchStringHomeAdmin"]" id="search_input" name="searchString" style=" width: 100%; border: none; background-color: #F5F5F5; border-radius: 17px; padding: 7px 0 6px 35px; outline: none;" placeholder="Tìm kiếm..." />
+                            <i style="position: absolute; left: 10px; top: 11px; color: #999999;" class="fas fa-search"></i>
+                        </div>
+                        <div style="position:relative">
+                            <select name="idStatus" class="StatusClass" style="border: none" id="IdStatus">
+                                <option value=0>Tất cả thể loại bài viết</option>
+                                @foreach (CategoryPost item in listcategory)
+                                {
+                                    <option value=@item.CategoryId selected=@(ViewData["IdStatusFinterHomeAdmin"].ToString() == item.CategoryId.ToString() ? "selected" : null)>@item.CategoryName</option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+
+                        </div>
+                        <button id="btnFinterStatus" type="submit" style="visibility: hidden; display: none"></button>
+                    </div>
+                }
+            </div>
+            <div class="card-header d-flex flex-row align-items-center justify-content-between">
                 <div style="display:flex; flex:1; align-items:center; justify-content:center">
-                    <h5 style="color: #6777ef">@TempData["MessSuccess"]</h5>
-                    <h5 style="color: #6777ef">@TempData["UpdateSuccess"]</h5>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Post Title</th>
+                            <th>Stt</th>
+                            <th>TIêu đề bài viết</th>
                             <th>Thể loại</th>
-                            <th>Hiển thị trên Onboading</th>
-                            <th>Authen</th>
-                            <th>Create Time</th>
-                            <th>Action</th>
+                            <th>Hiển thị trên Slide</th>
+                            <th>Tác giả</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var data in Model.Select((value, i) => new { i, value }))
                         {
+                            var item = data.value;
                             <tr id="row_@item.id" class="col-tr-post">
-                                <td>@item.id</td>
-                                <td>@item.PostTitle</td>
+                                <td>@(Math.Abs(data.i + 1))</td>
+                                <td class="name">@item.PostTitle</td>
                                 <td>@item.CategoryName</td>
-                                <td>@item.ShowPostOnboading</td>
+                                <td style="color: @(item.ShowPostOnboading != "None" ? "#6777ef" : "" )">@item.ShowPostOnboading</td>
                                 <td>@item.Author</td>
                                 <td>@item.CreateTime</td>
-                                <td>
+                                <td style="min-width: 200px;">
                                     <a href="UpdatePost/?id=@item.id" class="btn btn-sm btn-primary">Chỉnh sửa</a>
                                     @Ajax.ActionLink("Detele", "Delete", new { @id = item.id }, new AjaxOptions
                                {
@@ -54,10 +113,46 @@
                         }
                     </tbody>
                 </table>
-                @Html.PagedListPager(Model, page => Url.Action("index", new { page }))
+                @Html.PagedListPager(Model, page => Url.Action("index", new { page, searchString = ViewData["searchStringHomeAdmin"], idStatus = ViewData["IdStatusFinterHomeAdmin"] }))
             </div>
             <div class="card-footer"></div>
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div style="z-index: 9999999" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body contenModels">
+                Xét duyệt ý tưởng thành công!
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        var truthStatus = document.querySelectorAll(".StatusClass");
+        truthStatus.forEach(itemTruth => {
+            itemTruth.addEventListener('change', function () {
+                $("#btnFinterStatus").click();
+            })
+        })
 
+        $(function () {
+            $('input[id=search_input]').keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("#btnFinterStatus").click();
+                }
+            });
+        });
+    </script>
+}

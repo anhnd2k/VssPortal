@@ -13,5 +13,11 @@ namespace vss_portal_web.Areas.Admin.Models
 
         public List<CategoryPost> Category { get; set; }
 
+        public List<FieldRealTalk> ListFieldRealTalk { get; set; }
+
+        public List<PersionManageRealTalk> ListPersionManageRealTalk { get; set; }
+
+        public List<Department> ListDepartment { get; set; }
+
     }
 }

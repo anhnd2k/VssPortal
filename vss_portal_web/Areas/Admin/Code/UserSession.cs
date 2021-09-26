@@ -9,5 +9,11 @@ namespace vss_portal_web.Areas.Admin.Code
     public class UserSession
     {
         public string UserName { get; set; }
+
+        public string fullName { get; set; }
+
+        public string Email { get; set; }
+
+        public string Department { get; set; }
     }
 }

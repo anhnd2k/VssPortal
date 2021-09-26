@@ -18,5 +18,11 @@ namespace DBConect.Farmework
 
         [StringLength(50)]
         public string FullName { get; set; }
+
+        [StringLength(250)]
+        public string EmailVt { get; set; }
+
+        [StringLength(50)]
+        public string Role { get; set; }
     }
 }

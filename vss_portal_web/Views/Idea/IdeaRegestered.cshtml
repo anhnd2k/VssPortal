@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "IdeaRegestered";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model List<DBConect.model.GetListIdeaRegester>
+<style>
+    .imgRedirect {
+        margin-right: 10px
+    }
+    .table td.name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 300px;
+        height: 1.2em;
+        white-space: nowrap;
+    }
+    .nocontent {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: #ccc;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background-image: linear-gradient(to right, #f56383, #ff7524);
+        max-width: max-content;
+        margin: 69px auto 0 auto;
+    }
+
+    .btn_createTruth {
+        width: max-content;
+        margin: 28px auto 0 auto;
+        background-color: #ec0b2d;
+        border-radius: 10px;
+        height: 43px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<main style="min-height: 68vh" id="main">
+    <div class="container">
+        <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px; margin-top: 30px">
+            <a href="@Url.Action("Index", "Home")" class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_home.png" />
+            </a>
+            <div class="imgRedirect">
+                <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
+            </div>
+            <div style="color: black; font-size: 20px">Danh sách ý tưởng bạn đã đóng góp</div>
+        </div>
+        <div style="box-shadow: 0px 0px 20px #00000020; padding: 10px; margin: 50px 0">
+            <h4 style="text-align: center; margin-top: 20px; margin-bottom: 30px; color: #dc3545; font-weight: bold">Danh sách ý tưởng đã đăng ký</h4>
+            @if (Model.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Stt</th>
+                                <th>Tên ý tưởng</th>
+                                <th>Lĩnh vực</th>
+                                <th>Sáng kiến của</th>
+                                <th>Trạng thái</th>
+                                <th>Thời gian gửi</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row_@item.Id" class="col-tr-post">
+                                    <td>@(Math.Abs(Model.IndexOf(item) + 1))</td>
+                                    <td class="name">@item.NameIdea</td>
+                                    <td>@item.NameField</td>
+                                    <td>@(item.IndividualIdea == true ? "Cá nhân" : "Tập thể")</td>
+                                    <td style="color: @(item.Status == 1 ? "#ff9400" : (item.Status == 2 ? "#08d412" : "red") )">@item.NameStauts</td>
+                                    <td>@item.DateSend</td>
+                                    <td><a href="DetailIdeaRegester/?id=@item.Id" class="btn btn-sm btn-primary">Chi Tiết</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="nocontent">
+                    Opps. Bạn chưa gửi ý tưởng nào nào cho chúng tôi!
+                </div>
+                <div class="btn_createTruth">
+                    <a style="color: #fff; font-weight: bold; padding: 10px 31px; " href="@Url.Action("Index", "Idea")"> Gửi ngay</a>
+                </div>
+            }
+        </div>
+    </div>
+</main>

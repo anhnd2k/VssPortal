@@ -49,8 +49,17 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.DirectoryServices.Protocols" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,17 +69,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountModel.cs" />
+    <Compile Include="ActionCommentLikePost.cs" />
     <Compile Include="ActionPost.cs" />
+    <Compile Include="conmon\Encryptor.cs" />
     <Compile Include="Farmework\AccountAdmin.cs" />
     <Compile Include="Farmework\CategoryPost.cs" />
+    <Compile Include="Farmework\CommentIdeaPost.cs" />
     <Compile Include="Farmework\Department.cs" />
     <Compile Include="Farmework\Employee.cs" />
+    <Compile Include="Farmework\FieldInIdeal.cs" />
+    <Compile Include="Farmework\FieldRealTalk.cs" />
+    <Compile Include="Farmework\InitativeManage.cs" />
+    <Compile Include="Farmework\LikeCountPostIdea.cs" />
+    <Compile Include="Farmework\LikeIdeaPost.cs" />
     <Compile Include="Farmework\ListPost.cs" />
     <Compile Include="Farmework\ListThankCardImg.cs" />
+    <Compile Include="Farmework\ManageRegisterIdea.cs" />
     <Compile Include="Farmework\OnboadingPost.cs" />
+    <Compile Include="Farmework\PersionManageRealTalk.cs" />
+    <Compile Include="Farmework\StatusIdeaInitative.cs" />
+    <Compile Include="Farmework\TalkReal.cs" />
     <Compile Include="Farmework\ThankCard.cs" />
+    <Compile Include="Farmework\TruthStatu.cs" />
+    <Compile Include="Farmework\UnitApply.cs" />
     <Compile Include="Farmework\VssDbContext.cs" />
+    <Compile Include="model\GetCommentPostIdea.cs" />
+    <Compile Include="model\GetListIdeaRegester.cs" />
+    <Compile Include="model\GetListInitativeRegester.cs" />
     <Compile Include="model\GetListPosts.cs" />
+    <Compile Include="model\GetListRealTalk.cs" />
     <Compile Include="model\GetListThankCard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

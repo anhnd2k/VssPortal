@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using PagedList;
 using DBConect.model;
+using System.Text.RegularExpressions;
 
 namespace DBConect
 {
@@ -17,6 +18,50 @@ namespace DBConect
         public ActionPost()
         {
             context = new VssDbContext();
+        }
+
+        //set acc admin when create responsive persion real talk (truth)
+
+        public void AddAuthUser(string emailVt, string fullName)
+        {
+            bool checkPersion = false;
+            foreach(var item in context.AccountAdmins)
+            {
+                if(item.EmailVt == emailVt)
+                {
+                    checkPersion = true;
+                }
+            }
+            if (!checkPersion)
+            {
+                Regex rg = new Regex(@".*(?=@viettel.com.vn)");
+                string username = rg.Match(emailVt).ToString().Trim();
+                AccountAdmin DBAdmin = new AccountAdmin();
+                DBAdmin.UserName = username;
+                DBAdmin.EmailVt = emailVt;
+                DBAdmin.FullName = fullName;
+                DBAdmin.Role = "ADMIN";
+                context.AccountAdmins.Add(DBAdmin);
+                context.SaveChanges();
+            }
+        }
+
+        public void deletePersionAuth(string emailVt)
+        {
+            bool checkPersion = false;
+            foreach (var item in context.PersionManageRealTalks)
+            {
+                if (item.EmailManage == emailVt)
+                {
+                    checkPersion = true;
+                }
+            }
+            if (!checkPersion)
+            {
+                AccountAdmin Persion = context.AccountAdmins.Where(x => x.EmailVt == emailVt).FirstOrDefault();
+                context.AccountAdmins.Remove(Persion);
+                context.SaveChanges();
+            }
         }
 
         public List<ListPost> GetListPost()
@@ -241,7 +286,7 @@ namespace DBConect
         }
 
 
-        public IEnumerable<GetListRealTalk> GetListTruthSuccessForCmt(string searchString, int idTruhStatusFinter, int page, int pageSize)
+        public IEnumerable<GetListRealTalk> GetListTruthSuccessForCmt(string searchString, int idTruhStatusFinter, int idInterate, int page, int pageSize)
         {
             IEnumerable<GetListRealTalk> model = context.Database.SqlQuery<GetListRealTalk>("Sp_getListRealTalk");
             if (!string.IsNullOrEmpty(searchString))
@@ -256,7 +301,17 @@ namespace DBConect
             {
                 model = model.Where(x => (x.Status != 3) && (x.TruthStatus != 1));
             }
+            //sắp xếp theo ngày gần nhất
             var res = model.OrderByDescending(x => x.TimeApproval).ToPagedList(page, pageSize);
+            //sắp xếp theo thứ tự muộn nhất
+            if(idInterate == 1)
+            {
+                res = model.OrderBy(x => x.TimeApproval).ToPagedList(page, pageSize);
+            }
+            if (idInterate == 2)
+            {
+                res = model.OrderByDescending(x => x.UserNameLike?.Count()).ToPagedList(page, pageSize);
+            }
 
             return res;
         }
@@ -332,6 +387,7 @@ namespace DBConect
                 {
                     context.PersionManageRealTalks.Remove(persion);
                     context.SaveChanges();
+                    deletePersionAuth(persion.EmailManage);
                     return true;
                 }
                 return false;
@@ -362,6 +418,7 @@ namespace DBConect
                 persion.Department = model.Department;
                 context.PersionManageRealTalks.Add(persion);
                 context.SaveChanges();
+                AddAuthUser(model.EmailManage, model.FullNameManage);
                 return 1;
             }
             catch

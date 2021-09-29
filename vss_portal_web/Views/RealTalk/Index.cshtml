@@ -182,11 +182,11 @@
 
             $('.spinner').css('display', 'none');
 
-            //if (!regex.test(senderMail)) {
-            //    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoigui@viettel.com.vn)")
-            //    $('#popupCheckRegex').modal('show');
-            //    return false
-            //}
+            if (!regex.test(senderMail)) {
+                $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoigui@viettel.com.vn)")
+                $('#popupCheckRegex').modal('show');
+                return false
+            }
             if (senderName == '') {
                 $('#contenPopUp').text("Vui lòng nhập tên người gửi")
                 $('#popupCheckRegex').modal('show');

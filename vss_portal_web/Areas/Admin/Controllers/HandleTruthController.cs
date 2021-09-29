@@ -38,11 +38,13 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var dataItem = new ActionPost().DetailRealTalk(idPost);
             var action = new ActionPost();
             EmailService service = new EmailService();
-            string body = "Ý tưởng: " 
-                          + dataItem.TitleRealTalk 
-                          + " của bạn đã được phê duyệt và đang được triển khai, áp dụng </br>"
-                          + " Thời gian phê duyệt thực thi: " + DateTime.Now + " " 
-                          +" <br/>Người thực thi và phê duyệt:" + SessionHelper.GetSessionRoleAdmin().fullName + " <br/>";
+            string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
+                         + "Cảm ơn Anh/Chị đã gửi lời nói thật tới hòm thư \"Nói thật đê\" của Trung tâm VSS." + "<br/>"
+                         + "Đóng góp của bạn đang được xử lý bởi phía phòng ban phụ trách. Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link: "
+                         + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/RealTalk/NewFeedTruth"))
+                         + " Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
+                         + "BTC cảm ơn bạn vì sự tận tụy của mình, VSS tự hào vì có sự đóng góp của bạn. " + "<br/>"
+                         + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
             bool resSendMail = service.SendMailAction(dataItem.MailSender, titleEmailhandel, body);
 
             if (resSendMail)
@@ -59,12 +61,14 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var dataItem = new ActionPost().DetailRealTalk(idPost);
             var action = new ActionPost();
             EmailService service = new EmailService();
-            string body = "Ý tưởng: " 
-                          + dataItem.TitleRealTalk 
-                          + " của bạn đang được xử lý thành công. <br/>"
-                          + " Cảm ơn bạn vì những phản hồi tích cực đem lại lợi ích chung cho trung tâm </br>"
-                          + " Thời gian phê duyệt:  " + DateTime.Now + " <br/>"
-                          + "Người phê duyệt:" + SessionHelper.GetSessionRoleAdmin().fullName + " <br/>";
+            string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
+                         + "Cảm ơn Anh/Chị đã gửi lời nói thật tới hòm thư \"Nói thật đê\" của Trung tâm VSS." + "<br/>"
+                         + "Đóng góp của bạn đã được xử lý thành công. Cảm ơn bạn vì sự tận tuỵ này và VSS tự hào vì có sự đồng hành của bạn." + "<br/>"
+                         + "Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link: "
+                         + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/RealTalk/NewFeedTruth"))
+                         + " Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
+                         + "BTC cảm ơn bạn vì sự tận tụy của mình, VSS tự hào vì có sự đóng góp của bạn. " + "<br/>"
+                         + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
             bool resSendMail = service.SendMailAction(dataItem.MailSender, titleEmailhandel, body);
             if (resSendMail)
             {
@@ -80,11 +84,13 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var dataItem = new ActionPost().DetailRealTalk(idPost);
             var action = new ActionPost();
             EmailService service = new EmailService();
-            string body = "Ý tưởng: " 
-                          + dataItem.TitleRealTalk 
-                          + " của bạn đã bị từ chối. <br/>"
-                          + " Cảm ơn bạn vì những phản hồi. </br>"
-                          + " Thời gian phê duyệt:  " + DateTime.Now + " <br/>Người phê duyệt:" + SessionHelper.GetSessionRoleAdmin().fullName + " <br/>";
+            string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
+                         + "Cảm ơn Anh/Chị đã gửi lời nói thật tới hòm thư \"Nói thật đê\" của Trung tâm VSS." + "<br/>"
+                         + "Đóng góp của bạn đã được tiếp nhận bởi phía Phòng ban phụ trách và đang được xử lý. Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link: "
+                         + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/RealTalk/TruthRegestered"))
+                         + " Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
+                         + "BTC cảm ơn bạn vì sự tận tụy của mình, VSS tự hào vì có sự đóng góp của bạn. " + "<br/>"
+                         + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
             bool resSendMail = service.SendMailAction(dataItem.MailSender, titleEmailhandel, body);
             if (resSendMail)
             {

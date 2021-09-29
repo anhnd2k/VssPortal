@@ -13,12 +13,48 @@ namespace vss_portal_web.Models
     public class EmailService
     {
 
-        //private string EMAIL = "hotro@viettelsoftware.net";
-        //private string PWD = "V2dhVFsjPbqF5VvOW0lL";
-        private string EMAIL = "iutube99445@gmail.com";
-        private string PWD = "ngonhat94";
+        private string EMAIL = "hotro@viettelsoftware.net";
+        private string PWD = "V2dhVFsjPbqF5VvOW0lL";
+        //private string EMAIL = "iutube99445@gmail.com";
+        //private string PWD = "ngonhat94";
 
         public bool SendMailAction(string toEmail, string subject, string body)
+        {
+            var path = HttpContext.Current.Server.MapPath(@"ImageUpload/ThankCard/thankcard_1.jpg");
+            var path1 = path.Replace("\\ManageTalkReal", "");
+            var pathSuccess = path1.Replace("\\HandleTruth", "");
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.To.Add(toEmail);
+                mail.From = new MailAddress(EMAIL);
+                mail.Subject = subject;
+                mail.Body = body;
+
+                AlternateView imgview = AlternateView.CreateAlternateViewFromString(body + "<br/><img src=cid:imgPath width=500>", null, MediaTypeNames.Text.Html);
+                LinkedResource lr = new LinkedResource(pathSuccess, MediaTypeNames.Image.Jpeg);
+                lr.ContentId = "imgPath";
+                imgview.LinkedResources.Add(lr);
+                mail.AlternateViews.Add(imgview);
+
+                mail.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                //smtp.Host = "smtp.office365.com";
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential(EMAIL, PWD);
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool SendMailActionNoImg(string toEmail, string subject, string body)
         {
             try
             {

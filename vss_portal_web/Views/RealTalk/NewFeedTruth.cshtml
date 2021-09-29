@@ -337,26 +337,34 @@
 
                     @using (Html.BeginForm("NewFeedTruth", "RealTalk", FormMethod.Get))
                     {
-                        <div style="display:flex; justify-content:space-between">
-                            <div style="position:relative; display: flex; flex: 1">
-                                <input value="@ViewData["searchString"]" name="searchString" id="search_input" class="inputSearch" placeholder="Tìm kiếm Truth" />
-                                <i style="position: absolute; top: 16px; left: 15px; " class="icofont-search-1"></i>
-                            </div>
-                            <div style="position:relative">
-                                <select name="idTruhStatusFinter" class="truthStatusClass" style="border: none" id="truthIdStatus">
-                                    <option value=0>Tất cả trạng thái</option>
-                                    @foreach (TruthStatu item in ListTruthStatus)
-                                    {
-                                        if (item.IdTruth != 1)
-                                        {
-                                            <option selected=@(ViewData["idSelectedTruth"].ToString() == item.IdTruth.ToString() ? "selected" : null) value=@item.IdTruth>@item.NameStatus</option>
-                                        }
-                                    }
-                                </select>
-                                <i style="position: absolute; position: absolute; top: 16px; right: 10px;" class="icofont-rounded-down"></i>
-                            </div>
-                            <button style="visibility: hidden; display:none" id="btnSearch" type="submit"></button>
+                    <div style="display:flex; justify-content:space-between">
+                        <div style="position:relative; display: flex; flex: 1">
+                            <input value="@ViewData["searchString"]" name="searchString" id="search_input" class="inputSearch" placeholder="Tìm kiếm Truth" />
+                            <i style="position: absolute; top: 16px; left: 15px; " class="icofont-search-1"></i>
                         </div>
+                        <div style="position:relative">
+                            <select name="idInterate" class="truthStatusClass" style="border: none" id="truthIdStatus">
+                                <option selected=@(ViewData["idInterate"].ToString() == "0" ? "selected" : null) value=0>Ý kiến mới nhất</option>
+                                <option selected=@(ViewData["idInterate"].ToString() == "1" ? "selected" : null) value=1>Ý kiến muộn nhất</option>
+                                <option selected=@(ViewData["idInterate"].ToString() == "2" ? "selected" : null) value=2>Ý kiến nhiều like nhất</option>
+                            </select>
+                            <i style="position: absolute; position: absolute; top: 16px; right: 10px;" class="icofont-rounded-down"></i>
+                        </div>
+                        <div style="position:relative">
+                            <select name="idTruhStatusFinter" class="truthStatusClass" style="border: none" id="truthIdStatus">
+                                <option value=0>Tất cả trạng thái</option>
+                                @foreach (TruthStatu item in ListTruthStatus)
+                                {
+                                    if (item.IdTruth != 1)
+                                    {
+                                        <option selected=@(ViewData["idSelectedTruth"].ToString() == item.IdTruth.ToString() ? "selected" : null) value=@item.IdTruth>@item.NameStatus</option>
+                                    }
+                                }
+                            </select>
+                            <i style="position: absolute; position: absolute; top: 16px; right: 10px;" class="icofont-rounded-down"></i>
+                        </div>
+                        <button style="visibility: hidden; display:none" id="btnSearch" type="submit"></button>
+                    </div>
                     }
                     @* danh sách truth doing *@
                     @* box master truth *@
@@ -497,7 +505,7 @@
                         }
                     }
                     <div style="position: absolute; bottom: 0; right: -3px;">
-                        @Html.PagedListPager(Model, page => Url.Action("NewFeedTruth", new { page, searchString = ViewData["searchString"], idTruhStatusFinter = ViewData["idSelectedTruth"] }))
+                        @Html.PagedListPager(Model, page => Url.Action("NewFeedTruth", new { page, searchString = ViewData["searchString"], idTruhStatusFinter = ViewData["idSelectedTruth"], idInterate = ViewData["idInterate"] }))
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-md-12" style="height: 100vh; position: relative; background-color: #F8F8F8; overflow:scroll; padding: 15px">

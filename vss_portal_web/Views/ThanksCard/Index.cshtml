@@ -451,11 +451,11 @@
                     $('#popupCheckRegex').modal('show');
                     return false
                 }
-                //if (!regex.test(mailReceiver)) {
-                //    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@viettel.com.vn)")
-                //    $('#popupCheckRegex').modal('show');
-                //    return false
-                //}
+                if (!regex.test(mailReceiver)) {
+                    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoinhan@viettel.com.vn)")
+                    $('#popupCheckRegex').modal('show');
+                    return false
+                }
                 if (nameReceiver == "") {
                     $('#contenPopUp').text("Vui lòng điền tên người nhận!")
                     $('#popupCheckRegex').modal('show');

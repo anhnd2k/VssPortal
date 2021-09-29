@@ -34,8 +34,8 @@ namespace vss_portal_web.Areas.Admin.Code
                 var userSession = new UserSession();
                 userSession.UserName = userName;
                 userSession.fullName = fullName;
-                //userSession.Email = emailVt;
-                userSession.Email = "hoanganh1112k@gmail.com";
+                userSession.Email = emailVt;
+                //userSession.Email = "hoanganh1112k@gmail.com";
                 userSession.Department = resDepartment;
                 //FormsAuthentication.SetAuthCookie(userName, false, emailVt);
                 SessionHelper.SetSecssion(userSession);

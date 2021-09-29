@@ -14,8 +14,8 @@ namespace vss_portal_web.Areas.Admin.Controllers
 {
     public class ManageTalkRealController : BaseAdminController
     {
-        private string titleEmail = "Thông báo về việc xét duyệt Truth - Nói thật đêêê";
-        private string titleEmailToResponsible = "Thông báo về việc tiếp nhận, xét duyệt, xử lý Truth - Nói thật đêêê ";
+        private string titleEmail = "\"Nói thật đê 01\" Thư cảm ơn";
+        private string titleEmailToResponsible = "\"Nói thật đê 01\" Thông báo Xử lý công việc";
 
         // GET: Admin/ManageTalkReal
         public ActionResult Index(string searchString, int idFinterTruth = 0, int page = 1, int pageSize = 10)
@@ -100,25 +100,30 @@ namespace vss_portal_web.Areas.Admin.Controllers
 
             //gửi mail thông báo ý tưởng được phê duyệt đến tác giả
             EmailService service = new EmailService();
-            string body = "Ý tưởng: " 
-                          + dataItem.TitleRealTalk + " của bạn đã được ban quản trị ghi nhận. Đang trong quá trình xử lý ý kiến </br>" 
-                          + "Thời gian phê duyệt: " + DateTime.Now + " <br/>Người phê duyệt:" + SessionHelper.GetSessionRoleAdmin().fullName + " <br/>"
-                          + "Cảm ơn bạn đã đóng góp ý kiến, phản hồi đến chúng tôi.";
+            string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
+                         + "Cảm ơn Anh/Chị đã gửi lời nói thật tới hòm thư \"Nói thật đê\" của Trung tâm VSS." + "<br/>"
+                         + "Đóng góp của bạn đã gửi thành công. Phía Phòng ban phụ trách đang tiếp nhận & xử lý. Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link: "
+                         + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/RealTalk/NewFeedTruth"))
+                         + " Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
+                         + "BTC cảm ơn bạn vì sự tận tụy của mình, VSS tự hào vì có sự đóng góp của bạn. " + "<br/>"
+                         + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
             bool resSendMail = service.SendMailAction(dataItem.MailSender, titleEmail, body);
 
             bool resSendEmailIndividual = true;
 
             List<PersionManageRealTalk> resPersion = new ActionPost().findPersionResponsible(dataItem.Field);
-            string bodySendPersionResponsibleTruth = "Thông báo: </br> Bạn nhận được một yêu cầu xử lý ý kiến trong mục Nói Thật Đi - Truth với nội dung như sau: </br> "
-                                                        + "Lĩnh vưc:" + dataItem.NameFieldRealTalk + "<br/>"
-                                                        + "Lời nói thật: " + dataItem.TitleRealTalk + "<br/>"
-                                                        + "Tác giả: " + dataItem.NameSender + "<br/>"
-                                                        + "Email Viettel: " + dataItem.MailSender + "<br/>"
-                                                        + "Chi tiết và cập nhật tiến trình xử lý Truth - Nói thật đê xử lý tại: " 
-                                                        + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/Admin/HandleTruth/Index")) + "<br/>";
+
             foreach (var item in resPersion)
             {
-                resSendEmailIndividual = service.SendMailAction(item.EmailManage, titleEmailToResponsible, bodySendPersionResponsibleTruth);
+                string bodySendPersionResponsibleTruth = "Thân gửi Quý Anh/Chị: " + item.FullNameManage
+                                                        + "Hệ thống \"Nói thật đê\" của Trung tâm VSS nhận được một yêu cầu về: " + "<br/>"
+                                                        + "Tiêu đề ý kiến: " + dataItem.TitleRealTalk + "<br/>"
+                                                        + "Thực trạng: " + dataItem.Reality + "<br/>"
+                                                        + "Đề xuất: " + dataItem.Suggestion + "<br/>"
+                                                        + "Kính mong đồng chí và phòng ban " + item.Department + " hỗ trợ giải pháp để đảm bảo được tiến độ công việc của cán bộ nhân viên. Sau khi xử lý, Đồng chí vui lòng cập nhật trạng thái tại: "
+                                                        + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/Admin/HandleTruth/Index")) + "<br/>"
+                                                        + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
+                resSendEmailIndividual = service.SendMailActionNoImg(item.EmailManage, titleEmailToResponsible, bodySendPersionResponsibleTruth);
             }
 
             //check gửi mai thành công đến tác giả

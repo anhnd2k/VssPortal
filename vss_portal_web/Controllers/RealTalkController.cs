@@ -25,7 +25,7 @@ namespace vss_portal_web.Controllers
             return View(controllerModel);
         }
 
-        public ActionResult NewFeedTruth(string searchString, int idTruhStatusFinter = 0, int page = 1, int pageSize = 10)
+        public ActionResult NewFeedTruth(string searchString, int idTruhStatusFinter = 0, int idInterate = 0, int page = 1, int pageSize = 5)
         {
             TempData["myDataRedirect"] = CustomerRedirectLogin.CustomRedirects("NewFeedTruth", "RealTalk");
 
@@ -36,13 +36,14 @@ namespace vss_portal_web.Controllers
 
             ViewData["userName"] = userName;
 
-            var listPostIdea = actionPost.GetListTruthSuccessForCmt(searchString, idTruhStatusFinter, page, pageSize);
+            var listPostIdea = actionPost.GetListTruthSuccessForCmt(searchString, idTruhStatusFinter, idInterate, page, pageSize);
 
             ViewData["listCmtPost"] = actionCmt.ListCmtPostIdea();
             ViewData["listTruth"] = actionPost.GetListTruthv2();
             ViewData["TruthStatus"] = actionPost.getListTruthStatus();
             ViewData["searchString"] = searchString;
             ViewData["idSelectedTruth"] = idTruhStatusFinter;
+            ViewData["idInterate"] = idInterate;
 
             return View(listPostIdea);
         }

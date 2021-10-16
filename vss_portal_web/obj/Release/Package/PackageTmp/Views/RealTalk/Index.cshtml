@@ -9,8 +9,8 @@
 @if (ViewData["oke"] == "ok")
 {
     <script type="text/javascript">
-
         window.onload = function () {
+            $('.modal-body').text("Gửi yêu cầu thành công, cám ơn bạn đã gửi \"Nói thật đê\"")
             $('#exampleModalCenter').modal('show');
         };
 
@@ -19,12 +19,21 @@
 @if (ViewData["oke"] == "false")
 {
     <script type="text/javascript">
-
         window.onload = function () {
             $('#contenPopUp').text("Có lỗi xảy ra trong qua trình xử lý, vui lòng thử lại sau ít phút!")
             $('#popupCheckRegex').modal('show');
         };
 
+    </script>
+}
+
+@if (TempData["messLogin"] == "false")
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById("errLogin").classList.remove("disPlayNone")
+            $('#LoginModel').modal('show');
+        };
     </script>
 }
 
@@ -36,39 +45,95 @@
         margin: 0;
         color: #fff
     }
+
     .fontweight {
         font-weight: bold;
         font-size: 14px
     }
+
+    .backNewFeed {
+        width: max-content;
+        padding: 10px 25px;
+        border: 1px solid #dc0c2c;
+        background-color: #fff;
+        top: 28px;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        border-radius: 14px
+    }
+
+    .formLogin {
+        background-color: #fff;
+        height: 295px;
+        border-radius: 20px;
+        border: 2px solid #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Modal Login-->
+<div class="modal fade" id="LoginModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                <h5 class="modal-title" style="font-size:16px" id="exampleModalLongTitle">Vui lòng đăng nhập để sử dụng tính năng này</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="conten_popup" class="modal-body">
-                Cảm ơn bạn đã gửi email Nói thật đê!
-            </div>
-            <div class="modal-footer">
-                <button id="btn" type="button" data-dismiss="modal" class="btn btn-primary">Tiếp tục gửi</button>
-                <a href="@Url.Action("Index","Home")"><button type="button" class="btn btn-danger">Trang chủ</button></a>
+            <div class="modal-body">
+                @using (Html.BeginForm("Login", "RealTalk", FormMethod.Post, new { onsubmit = "return checkValidateLogin()", @class = "formLogin" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div style="display: flex; flex-direction: column; width: 325px; align-items: center;">
+                        <label style=" margin:20px 0 15px 0; font-weight: bold; color: #272424; font-size: 15px"
+                               for="myEmail">
+                            Tên đăng nhập
+                        </label>
+                        <input id="myUsername"
+                               name="UserName"
+                               style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;" class="form-control"
+                               placeholder="Vui lòng nhập tên đăng nhập">
+                        <div id="errUsername" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
+                        <label style=" margin-bottom: 15px; font-weight: bold; color: #272424; font-size: 15px "
+                               for="myPassword">
+                            Mật khẩu
+                        </label>
+                        <input name="PassWord"
+                               style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;"
+                               type="password"
+                               id="myPassword"
+                               class="form-control"
+                               placeholder="Vui lòng nhập mật khẩu">
+                        <div id="errPassword" style="font-size: 12px; color: red;" class="disPlayNone">Mật khẩu không được bỏ trống</div>
+                        <div id="errLogin" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập hoặc mật khẩu không đúng</div>
+                        <input style=" margin-top: 23px; padding: 12px 49px; border-radius: 14px; outline: none; border: none; cursor: pointer; cursor: pointer; font-weight: bold; background-color: #eb0729; color: #fff; width: 100%;"
+                               type="submit"
+                               name=""
+                               value="Đăng nhập">
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
-
+<!--End Modal Login-->
 
 <main id="main">
     <div class="container">
-        <div style="width: 100%; margin: 20px 0; padding: 10px 0">
-            <h4 style="text-align: center; margin: 0; color: #dc3545; font-weight:bold; margin-bottom: 15px">VSS TRUTH</h4>
+        <div style="width: 100%; margin: 20px 0; padding: 10px 0; position: relative">
+            <h4 style="text-align: center; margin: 0; color: #dc3545; font-weight:bold; margin-bottom: 15px">Vss Truth</h4>
             <h6 style="text-align: center; margin: 0; color: black;"><i>"NÓI THẬT ĐÊÊÊÊÊÊ"</i></h6>
+            <a data-toggle=@(ViewBag.checkPermision == null ? "modal" : "")
+               data-target="#LoginModel"
+               href=@(ViewBag.checkPermision != null ? @Url.Action("NewFeedTruth", "RealTalk") : "#")
+               class="backNewFeed">
+                <i style=" font-size: 21px; color: #dc0c2c;" class="icofont-arrow-left"></i>
+                <div style="margin-left: 10px; font-weight: bold; color: #dc0c2c;">Bảng tin</div>
+            </a>
         </div>
         <div class="mt-3" style="margin-bottom: 100px">
             <form method="post" onsubmit="return validate()">
@@ -81,7 +146,14 @@
                         <div style="right: -15px; top: 0px; position: absolute; width: 0; height: 0; border-top: 15px solid transparent; border-bottom: 15px solid transparent; border-left: 15px solid #dc0c2c; "></div>
                     </div>
                 </div>
-                <div class="mt-3" style="margin-bottom: 20px">
+                @* an danh *@
+                <div style="margin-top: 35px; margin-bottom: 15px;">
+                    <div style="display:flex; align-items:center; margin-right: 30px">
+                        <div style="margin-right: 20px">Gửi với chế độ ẩn danh :</div>
+                        <input id="checkBoxSenderTruth" onclick="CheckBoxTruth(checked)" type="checkbox" value="true" name="incognitoStatus" />
+                    </div>
+                </div>
+                <div id="boxInfoUserSendTruth" class="mt-3" style="margin-bottom: 20px">
                     @* thông tin người gửi *@
                     <div id="boxInfoUser" class="form-row">
                         <div class="form-group col-sm-6">
@@ -95,6 +167,15 @@
                             <input style="position: relative; padding: 25px 35px;" type="text" class="form-control"
                                    id="senderName" name="NameSender" placeholder="Cho chúng tôi biết tên của bạn...">
                             <i style="position: absolute; top: 50px; left: 17px;" class="icofont-pen-alt-4"></i>
+                        </div>
+                        <div id="department" class="form-group col-sm-6">
+                            <label class="fontweight">Phòng ban <strong style="color:red">*</strong></label>
+                            <select name="departmentId" style="height: 52px" id="myState" class="form-control">
+                                @foreach (var item in Model.ListDepartments)
+                                {
+                                    <option value=@item.Id>@item.NameDepartment</option>
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -115,25 +196,25 @@
                     @* chủ đề *@
                     <div id="FieldRealTalk" class="form-group col-sm-6">
                         <label class="fontweight" for="myEmail">Lĩnh vực <strong style="color:red">*</strong></label>
-                        <select name="Field" style="height: 52px" id="myState" class="form-control">
+                        <select name="Field" style="height: 52px" class="form-control">
                             @foreach (var item in Model.ListFieldRealTalk)
                             {
-                                <option value=@item.Id>@item.NameFieldRealTalk</option>
+                                <option value=@item.IdFieldRealTalk>@item.NameFieldRealTalk</option>
                             }
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="fontweight" for="inputAddress2">Thực trạng<strong style="color:red">*</strong></label>
-                    <textarea name="Reality" class="form-control" rows="12" cols="60"></textarea>
+                    <textarea id="RealityId" name="Reality" class="form-control" rows="6"></textarea>
                 </div>
                 <div class="form-group">
                     <label class="fontweight" for="inputAddress2">Đề xuất<strong style="color:red">*</strong></label>
-                    <textarea name="Suggestion" class="form-control" rows="12" cols="60"></textarea>
+                    <textarea id="SuggestionId" name="Suggestion" class="form-control" rows="6"></textarea>
                 </div>
                 <button style="padding: 15px" type="submit" class="btn btn-danger">Gửi yêu cầu</button>
                 @* spinner *@
-                <div class="spinner">
+                <div class="spinner" style="z-index: 999999">
                     <div class="spinner-border text-danger center-div" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -143,54 +224,64 @@
     </div>
 </main>
 
-<!-- Modal check -->
-<div class="modal fade" id="popupCheckRegex" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div id="contenPopUp" class="modal-body">
-                Vui lòng điền thông tin email Viettel
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn btn-primary">Đồng ý</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section scripts{
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
-        CKEDITOR.replace('Reality')
+        //CKEDITOR.replace('Reality')
 
-        CKEDITOR.replace('Suggestion')
+        //CKEDITOR.replace('Suggestion')
+
+        function checkValidateLogin() {
+            var username = document.getElementById("myUsername").value;
+            var password = document.getElementById("myPassword").value;
+            if (username == "") {
+                document.getElementById("errUsername").classList.remove("disPlayNone")
+                return false
+            }
+            document.getElementById("errUsername").classList.add("disPlayNone")
+            if (password == "") {
+                document.getElementById("errPassword").classList.remove("disPlayNone")
+                return false
+            }
+            $('.spinner').css('display', 'block');
+            return true;
+        }
+
+        function CheckBoxTruth(checked) {
+            if (checked == true) {
+                document.getElementById("boxInfoUserSendTruth").classList.add("disPlayNone")
+                return
+            } else {
+                document.getElementById("boxInfoUserSendTruth").classList.remove("disPlayNone")
+                return
+            }
+        }
 
         function validate() {
             var senderMail = document.getElementById("senderMail").value;
             var senderName = document.getElementById("senderName").value;
             var titleRealTalk = document.getElementById("titleRealTalk").value;
-            var ContentReality = CKEDITOR.instances.Reality.getData();
-            var Contentsuggestion = CKEDITOR.instances.Suggestion.getData();
+            var checkedTruth = document.getElementById("checkBoxSenderTruth").checked;
+            //CKEDITOR.instances.Reality.getData();  SuggestionId
+            var ContentReality = document.getElementById("RealityId").value
+            var Contentsuggestion = document.getElementById("SuggestionId").value
 
             const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
 
             $('.spinner').css('display', 'none');
 
-            if (!regex.test(senderMail)) {
-                $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoigui@viettel.com.vn)")
-                $('#popupCheckRegex').modal('show');
-                return false
-            }
-            if (senderName == '') {
-                $('#contenPopUp').text("Vui lòng nhập tên người gửi")
-                $('#popupCheckRegex').modal('show');
-                return false
+            if (!checkedTruth) {
+                if (!regex.test(senderMail)) {
+                    $('#contenPopUp').text("Vui lòng nhập đúng định dạng email Viettel (vd: nguoigui@viettel.com.vn)")
+                    $('#popupCheckRegex').modal('show');
+                    return false
+                }
+                if (senderName == '') {
+                    $('#contenPopUp').text("Vui lòng nhập tên người gửi")
+                    $('#popupCheckRegex').modal('show');
+                    return false
+                }
             }
 
             if (titleRealTalk == '') {
@@ -250,7 +341,7 @@
                         data: `{"e": "${email}"}`,
                         success: function (data) {
                             $(`#${idCompelete}`).val(data.Name);
-                            if (idEmail == "receiverMail") {
+                            if (idEmail == "senderMail") {
                                 let idDepaerment
                                 ListDepartments.map(item => {
                                     if (item.NameDepartment == data.Department) {

@@ -11,7 +11,6 @@ namespace vss_portal_web.Areas.Admin.Controllers
     {
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-
             ViewData["UserName"] = SessionHelper.GetSessionRoleAdmin()?.fullName;
             var session = SessionHelper.GetSessionRoleAdmin();
             if (session == null)

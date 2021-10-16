@@ -7,27 +7,47 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using vss_portal_web.Areas.Admin.Code;
+using vss_portal_web.Areas.Admin.Models;
 using vss_portal_web.Models;
 
 namespace vss_portal_web.Controllers
 {
-    public class RealTalkController : BaseController
+    public class RealTalkController : Controller
     {
         // GET: RealTalk
         public ActionResult Index()
         {
             TempData["myDataRedirect"] = CustomerRedirectLogin.CustomRedirects("Index", "RealTalk");
-
+            ViewData["fullNameUser"] = CheckLoginRole.getUserName();
+            ViewData["checkRoleLogin"] = CheckLoginRole.check();
+            ViewData["headerActive"] = "active";
+            var cookie = SessionHelper.GetSession();
+            if (cookie != null)
+            {
+                ViewBag.checkPermision = true;
+            }
             var action = new ActionPost();
             var field = action.getListFieldRealTalk();
+            var ListDepartment = action.getListDepartment();
+
             ModelController controllerModel = new ModelController();
             controllerModel.ListFieldRealTalk = field;
+            controllerModel.ListDepartments = ListDepartment;
             return View(controllerModel);
         }
 
         public ActionResult NewFeedTruth(string searchString, int idTruhStatusFinter = 0, int idInterate = 0, int page = 1, int pageSize = 5)
         {
             TempData["myDataRedirect"] = CustomerRedirectLogin.CustomRedirects("NewFeedTruth", "RealTalk");
+            ViewData["fullNameUser"] = CheckLoginRole.getUserName();
+            ViewData["checkRoleLogin"] = CheckLoginRole.check();
+            ViewData["headerActive"] = "active";
+
+            var cookie = SessionHelper.GetSession();
+            if (cookie == null)
+            {
+                return RedirectToAction("Index", "LoginForGuest");
+            }
 
             var actionPost = new ActionPost();
             var actionCmt = new ActionCommentLikePost();
@@ -46,6 +66,22 @@ namespace vss_portal_web.Controllers
             ViewData["idInterate"] = idInterate;
 
             return View(listPostIdea);
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginModel model)
+        {
+            if (new LdapAuthentication().AuthenticateUserV2(model.UserName, model.PassWord) && ModelState.IsValid)
+            {
+                return RedirectToAction("NewFeedTruth", "RealTalk");
+            }
+            else
+            {
+                TempData["messLogin"] = "false";
+                ViewBag.checkPermision = "";
+                ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng");
+            }
+            return RedirectToAction("Index", "RealTalk");
         }
 
         [HttpPost]
@@ -123,13 +159,34 @@ namespace vss_portal_web.Controllers
         //create new new truth
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Index (TalkReal model)
+        public ActionResult Index (TalkReal model, Incognito statusIncognito, int departmentId)
         {
             var action = new ActionPost();
             var field = action.getListFieldRealTalk();
+            var listDepartment = action.getListDepartment();
+            var ListDepartment = action.getListDepartment();
             ModelController controllerModel = new ModelController();
             controllerModel.ListFieldRealTalk = field;
-            model.DepartmentSender = SessionHelper.GetSession()?.Department;
+            controllerModel.ListDepartments = ListDepartment;
+
+            if (statusIncognito.incognitoStatus)
+            {
+                model.NameSender = null;
+                model.MailSender = null;
+                model.DepartmentSender = null;
+            }
+            foreach(var item in listDepartment)
+            {
+                if(item.Id == departmentId)
+                {
+                    model.DepartmentSender = item.NameDepartment;
+                    break;
+                }
+            }
+            //else
+            //{
+            //    model.DepartmentSender = SessionHelper.GetSession()?.Department;
+            //}
 
             bool res = new ActionPost().SendRealTalk(model);
             if (res)

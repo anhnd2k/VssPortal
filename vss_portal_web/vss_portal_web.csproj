@@ -394,6 +394,7 @@
     <Compile Include="Areas\Admin\Code\UserSession.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BaseResolverTruth.cs" />
     <Compile Include="Areas\Admin\Controllers\DetailIdeaRegesterController.cs" />
     <Compile Include="Areas\Admin\Controllers\HandleTruthController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageIdeaRegisterController.cs" />
@@ -423,6 +424,7 @@
     </Compile>
     <Compile Include="Models\EmailService.cs" />
     <Compile Include="Models\IdeaPlus.cs" />
+    <Compile Include="Models\Incognito.cs" />
     <Compile Include="Models\ModelController.cs" />
     <Compile Include="Models\PathImgConten.cs" />
     <Compile Include="Models\RealTalkUser.cs" />
@@ -3723,6 +3725,18 @@
     <Content Include="Areas\Admin\assets_admin\assets\scss\_navs.scss" />
     <Content Include="Areas\Admin\assets_admin\assets\scss\_utilities.scss" />
     <Content Include="Areas\Admin\assets_admin\assets\scss\_variables.scss" />
+    <Content Include="Areas\Admin\Views\UpdatePost\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CreatePosts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\UpdateOnBoadingPosts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageThankcard\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageTalkReal\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ViewDetailRealTalk\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageIdeaRegister\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageInitativeRegister\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\DetailIdeaRegester\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageInitativeRegister\DetailInitative.cshtml" />
+    <Content Include="Areas\Admin\Views\HandleTruth\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ManageTalkReal\ManagePersionEditTruth.cshtml" />
     <Content Include="Areas\Admin\assets_admin\assets\vendor\bootstrap-datepicker\css\bootstrap-datepicker.css.map" />
     <Content Include="Areas\Admin\assets_admin\assets\vendor\bootstrap-datepicker\css\bootstrap-datepicker.standalone.css.map" />
     <Content Include="Areas\Admin\assets_admin\assets\vendor\bootstrap-datepicker\css\bootstrap-datepicker3.css.map" />
@@ -3882,18 +3896,6 @@
     <Content Include="Areas\Admin\assets_admin\assets\vendor\select2\src\scss\_dropdown.scss" />
     <Content Include="Areas\Admin\assets_admin\assets\vendor\select2\src\scss\_multiple.scss" />
     <Content Include="Areas\Admin\assets_admin\assets\vendor\select2\src\scss\_single.scss" />
-    <Content Include="Areas\Admin\Views\UpdatePost\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\CreatePosts\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\UpdateOnBoadingPosts\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageThankcard\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageTalkReal\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ViewDetailRealTalk\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageIdeaRegister\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageInitativeRegister\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\DetailIdeaRegester\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageInitativeRegister\DetailInitative.cshtml" />
-    <Content Include="Areas\Admin\Views\HandleTruth\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageTalkReal\ManagePersionEditTruth.cshtml" />
     <None Include="bin\vss_portal_web.dll.config" />
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="obj\Debug\vss_portal_web.csproj.AssemblyReference.cache" />

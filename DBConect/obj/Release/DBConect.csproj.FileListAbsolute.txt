@@ -1,0 +1,16 @@
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\DBConect.dll.config
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\DBConect.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\DBConect.pdb
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\EntityFramework.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\PagedList.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\PagedList.Mvc.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\EntityFramework.xml
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\PagedList.xml
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\bin\Release\PagedList.Mvc.xml
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\obj\Release\DBConect.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\obj\Release\DBConect.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\obj\Release\DBConect.csproj.CopyComplete
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\obj\Release\DBConect.dll
+C:\Users\Admin\Desktop\c#\vss_portal_web\DBConect\obj\Release\DBConect.pdb

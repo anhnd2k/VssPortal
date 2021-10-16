@@ -61,6 +61,12 @@
         max-width: max-content;
         margin: 69px auto 0 auto;
     }
+    .activeFlag {
+        color: #dc3545
+    }
+    .disableFlag {
+        color: #d1c5c6
+    }
 </style>
 <div class="row table_post">
     <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px">
@@ -83,6 +89,10 @@
                         <div style="width: 40%;position: relative; margin-right: 30px">
                             <input value="@ViewData["searchString"]" id="search_input" name="searchString" style=" width: 100%; border: none; background-color: #F5F5F5; border-radius: 17px; padding: 7px 0 6px 35px; outline: none;" placeholder="Tìm kiếm..." />
                             <i style="position: absolute; left: 10px; top: 11px; color: #999999;" class="fas fa-search"></i>
+                        </div>
+                        <div style="margin-right: 30px; background-color: #5d9866; padding: 7px 10px; border-radius: 13px; display: flex; align-items: center">
+                            <i style=" color: #fff; margin-right: 10px;" class="fas fa-file-download"></i>
+                            <a style="color: #fff" href="@Url.Action("ExportExcelTruth", "ManageTalkReal")">Xuất Excel</a>
                         </div>
                         <div style="margin-right: 30px; background-color: #5d9866; padding: 7px 10px; border-radius: 13px; display: flex; align-items: center">
                             <i style=" color: #fff; margin-right: 10px;" class="fas fa-user-edit"></i>
@@ -115,10 +125,11 @@
                                 <th>Stt</th>
                                 <th>Lời nói thật</th>
                                 <th>Người gửi</th>
-                                <th>Phong ban</th>
+                                <th>Phòng ban</th>
                                 <th>Lĩnh vực</th>
                                 <th>Trạng thái tiến trình</th>
                                 <th>Thời gian gửi</th>
+                                <th>Hiển thị trên bảng tin</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -129,13 +140,13 @@
                                 <tr id="row_@item.id" class="col-tr-post">
                                     <td>@(Math.Abs(data.i + 1))</td>
                                     <td class="name">@item.TitleRealTalk</td>
-                                    <td>@item.NameSender</td>
+                                    <td>@(item.NameSender != null ? item.NameSender : "ẩn danh")</td>
                                     <td>@(item.DepartmentSender != null ? item.DepartmentSender : "Không có dữ liệu")</td>
                                     <td>
                                         @if (item.Status == 1)
                                         {
                                             <div style="position: relative">
-                                                <select name="Field" style="height: 34px; min-width: 122px; background-color: #f5f5f5 " class="form-control myState" id="@item.id">
+                                                <select name="Field" style="height: 34px; min-width: max-content; background-color: #f5f5f5; padding-right: 29px;" class="form-control myState" id="@item.id">
                                                     @foreach (FieldRealTalk items in ListFields)
                                                     {
                                                         <option id="option_field" selected=@(item.Field == items.IdFieldRealTalk ? "selected" : null) value=@items.IdFieldRealTalk>@items.NameFieldRealTalk</option>
@@ -156,6 +167,12 @@
                                         </div>
                                     </td>
                                     <td>@item.TimeSend</td>
+                                    @* flag show in new feed *@
+                                    <td style=" min-width: 165px">
+                                        <div onclick="setStatusFlag(@item.id)" style="text-align:center">
+                                            <i class="@(item.ShowInNewFeed ? "fas fa-flag activeFlag" : "fas fa-flag disableFlag")"></i>
+                                        </div>
+                                    </td>
                                     <td style="min-width: 300px">
                                         <a href="ViewDetailRealTalk/?id=@item.id" class="btn btn-sm btn-primary">Chi Tiết</a>
                                         <div onclick="ApproveTruth(@item.id)" class="@(item.Status != 1 ? "btn btn-sm btn-success disabled" : "btn btn-sm btn-success")">
@@ -169,31 +186,6 @@
                             }
                         </tbody>
                     </table>
-                    @* spinner *@
-                    <div class="spinner">
-                        <div class="spinner-border text-danger center-div" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body contenModels">
-                                    Xét duyệt ý tưởng thành công!
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     @Html.PagedListPager(Model, page => Url.Action("index", new { page, idFinterTruth = ViewData["idSelectedTruth"], searchString = ViewData["searchString"] }))
                 </div>
             }
@@ -208,17 +200,6 @@
 </div>
             @section scripts{
                 <script type="text/javascript">
-
-                $(".statusTruth_5").css("background-color", "#FF375F")
-                $(".statusTruth_1").css("background-color", "#B5A13D")
-                $(".statusTruth_2").css("background-color", "#4267B2")
-                $(".statusTruth_3").css("background-color", "#32A4D7")
-                $(".statusTruth_4").css("background-color", "#32D74B")
-
-                    // người dùng xác nhận form model và reload lại trang
-                    $("#exampleModalCenter").on('hidden.bs.modal', function () {
-                        location.reload()
-                    });
 
                     var truthStatus = document.querySelectorAll(".truthStatusClass");
                     truthStatus.forEach(itemTruth => {
@@ -276,7 +257,7 @@
                                 success: function (data) {
                                     $('.spinner').css('display', 'none');
                                     if (data) {
-                                        $('.contenModels').text(`Xét duyệt Truth - nói thật đê thành công. Ý kiến sẽ được bàn giao đến `)
+                                        $('.contenModels').text(`Xét duyệt Truth - nói thật đê thành công. Ý kiến sẽ được bàn giao đến người phụ trách quản lý `)
                                         $('#exampleModalCenter').modal('show');
                                     } else {
                                         $('.contenModels').text("Có lỗi xảy ra, xét duyệt không thành công. Vui lòng thử lại sau ít phút!")
@@ -312,6 +293,26 @@
                         } else {
                             return false;
                         }
+                    }
+                    function setStatusFlag(id) {
+                        $('.spinner').css('display', 'block');
+                        $.ajax({
+                            url: "/ManageTalkReal/setStatusFlag",
+                            type: "POST",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            data: `{"id": "${id}"}`,
+                            success: function (data) {
+                                $('.spinner').css('display', 'none');
+                                if (data) {
+                                    $('.contenModels').text("Thay đổi trạng thái hiển thị ý kiến thành công")
+                                    $('#exampleModalCenter').modal('show');
+                                } else {
+                                    $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                                    $('#exampleModalCenter').modal('show');
+                                }
+                            }
+                        })
                     }
                 </script>
             }

@@ -50,8 +50,6 @@ namespace DBConect
         public int CheckRoleUser(string emailVt)
         {
                 AccountAdmin res = context.AccountAdmins.Where(x => x.EmailVt == emailVt).FirstOrDefault();
-            
-
                 if(res == null)
                 {
                     return 0;
@@ -60,6 +58,11 @@ namespace DBConect
                 if(res?.Role == "ADMIN")
                 {
                     return 1;
+                }
+
+                if(res?.Role == "RESOLVER_TRUTH")
+                {
+                    return 2;
                 }
             return 1;
         }

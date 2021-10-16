@@ -42,6 +42,7 @@ namespace DBConect.Farmework
         [StringLength(50)]
         public string AuthorEmail { get; set; }
 
+        [StringLength(50)]
         public string AuthorDepartment { get; set; }
 
         [StringLength(600)]

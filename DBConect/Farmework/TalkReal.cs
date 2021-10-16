@@ -17,6 +17,7 @@ namespace DBConect.Farmework
         [StringLength(50)]
         public string MailSender { get; set; }
 
+        [StringLength(50)]
         public string DepartmentSender { get; set; }
 
         public DateTime? TimeSend { get; set; }
@@ -35,5 +36,9 @@ namespace DBConect.Farmework
         public int? TruthStatus { get; set; }
 
         public int? Status { get; set; }
+
+        public bool ShowInNewFeed { get; set; }
+
+        public DateTime? TimeUpdateStatus { get; set; }
     }
 }

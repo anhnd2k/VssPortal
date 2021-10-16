@@ -13,7 +13,6 @@ namespace DBConect.Farmework
 
         public int? IdPostIdea { get; set; }
 
-        [StringLength(50)]
         public string UserNameLike { get; set; }
 
         [StringLength(100)]

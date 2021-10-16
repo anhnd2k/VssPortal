@@ -47,6 +47,11 @@ namespace vss_portal_web.Areas.Admin.Code
                     SessionHelper.SetSessionRoleAdmin(userSession);
                 }
 
+                if(checkRole == 2)
+                {
+                    SessionHelper.SetSessionRoleResolverTruth(userSession);
+                }
+
                 ret = true;
                 return ret;
             }

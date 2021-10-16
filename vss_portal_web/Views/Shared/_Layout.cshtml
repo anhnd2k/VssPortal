@@ -75,14 +75,15 @@
                     <li><a href="@Request.Url.Scheme://@Request.Url.Host/#recruitment">Tuyển dụng</a></li>
                     <li>
                         <a id="userDropdown" role="button" data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false" href="/Admin" class="adminCss"><i class="icofont-user-alt-7"> @ViewData["fullNameUser"]</i></a>
+                           aria-haspopup="true" aria-expanded="false" href="/Admin" class="adminCss"><i class="icofont-user-alt-7"> @ViewData["fullNameUser"]</i></a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                             <a style="display: @(ViewData["checkRoleLogin"] == "noLogin" ? "block" : "none")" href=@Url.Action("Index", "LoginForGuest")><i style="margin-right: 10px" class="icofont-login"></i> Login</a>
                             <a style="display: @(ViewData["checkRoleLogin"] == "Admin" ? "block" : "none")" href="/Admin/HomeAdmin"><i style="margin-right: 10px" class="icofont-ui-next"></i> Đi tới trang quản lý</a>
-                            <a style="display: @(ViewData["checkRoleLogin"] == "Guest" ? "block" : (ViewData["checkRoleLogin"] == "Admin" ? "block" : "none"))" href=@Url.Action("TruthRegestered", "RealTalk")><i style="margin-right: 10px" class="icofont-google-talk"></i>Nói thật đi của bạn</a>
-                            <a style="display: @(ViewData["checkRoleLogin"] == "Guest" ? "block" : (ViewData["checkRoleLogin"] == "Admin" ? "block" : "none"))" href=@Url.Action("InitativeRegestered", "Initiative")><i style="margin-right: 10px" class="icofont-brand-slideshare"></i>Sáng kiến đã đóng góp</a>
-                            <a style="display: @(ViewData["checkRoleLogin"] == "Guest" ? "block" : (ViewData["checkRoleLogin"] == "Admin" ? "block" : "none"))" href=@Url.Action("IdeaRegestered", "Idea")><i style="margin-right: 10px" class="icofont-unique-idea"></i>Ý tưởng đã đóng góp</a>
-                            <a style="display: @(ViewData["checkRoleLogin"] == "Guest" ? "block" : (ViewData["checkRoleLogin"] == "Admin" ? "block" : "none"))" href=@Url.Action("LogOut","Admin/Admin")><i style="margin-right: 10px" class="icofont-logout"></i>Đăng xuất</a>
+                            <a style="display: @(ViewData["checkRoleLogin"] == "Resolver" ? "block" : "none")" href="/Admin/HandleTruth"><i style="margin-right: 10px" class="icofont-ui-next"></i> Quản lý "Nói Thật đê"</a>
+                            <a style="display: @(ViewData["checkRoleLogin"] != "noLogin" ? "block" : "none")" href=@Url.Action("TruthRegestered", "RealTalk")><i style="margin-right: 10px" class="icofont-google-talk"></i>Nói thật đi của bạn</a>
+                            <a style="display: @(ViewData["checkRoleLogin"] != "noLogin" ? "block" : "none")" href=@Url.Action("InitativeRegestered", "Initiative")><i style="margin-right: 10px" class="icofont-brand-slideshare"></i>Sáng kiến đã đóng góp</a>
+                            <a style="display: @(ViewData["checkRoleLogin"] != "noLogin" ? "block" : "none")" href=@Url.Action("IdeaRegestered", "Idea")><i style="margin-right: 10px" class="icofont-unique-idea"></i>Ý tưởng đã đóng góp</a>
+                            <a style="display: @(ViewData["checkRoleLogin"] != "noLogin" ? "block" : "none")" href=@Url.Action("LogOut","Admin/Admin")><i style="margin-right: 10px" class="icofont-logout"></i>Đăng xuất</a>
                         </div>
                     </li>
                 </ul>
@@ -90,9 +91,49 @@
 
         </div>
     </header>
-    <!-- End Header -->
+
+    <!-- Modal check -->
+    <div class="modal fade" id="popupCheckRegex" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="contenPopUp" class="modal-body">
+                    Vui lòng điền thông tin email Viettel
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary">Đồng ý</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Cảm ơn bạn đã gửi thank card
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary">Tiếp tục gửi thiệp</button>
+                    <a href="@Url.Action("Index","Home")"><button type="button" class="btn btn-danger">Trang chủ</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @RenderBody()
-    <!-- ======= Footer ======= -->
     <footer id="footer">
         <div class="footer-top">
             <div class="container">
@@ -100,27 +141,12 @@
 
                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;" class="col-lg-12 col-md-12 footer-info">
                         <h3>Trang tin nội bộ Viettel Software Services</h3>
-                        @*<p>
-                                <strong>Office:</strong> 4-5 floor, Thanh Cong Building,
-                                80 Dich Vong Hau street, Hanoi<br>
-                                <strong>Phone:</strong> 1800 8098/198<br>
-                                <strong>Email:</strong> mail.viettel.com.vn<br>
-
-                            </p>
-                            <br />*@
                         <strong>Phát triển bởi Phòng Kỹ thuật Công nghệ - VSS</strong>
-                        @*<div class="social-links mt-3">
-                                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-                            </div>*@
                     </div>
                 </div>
             </div>
         </div>
-    </footer><!-- End Footer -->
+    </footer>
 
     <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
     <!-- Vendor JS Files -->

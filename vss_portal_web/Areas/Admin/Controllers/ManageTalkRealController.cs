@@ -1,5 +1,6 @@
 ﻿using DBConect;
 using DBConect.Farmework;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var listTruthStatus = action.getListTruthStatus();
 
             ViewData["tabBarSelection"] = "truth";
-
+            TempData["redirectAction"] = "";
             ViewData["FiendList"] = listFiend;
             ViewData["TruthStatus"] = listTruthStatus;
             ViewData["idSelectedTruth"] = idFinterTruth;
@@ -97,22 +98,26 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var dataItem = new ActionPost().DetailRealTalk(id);
 
             bool res = false;
+            bool resSendMail = true;
 
-            //gửi mail thông báo ý tưởng được phê duyệt đến tác giả
             EmailService service = new EmailService();
-            string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
+
+            if(dataItem.NameSender != null && dataItem.MailSender != null)
+            {
+                string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
                          + "Cảm ơn Anh/Chị đã gửi lời nói thật tới hòm thư \"Nói thật đê\" của Trung tâm VSS." + "<br/>"
-                         + "Đóng góp của bạn đã gửi thành công. Phía Phòng ban phụ trách đang tiếp nhận & xử lý. Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link: "
+                         + "Đóng góp của bạn đã gửi thành công. Phía Phòng ban phụ trách đang tiếp nhận & xử lý. Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link:  "
                          + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/RealTalk/NewFeedTruth"))
-                         + " Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
+                         + "  .Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
                          + "BTC cảm ơn bạn vì sự tận tụy của mình, VSS tự hào vì có sự đóng góp của bạn. " + "<br/>"
                          + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
-            bool resSendMail = service.SendMailAction(dataItem.MailSender, titleEmail, body);
+                resSendMail = service.SendMailAction(dataItem.MailSender, titleEmail, body);
+            }
 
             bool resSendEmailIndividual = true;
 
             List<PersionManageRealTalk> resPersion = new ActionPost().findPersionResponsible(dataItem.Field);
-
+            //gửi mail thông báo ý tưởng được phê duyệt đến tác giả
             foreach (var item in resPersion)
             {
                 string bodySendPersionResponsibleTruth = "Thân gửi Quý Anh/Chị: " + item.FullNameManage
@@ -120,7 +125,7 @@ namespace vss_portal_web.Areas.Admin.Controllers
                                                         + "Tiêu đề ý kiến: " + dataItem.TitleRealTalk + "<br/>"
                                                         + "Thực trạng: " + dataItem.Reality + "<br/>"
                                                         + "Đề xuất: " + dataItem.Suggestion + "<br/>"
-                                                        + "Kính mong đồng chí và phòng ban " + item.Department + " hỗ trợ giải pháp để đảm bảo được tiến độ công việc của cán bộ nhân viên. Sau khi xử lý, Đồng chí vui lòng cập nhật trạng thái tại: "
+                                                        + "Kính mong đồng chí và phòng ban " + item.Department + " hỗ trợ giải pháp để đảm bảo được tiến độ công việc của cán bộ nhân viên. Sau khi xử lý, Đồng chí vui lòng cập nhật trạng thái tại:  "
                                                         + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/Admin/HandleTruth/Index")) + "<br/>"
                                                         + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
                 resSendEmailIndividual = service.SendMailActionNoImg(item.EmailManage, titleEmailToResponsible, bodySendPersionResponsibleTruth);
@@ -152,14 +157,21 @@ namespace vss_portal_web.Areas.Admin.Controllers
             var dataItem = new ActionPost().DetailRealTalk(id);
 
             bool res = false;
+            bool resSendMail = true;
 
             //gửi mail thông báo ý tưởng được phê duyệt
-            EmailService service = new EmailService();
-            string body = "Ý kiến trong chuyên mục Nói Thật Đê: " + dataItem.TitleRealTalk + "của bạn đã bị từ chối. </br>"
-                          + "Thời gian từ chối:  " + dataItem.TimeApproval + " <br/>"
-                          + "Người phê duyệt: <br/>" + SessionHelper.GetSessionRoleAdmin().fullName + " <br/>"
-                          + "Cảm ơn bạn đã đóng góp ý kiến, phản hồi đến chúng tôi.";
-            bool resSendMail = service.SendMailAction(dataItem.MailSender, titleEmail, body);
+            if(dataItem.NameSender != null && dataItem.MailSender != null)
+            {
+                EmailService service = new EmailService();
+                string body = "Thân gửi Quý Anh/Chị: " + dataItem.NameSender + "<br/>"
+                             + "Cảm ơn Anh/Chị đã gửi lời nói thật tới hòm thư \"Nói thật đê\" của Trung tâm VSS." + "<br/>"
+                             + "Đóng góp của bạn đã được tiếp nhận bởi phía Phòng ban phụ trách và đang được xử lý. Nội dung đóng góp của Anh/Chị đã được đăng lên kênh thông tin \"Nói thật đê\" tại link:  "
+                             + string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("/RealTalk/NewFeedTruth"))
+                             + "  .Anh/Chị có thể theo dõi nhé ạ" + "<br/>"
+                             + "BTC cảm ơn bạn vì sự tận tụy của mình, VSS tự hào vì có sự đóng góp của bạn. " + "<br/>"
+                             + "Xin trân trọng cảm ơn những nỗ lực của bạn.";
+                resSendMail = service.SendMailAction(dataItem.MailSender, titleEmail, body);
+            }
 
             if (resSendMail)
             {
@@ -172,5 +184,104 @@ namespace vss_portal_web.Areas.Admin.Controllers
 
             return new JsonResult { Data = res, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
+
+        public JsonResult setStatusFlag(int id)
+        {
+            bool res = new ActionPost().setStatusFlag(id);
+            return new JsonResult { Data = res, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        public JsonResult changeFieldName(string name, int idField)
+        {
+            bool res = new ActionPost().changeNameField(idField, name);
+            return new JsonResult { Data = res, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        //add new filed
+        public JsonResult addNewField(string nameField)
+        {
+            bool res = new ActionPost().addNewField(nameField);
+            return new JsonResult { Data = res, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        //xuất excel truth
+
+        public void ExportExcelTruth()
+        {
+            var action = new ActionPost();
+            var ListTruth = action.ListTruth();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage Ep = new ExcelPackage();
+            ExcelWorksheet Sheet = Ep.Workbook.Worksheets.Add("Report");
+            Sheet.Cells["A1"].Value = "STT";
+            Sheet.Cells["B1"].Value = "Ngày tạo";
+            Sheet.Cells["C1"].Value = "Người tạo";
+            Sheet.Cells["D1"].Value = "Email";
+            Sheet.Cells["E1"].Value = "Đơn vị";
+            Sheet.Cells["F1"].Value = "Tên Truth";
+            Sheet.Cells["G1"].Value = "Chủ đề";
+            Sheet.Cells["H1"].Value = "Hiện trạng";
+            Sheet.Cells["I1"].Value = "Đề xuất";
+            Sheet.Cells["J1"].Value = "Ngày duyệt";
+            Sheet.Cells["K1"].Value = "Trạng thái";
+            Sheet.Cells["L1"].Value = "Ngày cập nhật trạng thái cuối";
+            Sheet.Cells["M1"].Value = "Người xử lý";
+            Sheet.Cells["N1"].Value = "Email";
+            Sheet.Cells["O1"].Value = "Đơn vị";
+            Sheet.Cells["P1"].Value = "Phản hồi cuối cùng";
+            Sheet.Cells["Q1"].Value = "Đã lên bảng tin";
+            Sheet.Cells["R1"].Value = "Số lượng comment";
+            Sheet.Cells["S1"].Value = "Số lượng like";
+
+            int row = 2;
+            foreach (var data in ListTruth.Select((value, i) => new { value, i }))
+            {
+                var item = data.value;
+                CommentDetailTruth infoPersionHandletruth = new CommentDetailTruth();
+                if (item.TruthStatus != 1 && item.TruthStatus != 2)
+                {
+                    infoPersionHandletruth = action.getInfoTruth(item.id);
+                }
+                var findPersionHandelToField = action.findPersionHandelToField(item.Field);
+                var mailHandelToFiend = action.mailHandelToFiend(item.Field);
+                var departmentPersionHandel = string.Empty;
+                if (infoPersionHandletruth.EmailManagerCmt != null)
+                {
+                    departmentPersionHandel = action.findDepartment(infoPersionHandletruth.EmailManagerCmt);
+                }
+
+                Sheet.Cells[string.Format("A{0}", row)].Value = Math.Abs(data.i + 1);
+                Sheet.Cells[string.Format("B{0}", row)].Value = item.TimeSend?.ToString("MM/dd/yyyy hh:mm:ss tt");
+                Sheet.Cells[string.Format("C{0}", row)].Value = item.NameSender != null ? item.NameSender : "Ẩn danh";
+                Sheet.Cells[string.Format("D{0}", row)].Value = item.MailSender != null ? item.MailSender : "Ẩn danh";
+                Sheet.Cells[string.Format("E{0}", row)].Value = item.DepartmentSender != null ? item.MailSender : "Không có dữ liệu";
+                Sheet.Cells[string.Format("F{0}", row)].Value = item.TitleRealTalk;
+                Sheet.Cells[string.Format("G{0}", row)].Value = item.NameFieldRealTalk;
+                Sheet.Cells[string.Format("H{0}", row)].Value = item.Reality;
+                Sheet.Cells[string.Format("I{0}", row)].Value = item.Suggestion;
+                Sheet.Cells[string.Format("J{0}", row)].Value = item.TimeApproval?.ToString("MM/dd/yyyy hh:mm:ss tt");
+                Sheet.Cells[string.Format("K{0}", row)].Value = item.TruthStatusName;
+                Sheet.Cells[string.Format("L{0}", row)].Value = item.TimeUpdateStatus.ToString("MM/dd/yyyy hh:mm:ss tt");
+                Sheet.Cells[string.Format("M{0}", row)].Value = item.TruthStatus == 1 ? "Truth đang chờ phê duyệt" : (item.TruthStatus == 2 ? findPersionHandelToField : infoPersionHandletruth?.NameManagerCmt);
+                Sheet.Cells[string.Format("N{0}", row)].Value = item.TruthStatus == 1 ? "Truth đang chờ phê duyệt" : (item.TruthStatus == 2 ? mailHandelToFiend : infoPersionHandletruth?.EmailManagerCmt);
+                Sheet.Cells[string.Format("O{0}", row)].Value = infoPersionHandletruth != null ? departmentPersionHandel : "";
+                Sheet.Cells[string.Format("P{0}", row)].Value = item.TruthStatus == 1 ? "Truth đang chờ phê duyệt" : (item.TruthStatus == 2 ? "Đang chờ người quản lý phê duyệt" : infoPersionHandletruth?.CommentTruth); ;
+                Sheet.Cells[string.Format("Q{0}", row)].Value = item.ShowInNewFeed ? "Đã hiển thị" : "Đã ẩn";
+                Sheet.Cells[string.Format("R{0}", row)].Value = item.UserNameComment != null ? item.UserNameComment.Trim().Split(',').Length : 0;
+                Sheet.Cells[string.Format("S{0}", row)].Value = item.UserNameLike != null ? item.UserNameLike.Trim().Split(',').Length : 0;
+                row++;
+            }
+
+
+            Sheet.Cells["A:AZ"].AutoFitColumns();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment: filename=" + "IdeaRegester.xlsx");
+            Response.BinaryWrite(Ep.GetAsByteArray());
+            Response.End();
+
+        }
+
     }
 }

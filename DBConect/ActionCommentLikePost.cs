@@ -104,6 +104,24 @@ namespace DBConect
 
         public void AddNewCmt(CommentIdeaPost model)
         {
+            var cmtTruth = context.CommentCountTruths.Where(x => x.IdPostTruth == model.IdPostIdea).FirstOrDefault();
+            if(cmtTruth != null)
+            {
+                var userNameCmt = cmtTruth.UserNameComment.Trim().Split(',').ToList();
+                userNameCmt.Add(model.UserName);
+                string outPutUserCmt = string.Join(",", userNameCmt);
+                cmtTruth.UserNameComment = outPutUserCmt;
+                context.SaveChanges();
+            }
+            else
+            {
+                CommentCountTruth CmtCout = new CommentCountTruth();
+                CmtCout.IdPostTruth = model.IdPostIdea;
+                CmtCout.UserNameComment = model.UserName;
+                context.CommentCountTruths.Add(CmtCout);
+                context.SaveChanges();
+            }
+
             CommentIdeaPost dbCmt = new CommentIdeaPost();
             dbCmt.IdPostIdea = model.IdPostIdea;
             dbCmt.FullNameUser = model.FullNameUser;

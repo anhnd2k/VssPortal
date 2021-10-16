@@ -47,6 +47,23 @@
     }
 </style>
 
+<div id="popupAddComment" class="overlay">
+    <div class="popup">
+        <h4 style="margin-bottom: 20px">Thêm bình luận, chú thích khi chuyển trạng thái</h4>
+        <a id="hiddenPopUp" class="close" href="#">&times;</a>
+        <div class="content">
+        <textarea id="commentContent" class="form-control" rows="5" placeholder="Chú thích"></textarea>
+        <di style="display: flex; height: 100px; justify-content: center; align-items: center; margin-top: 30px; flex-direction: column">
+            <div id="notyfiText" style="font-size: 14px; color: red; margin: 10px 0; display: none"> Vui lòng điền email Viettel người quản lý</div>
+            <input id="idSetValueTruth" value="" style="display: none; visibility: hidden;" />
+            <input id="idKey" value="" style="display: none; visibility: hidden;" />
+            <a href="#" id="btnChange" onclick="onChangeStatusTruth()" style="padding: 10px 40px; cursor:pointer; border: none; outline: none;background-color: darkred; color: #fff; display: flex; justify-content:center; align-items:center" class="form-group col-sm-6">
+                Xác nhận chuyển trạng thái Truth
+            </a>
+        </div>
+    </div>
+</div>
+
 <div class="row table_post">
     <div style="height: 30px; width: 100%; display:flex; align-items:center; padding: 0 24px">
         <a href="@Url.Action("Index", "HomeAdmin")" class="imgRedirect">
@@ -110,7 +127,7 @@
                                 var item = data.value;
                                 for (var j = 0; j < ListPersionResPonsive.Count; j++)
                                 {
-                                    if (ListPersionResPonsive[j].EmailManage == ViewData["userMail"].ToString() && ListPersionResPonsive[j].IdField == item.Field)
+                                    if (ListPersionResPonsive[j].EmailManage == ViewData["userMail"].ToString() && ListPersionResPonsive[j].IdField == item.Field && item.Status == 2)
                                     {
                                         <tr id="row_@item.id" class="col-tr-post">
                                             <td>@(Math.Abs(data.i + 1))</td>
@@ -124,16 +141,16 @@
                                                 </div>
                                             </td>
                                             <td style="min-width: 408px">
-                                                <a href="ViewDetailRealTalk/?id=@item.id" class="btn btn-sm btn-primary">Chi Tiết</a>
-                                                <div onclick="DoingTruth(@item.id)" class="@((item.TruthStatus == 5) ? "btn btn-sm btn-info disabled" : (item.TruthStatus == 2 ? "btn btn-sm btn-info" : "disPlayNone"))">
+                                                <a href="/Admin/ViewDetailRealTalk/?id=@item.id" class="btn btn-sm btn-primary">Chi Tiết</a>
+                                                <a href="#popupAddComment" onclick="setIdDoingTruth(@item.id)" class="@((item.TruthStatus == 5) ? "btn btn-sm btn-info disabled" : (item.TruthStatus == 2 ? "btn btn-sm btn-info" : "disPlayNone"))">
                                                     Doing Truth
-                                                </div>
-                                                <div onclick="CloseTruth(@item.id)" class="@((item.TruthStatus == 5 || item.TruthStatus == 4) ? "btn btn-sm btn-success disabled" : (item.TruthStatus == 3 ? "btn btn-sm btn-success" : "disPlayNone"))">
+                                                </a>
+                                                <a href="#popupAddComment" onclick="setIdCloseTruth(@item.id)" class="@((item.TruthStatus == 5 || item.TruthStatus == 4) ? "btn btn-sm btn-success disabled" : (item.TruthStatus == 3 ? "btn btn-sm btn-success" : "disPlayNone"))">
                                                     Close Truth
-                                                </div>
-                                                <div onclick="ThanksTruth(@item.id)" class="@((item.TruthStatus == 5 || item.TruthStatus == 4) ? "btn btn-sm btn btn-sm btn-danger disabled" : "btn btn-sm btn-danger")">
+                                                </a>
+                                                <a href="#popupAddComment" onclick="setIdThanksTruth(@item.id)" class="@((item.TruthStatus == 5 || item.TruthStatus == 4) ? "btn btn-sm btn btn-sm btn-danger disabled" : "btn btn-sm btn-danger")">
                                                     Thanks Truth
-                                                </div>
+                                                </a>
                                             </td>
                                         </tr>
                                     }
@@ -141,31 +158,6 @@
                             }
                         </tbody>
                     </table>
-                    @* spinner *@
-                    <div class="spinner">
-                        <div class="spinner-border text-danger center-div" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="handleTruth" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body contenModels">
-                                    Xét duyệt ý tưởng thành công!
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             }
             else
@@ -182,22 +174,11 @@
 </div>
 @section scripts{
     <script type="text/javascript">
-        // người dùng xác nhận form model và reload lại trang
-        $("#handleTruth").on('hidden.bs.modal', function () {
-            location.reload()
-        });
-
-        $(".statusTruth_5").css("background-color", "#FF375F")
-        $(".statusTruth_1").css("background-color", "#B5A13D")
-        $(".statusTruth_2").css("background-color", "#4267B2")
-        $(".statusTruth_3").css("background-color", "#32A4D7")
-        $(".statusTruth_4").css("background-color", "#32D74B")
 
         var truthStatus = document.querySelectorAll(".truthStatusClass");
         truthStatus.forEach(itemTruth => {
             itemTruth.addEventListener('change', function () {
                 var idTruth = $("#truthIdStatus option:selected").val();
-                console.log("===>>", idTruth)
                 $("#btnFinterTruth").click();
             })
         })
@@ -210,7 +191,7 @@
             });
         });
 
-        function changeStatusTruth(idPost, alertConfirm, pathAjax, SuccessText) {
+        function changeStatusTruth(idPost, cmt,alertConfirm, pathAjax, SuccessText) {
             if (confirm(alertConfirm)) {
                 $('.spinner').css('display', 'block');
                 $.ajax({
@@ -218,15 +199,17 @@
                     type: "POST",
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
-                    data: `{"idPost": "${idPost}"}`,
+                    data: `{"idPost": "${idPost}", "cmt": "${cmt}"}`,
                     success: function (data) {
                         $('.spinner').css('display', 'none');
                         if (data) {
                             $('.contenModels').text(SuccessText)
-                            $('#handleTruth').modal('show');
+                            $("#hiddenPopUp").click();
+                            $('#exampleModalCenter').modal('show');
                         } else {
                             $('.contenModels').text("Có lỗi xảy ra, xét duyệt không thành công. Vui lòng thử lại sau ít phút!")
-                            $('#handleTruth').modal('show');
+                            $("#hiddenPopUp").click();
+                            $('#exampleModalCenter').modal('show');
                         }
                     }
                 })
@@ -235,20 +218,64 @@
             }
         }
 
-        function DoingTruth(id) {
+        function setIdDoingTruth(id) {
+            $("#idSetValueTruth").val(id)
+            $("#idKey").val("DOING_TRUTH")
+            $("#btnChange").html("Xác nhận chuyển trạng thái sang doing truth")
+        }
+
+        function setIdCloseTruth(id) {
+            $("#idSetValueTruth").val(id)
+            $("#idKey").val("CLOSE_TRUTH")
+            $("#btnChange").html("Xác nhận chuyển trạng thái sang close truth")
+        }
+
+        function setIdThanksTruth(id) {
+            $("#idSetValueTruth").val(id)
+            $("#idKey").val("THANK_TRUTH")
+            $("#btnChange").html("Xác nhận chuyển trạng thái sang thank truth")
+        }
+
+        function onChangeStatusTruth() {
+            var idTruth = document.getElementById("idSetValueTruth").value;
+            var keyTruth = document.getElementById("idKey").value;
+            var commentContent = document.getElementById("commentContent").value;
+            if (commentContent == "") {
+                $('#notyfiText').html("Vui lòng điền chú thích trong quá trình xử lý")
+                $('#notyfiText').css("display", "block");
+                return false
+            }
+            if (keyTruth == "DOING_TRUTH") {
+                DoingTruth(idTruth, commentContent)
+                return;
+            }
+            if (keyTruth == "CLOSE_TRUTH") {
+                CloseTruth(idTruth, commentContent)
+                return;
+            }
+            if (keyTruth == "THANK_TRUTH") {
+                ThanksTruth(idTruth, commentContent)
+                return;
+            }
+        }
+
+        function DoingTruth(id, cmt) {
             changeStatusTruth(id,
+                cmt,
                 "Bạn có muốn chuyển trạng thái ý kiến sang Doing Truth?",
                 "DoingTruth",
                 "Chỉnh sửa trạng thái Truth thành công. Ý tưởng này đang được người phụ trách xử lý");
         }
-        function CloseTruth(id) {
+        function CloseTruth(id, cmt) {
             changeStatusTruth(id,
+                cmt,
                 "Bạn có muốn chuyển trạng thái ý kiến sang Close Truth?",
                 "CloseTruth",
                 "Chỉnh sửa trạng thái Truth thành công. Ý tưởng này đã được xử lý thành công");
         }
-        function ThanksTruth(id) {
+        function ThanksTruth(id, cmt) {
             changeStatusTruth(id,
+                cmt,
                 "Bạn có muốn chuyển trạng thái ý kiến sang Thanks Truth?",
                 "ThanksTruth",
                 "Chỉnh sửa trạng thái Truth thành công. Ý tưởng đã được từ chối thực hiện");

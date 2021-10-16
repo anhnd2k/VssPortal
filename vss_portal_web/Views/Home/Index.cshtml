@@ -32,6 +32,7 @@
         background-color: #dedddd;
         opacity: 0.93
     }
+
     .swiper {
         width: 100%;
         height: 100%;
@@ -40,8 +41,7 @@
     .swiper-slide {
         font-size: 18px;
         background: #fff;
-         Center slide text vertically 
-        display: -webkit-box;
+        Center slide text vertically display: -webkit-box;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
@@ -55,12 +55,12 @@
         align-items: center;
     }
 
-    .swiper-slide img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
     .swiper-horizontal > .swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
         bottom: -33px;
@@ -79,6 +79,7 @@
         left: auto;
         top: 164px;
     }
+
     .nocontent {
         margin-top: 50px;
         padding: 20px;
@@ -93,7 +94,7 @@
         background-image: linear-gradient(to right, #f56383, #ff7524);
         max-width: max-content;
         margin: 29px auto 0 auto;
-        text-align:center
+        text-align: center
     }
 
     .btn_createTruth {
@@ -107,6 +108,55 @@
         align-items: center;
     }
 </style>
+
+<!-- Modal Login-->
+<div class="modal fade" id="LoginModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size:16px" id="exampleModalLongTitle">Vui lòng đăng nhập để sử dụng tính năng này</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div style="padding: 30px;" class="modal-body">
+                <form onsubmit="return checkValidate()" method="post" action="" style="background-color: #fff; height: 295px; border-radius: 20px; border: 2px solid #fff; display: flex; justify-content: center; align-items: center; ">
+                    @Html.AntiForgeryToken()
+                    <div style="display: flex; flex-direction: column; width: 325px; align-items: center;">
+                        <label style=" margin:20px 0 15px 0; font-weight: bold; color: #272424; font-size: 15px"
+                               for="myEmail">
+                            Tên đăng nhập
+                        </label>
+                        <input id="myUsername"
+                               name="UserName"
+                               style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;" class="form-control"
+                               placeholder="Vui lòng nhập tên đăng nhập">
+                        <div id="errUsername" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
+                        <label style=" margin-bottom: 15px; font-weight: bold; color: #272424; font-size: 15px "
+                               for="myPassword">
+                            Mật khẩu
+                        </label>
+                        <input name="PassWord"
+                               style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;"
+                               type="password"
+                               id="myPassword"
+                               class="form-control"
+                               placeholder="Vui lòng nhập mật khẩu">
+                        <div id="errPassword" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
+                        @Html.ValidationSummary(true, null, new { @style = "color: red" })
+                        <input style=" margin-top: 23px; padding: 12px 49px; border-radius: 14px; outline: none; border: none; cursor: pointer; cursor: pointer; font-weight: bold; background-color: #eb0729; color: #fff; width: 100%;"
+                               type="submit"
+                               name=""
+                               value="Đăng nhập">
+                        <input style="visibility:hidden" name="RedirectName" id="RedirectName" type="text">
+                        <input style="visibility:hidden" name="RedirectAction" id="RedirectAction" type="text">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Modal Login-->
 
 <section id="hero">
     <div class="hero-container">
@@ -225,6 +275,12 @@
                         <h4 class="title">Elearning</h4>
                     </a>
                 </div>
+                <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSffnGFLZMg_XT45dPjC9zFZ8ZuRp1TlDutgrpEFSUvWnXeGhQ/viewform">
+                        <div class="icon pointer_hover"><i class="icofont-quill-pen"></i></div>
+                        <h4 class="title">Đăng ký thi đua về tăng tốc quý 4 về đích 2021</h4>
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -254,27 +310,8 @@
                     </div>
 
                 </a>
-
-                @*<a href="@Url.Action("NewFeedTruth","RealTalk")" class="col-lg-3 col-md-6 text-center">
-                    <div data-target="#exampleModalCenter" data-aos="fade-up" data-aos-delay="100">
-                        <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
-                            <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
-                            <span data-toggle="counter-up">@Model.ListTalkReal.Count</span>
-                            <p>Nói thật đê...</p>
-
-                            <div class="info">
-                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Nói thật đê...</div>
-                                Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
-                            </div>
-                        </div>
-
-                    </div>
-
-                </a>*@
                 <a class="col-lg-3 col-md-6 text-center"
-                   data-toggle=@(ViewBag.checkPermision == null ? "modal" : "")
-                   data-target="#LoginModel"
-                   href=@(ViewBag.checkPermision != null ? @Url.Action("NewFeedTruth","RealTalk") : "#")
+                   href=@(ViewBag.checkPermision != null ? @Url.Action("NewFeedTruth","RealTalk") : @Url.Action("Index","RealTalk"))
                    onclick="setNameRedirect('NewFeedTruth','RealTalk')">
                     <div data-aos="fade-up" data-aos-delay="150">
                         <div style="position: relative; overflow: hidden" class="count-box hoverInfo">
@@ -283,21 +320,12 @@
                             <p>Nói thật đê...</p>
 
                             <div class="info">
-                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Nói thật đê...</div>
+                                <div style="font-weight: bold; text-align: center; margin-bottom: 5px">Nói thật đê...</div>
                                 Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
                             </div>
                         </div>
                     </div>
                 </a>
-                @*<div class="col-lg-3 col-md-6 text-center">
-            <div data-toggle="modal" data-target="#exampleModalCenter" data-aos="fade-up" data-aos-delay="100">
-                <div class="count-box">
-                    <i class="icofont-kakaotalk" style="color: #c042ff;"></i>
-                    <span data-toggle="counter-up">521</span>
-                    <p>Nói thật đê...</p>
-                </div>
-            </div>
-        </div>*@
                 <a class="col-lg-3 col-md-6 text-center"
                    data-toggle=@(ViewBag.checkPermision == null ? "modal" : "")
                    data-target="#LoginModel"
@@ -310,7 +338,7 @@
                             <p>Đăng ký ý tưởng</p>
 
                             <div class="info">
-                                <div style="font-weight: bold; text-align: center; margin-top: 10p; margin-bottom: 5px">Đăng ký ý tưởng</div>
+                                <div style="font-weight: bold; text-align: center; margin-bottom: 5px">Đăng ký ý tưởng</div>
                                 Chuyên mục dành cho cán bộ, nhân viên đóng góp ý kiến, mong mỏi, đề xuất tới bộ phận phòng ban hoặc ban lãnh đạo trung tâm
                             </div>
                         </div>
@@ -366,53 +394,7 @@
             </div>
         </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="LoginModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" style="font-size:16px" id="exampleModalLongTitle">Vui lòng đăng nhập để sử dụng tính năng này</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div style="padding: 30px;" class="modal-body">
-                        <form onsubmit="return checkValidate()" method="post" action="" style="background-color: #fff; height: 295px; border-radius: 20px; border: 2px solid #fff; display: flex; justify-content: center; align-items: center; ">
-                            @Html.AntiForgeryToken()
-                            <div style="display: flex; flex-direction: column; width: 325px; align-items: center;">
-                                <label style=" margin:20px 0 15px 0; font-weight: bold; color: #272424; font-size: 15px"
-                                       for="myEmail">
-                                    Tên đăng nhập
-                                </label>
-                                <input id="myUsername"
-                                       name="UserName"
-                                       style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;" class="form-control"
-                                       placeholder="Vui lòng nhập tên đăng nhập">
-                                <div id="errUsername" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
-                                <label style=" margin-bottom: 15px; font-weight: bold; color: #272424; font-size: 15px "
-                                       for="myPassword">
-                                    Mật khẩu
-                                </label>
-                                <input name="PassWord"
-                                       style="border: 1px solid #ccc; width: 121%; height: 25px; margin-bottom: 10px; border-radius: 13px; outline: none; padding: 23px 12px;"
-                                       type="password"
-                                       id="myPassword"
-                                       class="form-control"
-                                       placeholder="Vui lòng nhập mật khẩu">
-                                <div id="errPassword" style="font-size: 12px; color: red;" class="disPlayNone">Tên đăng nhập không được bỏ trống</div>
-                                @Html.ValidationSummary(true, null, new { @style = "color: red" })
-                                <input style=" margin-top: 23px; padding: 12px 49px; border-radius: 14px; outline: none; border: none; cursor: pointer; cursor: pointer; font-weight: bold; background-color: #eb0729; color: #fff; width: 100%;"
-                                       type="submit"
-                                       name=""
-                                       value="Đăng nhập">
-                                <input style="visibility:hidden" name="RedirectName" id="RedirectName" type="text">
-                                <input style="visibility:hidden" name="RedirectAction" id="RedirectAction" type="text">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </section>
     <!-- End Counts Section -->
     @* SÁNG KIẾN Ý TƯỞNG ONBOADING *@
@@ -598,8 +580,8 @@
     </script>
     <script type="text/javascript">
 
-        function setNameRedirect(actionName,name) {
-            document.getElementById("RedirectName").value = name; 
+        function setNameRedirect(actionName, name) {
+            document.getElementById("RedirectName").value = name;
             document.getElementById("RedirectAction").value = actionName;
         }
 

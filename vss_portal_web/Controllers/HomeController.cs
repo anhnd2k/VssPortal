@@ -17,19 +17,11 @@ namespace vss_portal_web.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            //string UserName = "";
-            //string AdminUserName = "";
             var cookie = SessionHelper.GetSession();
             if (cookie != null)
             {
                 ViewBag.checkPermision = true;
             }
-
-            //    if(cookieAdmin != null)
-            //    {
-            //        AdminUserName = cookieAdmin.fullName;
-            //    }
-
 
             ViewData["fullNameUser"] = CheckLoginRole.getUserName();
             ViewData["departmentUser"] = SessionHelper.GetSession()?.Department;
@@ -114,7 +106,8 @@ namespace vss_portal_web.Controllers
         {
             var cookie = SessionHelper.GetSession();
             var cookieAdmin = SessionHelper.GetSessionRoleAdmin();
-            if (cookie != null && cookieAdmin == null)
+            var cookieResolver = SessionHelper.GetSessionRoleResolverTruth();
+            if (cookie != null && cookieAdmin == null && cookieResolver == null)
             {
                 return "Guest";
             }
@@ -122,6 +115,11 @@ namespace vss_portal_web.Controllers
             if (cookieAdmin != null)
             {
                 return "Admin";
+            }
+
+            if(cookieResolver != null)
+            {
+                return "Resolver";
             }
             return "noLogin";
         }

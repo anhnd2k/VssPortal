@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,9 @@ namespace DBConect.Farmework
     public partial class StatusIdeaInitative
     {
         public int Id { get; set; }
-        public int IdStatus { get; set; }
+        public int? IdStatus { get; set; }
+
+        [StringLength(50)]
         public string NameStauts { get; set; }
     }
 }

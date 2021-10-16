@@ -74,6 +74,8 @@
     <Compile Include="conmon\Encryptor.cs" />
     <Compile Include="Farmework\AccountAdmin.cs" />
     <Compile Include="Farmework\CategoryPost.cs" />
+    <Compile Include="Farmework\CommentCountTruth.cs" />
+    <Compile Include="Farmework\CommentDetailTruth.cs" />
     <Compile Include="Farmework\CommentIdeaPost.cs" />
     <Compile Include="Farmework\Department.cs" />
     <Compile Include="Farmework\Employee.cs" />

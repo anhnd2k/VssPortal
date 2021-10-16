@@ -34,6 +34,8 @@ namespace DBConect.model
 
         public int? TruthStatus { get; set; }
 
+        public bool ShowInNewFeed { get; set; }
+
         public int? Status { get; set; }
 
         public string NameFieldRealTalk { get; set; }
@@ -43,5 +45,9 @@ namespace DBConect.model
         public string StatusConfirm { get; set; }
 
         public string UserNameLike { get; set; }
+
+        public string UserNameComment { get; set; }
+
+        public DateTime TimeUpdateStatus { get; set; }
     }
 }

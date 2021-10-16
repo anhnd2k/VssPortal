@@ -17,6 +17,7 @@ namespace DBConect.Farmework
         [StringLength(100)]
         public string UserSendFullName { get; set; }
 
+        [StringLength(50)]
         public string UserSenDepartment { get; set; }
 
         [StringLength(500)]

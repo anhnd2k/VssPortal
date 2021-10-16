@@ -27,6 +27,58 @@
             font-size: 16px;
             font-weight: bold
         }
+        .overlay {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            transition: opacity 500ms;
+            visibility: hidden;
+            opacity: 0;
+            z-index: 99
+        }
+
+            .overlay:target {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        .popup {
+            margin: 200px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+            position: relative;
+            transition: all 2s ease-in-out;
+            width: 50%;
+        }
+            .popup h2 {
+                margin-top: 0;
+                color: #333;
+                font-family: Tahoma, Arial, sans-serif;
+            }
+
+            .popup .close {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+                transition: all 200ms;
+                font-size: 30px;
+                font-weight: bold;
+                text-decoration: none;
+                color: #333;
+            }
+
+                .popup .close:hover {
+                    color: red;
+                }
+
+            .popup .content {
+                max-height: 30%;
+                overflow: auto;
+            }
     </style>
 </head>
 
@@ -123,6 +175,50 @@
             </footer>
             <!-- Footer -->
         </div>
+        @* spinner *@
+        <div class="spinner">
+            <div class="spinner-border text-danger center-div" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body contenModels">
+                        Xét duyệt ý tưởng thành công!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal none reload-->
+        <div class="modal fade" id="exampleModalCenterNoneReload" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Thông báo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body contenModelsNoneReload">
+                        Xét duyệt ý tưởng thành công!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-primary">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="~/Areas/Admin/assets_admin/assets/vendor/jquery/jquery.min.js"></script>
@@ -131,6 +227,19 @@
     @*<script src="~/Areas/Admin/assets_admin/assets/vendor/jquery-easing/jquery.easing.min.js"></script>*@
     <script src="~/Areas/Admin/assets_admin/assets/js/main.min.js"></script>
     @*<script src="~/Areas/Admin/assets_admin/assets/vendor/chart.js/Chart.min.js"></script>*@
+    <script type="text/javascript">
+
+        // người dùng xác nhận form model và reload lại trang
+        $("#exampleModalCenter").on('hidden.bs.modal', function () {
+            location.reload()
+        });
+
+        $(".statusTruth_5").css("background-color", "#FF375F")
+        $(".statusTruth_1").css("background-color", "#B5A13D")
+        $(".statusTruth_2").css("background-color", "#4267B2")
+        $(".statusTruth_3").css("background-color", "#32A4D7")
+        $(".statusTruth_4").css("background-color", "#32D74B")
+    </script>
     @RenderSection("scripts", false)
 </body>
 

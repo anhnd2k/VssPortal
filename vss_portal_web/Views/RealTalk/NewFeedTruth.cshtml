@@ -28,7 +28,7 @@
         padding: 7px 10px 7px 37px;
         width: 100%;
         border: none;
-        border-radius: 20px;
+        border-radius: 10px;
         background-color: #F5F5F5;
         border: 4px solid #fff
     }
@@ -141,26 +141,6 @@
             flex-direction: column;
         }
 
-        .headerprogress {
-            width: 100%;
-            display: flex;
-            margin: 30px 0;
-        }
-
-    .progressSelection {
-        flex: 1;
-        cursor: pointer;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        font-size: 14px;
-        color: #707070;
-    }
-
-        .progressSelection.active {
-            color: #EE0033;
-        }
-
     .truthConten.active {
         display: flex;
     }
@@ -222,7 +202,6 @@
         padding: 2px 14px;
         border-radius: 15px;
         margin-top: 10px;
-        min-width: 119px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -246,26 +225,6 @@
         border-radius: 11px;
         margin-top: 8px;
         display: none;
-    }
-
-    .BoxInfoTruth {
-        width: 100%;
-        padding: 10px;
-        border-radius: 10px;
-        margin-top: 12px;
-        box-shadow: 0px 0px 20px #00000020;
-        display: flex
-    }
-
-    .avatarInfotruth {
-        color: #fff;
-        width: 30px;
-        height: 30px;
-        border-radius: 15px;
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center
     }
 
     .pagination-container .pagination li {
@@ -309,21 +268,37 @@
         margin-top: 12px;
         margin-right: 12px;
     }
+    .font-weight-b {
+        font-weight: bold
+    }
+    .topFinter {
+        width: max-content;
+        padding: 10px 15px;
+        border-radius: 10px;
+        height: 43px;
+        margin-top: 2px;
+        background-color: #c3bebe;
+        color: #fff;
+        cursor: pointer
+    }
+    .topFinterActive {
+        background-color: #f0092bc7;
+    }
 </style>
 
 <main id="main">
     <div class="container">
         <div style="width: 100%; margin: 20px 0; padding: 10px 0">
-            <h4 style="text-align: center; margin: 0; color: #dc3545; font-weight:bold; margin-bottom: 15px">VSS TRUTH</h4>
-            <h6 style="text-align: center; margin: 0; color: black;"><i>"NÓI THẬT ĐÊÊÊÊÊÊ"</i></h6>
+            <h4 style="text-align: center; margin: 0; color: #dc3545; font-weight:bold; margin-bottom: 15px">Nói thật đê</h4>
+            <h6 style="text-align: center; margin: 0; color: black;"><i>"Nơi bạn được lắng nghe"</i></h6>
         </div>
 
         <div style="margin-bottom: 50px">
             <div class="row" style="margin-top: 20px">
-                <div class="col-lg-8 col-md-8 col-md-12 boxNewFeedTruth">
+                <div class="col-md-12 boxNewFeedTruth">
                     <div style="margin: 24px 0; display: flex; justify-content: space-between">
                         <div class="textHeader">
-                            NEW FEED
+                            Bảng tin
                         </div>
                         <div class="btnCreateTruth">
                             <a href="@Url.Action("Index","RealTalk")" style="display: flex; align-items:center">
@@ -332,41 +307,38 @@
                             </a>
                         </div>
                     </div>
-                    @* input search *@
-
-
+                    @* Tìm kiếm, Lọc truth *@
                     @using (Html.BeginForm("NewFeedTruth", "RealTalk", FormMethod.Get))
                     {
-                    <div style="display:flex; justify-content:space-between">
-                        <div style="position:relative; display: flex; flex: 1">
-                            <input value="@ViewData["searchString"]" name="searchString" id="search_input" class="inputSearch" placeholder="Tìm kiếm Truth" />
-                            <i style="position: absolute; top: 16px; left: 15px; " class="icofont-search-1"></i>
-                        </div>
-                        <div style="position:relative">
-                            <select name="idInterate" class="truthStatusClass" style="border: none" id="truthIdStatus">
-                                <option selected=@(ViewData["idInterate"].ToString() == "0" ? "selected" : null) value=0>Ý kiến mới nhất</option>
-                                <option selected=@(ViewData["idInterate"].ToString() == "1" ? "selected" : null) value=1>Ý kiến muộn nhất</option>
-                                <option selected=@(ViewData["idInterate"].ToString() == "2" ? "selected" : null) value=2>Ý kiến nhiều like nhất</option>
-                            </select>
-                            <i style="position: absolute; position: absolute; top: 16px; right: 10px;" class="icofont-rounded-down"></i>
-                        </div>
-                        <div style="position:relative">
-                            <select name="idTruhStatusFinter" class="truthStatusClass" style="border: none" id="truthIdStatus">
-                                <option value=0>Tất cả trạng thái</option>
-                                @foreach (TruthStatu item in ListTruthStatus)
-                                {
-                                    if (item.IdTruth != 1)
+                        <div style="display:flex; justify-content:space-between">
+                            <div style="position:relative; display: flex; flex: 1">
+                                <input value="@ViewData["searchString"]" name="searchString" id="search_input" class="inputSearch" placeholder="Tìm kiếm Truth" />
+                                <i style="position: absolute; top: 16px; left: 15px; " class="icofont-search-1"></i>
+                            </div>
+                            <div id="topLike" class="@(ViewData["idInterate"].ToString() == "2" ? "topFinterActive" : "") topFinter" style="margin-right: 10px; margin-left: 10px">
+                                Top Like
+                            </div>
+                            
+                            <div id="topCmt" class="@(ViewData["idInterate"].ToString() == "1" ? "topFinterActive" : "") topFinter">
+                                Top Comment
+                            </div>
+                            <input style="visibility: hidden; display: none" name="idInterate" id="setValueInterate" value="0"/>
+                            <div style="position:relative">
+                                <select name="idTruhStatusFinter" class="truthStatusClass" style="border: none" id="truthIdStatus">
+                                    <option value=0>Tất cả trạng thái</option>
+                                    @foreach (TruthStatu item in ListTruthStatus)
                                     {
-                                        <option selected=@(ViewData["idSelectedTruth"].ToString() == item.IdTruth.ToString() ? "selected" : null) value=@item.IdTruth>@item.NameStatus</option>
+                                        if (item.IdTruth != 1)
+                                        {
+                                            <option selected=@(ViewData["idSelectedTruth"].ToString() == item.IdTruth.ToString() ? "selected" : null) value=@item.IdTruth>@item.NameStatus</option>
+                                        }
                                     }
-                                }
-                            </select>
-                            <i style="position: absolute; position: absolute; top: 16px; right: 10px;" class="icofont-rounded-down"></i>
+                                </select>
+                                <i style="position: absolute; position: absolute; top: 16px; right: 10px;" class="icofont-rounded-down"></i>
+                            </div>
+                            <button style="visibility: hidden; display:none" id="btnSearch" type="submit"></button>
                         </div>
-                        <button style="visibility: hidden; display:none" id="btnSearch" type="submit"></button>
-                    </div>
                     }
-                    @* danh sách truth doing *@
                     @* box master truth *@
                     @{
                         string[] colors = { "#0800F5", "#F50093", "#00F562", "#F58300", "#0008F5", "#F50064", "#ED00F5", "#2AEDEE", "#2CF316", "#DDF316", "#F99E00", "#24c1ba", "#92e23b", "#18586b" };
@@ -375,14 +347,6 @@
                         {
                             foreach (var item in Model)
                             {
-                                var cmtCout = 0;
-                                foreach (CommentIdeaPost itemCmt in ListCmt)
-                                {
-                                    if (itemCmt.IdPostIdea == item.id)
-                                    {
-                                        cmtCout += 1;
-                                    }
-                                }
                                 var randomColor = colors.OrderBy(x => rnd.Next()).First();
                                 <div id="@item.id" class="masterBoxTruth">
                                     <div class="itemTruth">
@@ -399,14 +363,20 @@
 
                                                 <div style=" font-size: 13px; margin-top: -3px;">@item.TimeApproval</div>
                                             </div>
-                                            <div style="background-color: @(item.TruthStatus == 2 ? "#17a985" : (@item.TruthStatus == 3 ? "#74c1ea" : "#69e481"));" class="statusTruth">
-                                                <span style="color:#fff; font-weight: 600; font-size: 14px">@item.TruthStatusName</span>
+                                            <div style="display: flex">
+                                                <div style="background-color: @(item.TruthStatus == 2 ? "#17a985" : (@item.TruthStatus == 3 ? "#74c1ea" : "#69e481"));" class="statusTruth">
+                                                    <span style="color:#fff; font-weight: 600; font-size: 14px">@item.TruthStatusName</span>
+                                                </div>
+                                                <div onclick="showModalDetailTruth(@item.id)" style="background-color: #f50538c4; margin-left: 10px; cursor: pointer" class="statusTruth">
+                                                    <span style="color:#fff; font-weight: 600; font-size: 14px">Chi tiết</span>
+                                                </div>
                                             </div>
+                                            <br />
                                             <div style="margin-top: 5px">
-                                                <div style="font-weight: bold; color: #504d4d;">Hiện trạng: </div><span>@Html.Raw(item.Reality)</span>
-                                                <div style="font-weight: bold; color: #504d4d; ">Đề xuất: </div><span>@Html.Raw(item.Suggestion)</span>
+                                                <div style="font-weight: bold; color: #504d4d; ">Tiêu đề: </div><span>@item.TitleRealTalk</span>
                                             </div>
                                         </div>
+                                        @* like, comment view truth *@
                                         <div class="actionItemTruth">
                                             <div>
                                                 <span id="heartTym_@item.id" style="color: red; margin-right: 8px"><img class="img_heart" src="~/assets/img/heart_red.png" /></span>
@@ -419,7 +389,7 @@
                                                     <span id="countTym_@item.id">0 </span>
                                                 }
                                                 <img style="margin-left: 10px; margin-right: 8px; margin-bottom: 3px;" src="~/assets/img/cmt_ccc.png" />
-                                                <span class="cmtCount">@cmtCout</span>
+                                                <span class="cmtCount">@(item.UserNameComment != null ? item.UserNameComment.Trim().Split(',').Length : 0)</span>
                                                 <span style="cursor:pointer" onclick="actionHearPost(@item.id)">
                                                     @if (item.UserNameLike != "" && item.UserNameLike != null)
                                                     {
@@ -490,7 +460,10 @@
                                                 }
                                             }
                                         </div>
-                                        <div class="btnLoadMoreCmt" onclick="clickLoadMore(@item.id)" id="showMoreBtn_@item.id" style="display: @(cmtCout <= 4 ? "none" : "block")">Xem thêm bình luận</div>
+                                        <div class="btnLoadMoreCmt" 
+                                             onclick="clickLoadMore(@item.id)" 
+                                             id="showMoreBtn_@item.id" 
+                                             style="display: @(item.UserNameComment != null ? (item.UserNameComment.Trim().Split(',').Length <= 4 ? "none" : "block") : "none")">Xem thêm bình luận</div>
                                         <div id="couted_@item.id" style="visibility:hidden; display: none">4</div>
                                     </div>
 
@@ -498,7 +471,8 @@
                                 </div>
                             }
                         }
-                        else{
+                        else
+                        {
                             <div class="nocontentPostTruth">
                                 Không có dữ liệu
                             </div>
@@ -508,146 +482,37 @@
                         @Html.PagedListPager(Model, page => Url.Action("NewFeedTruth", new { page, searchString = ViewData["searchString"], idTruhStatusFinter = ViewData["idSelectedTruth"], idInterate = ViewData["idInterate"] }))
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-md-12" style="height: 100vh; position: relative; background-color: #F8F8F8; overflow:scroll; padding: 15px">
-                    <div class="headerprogress">
-                        <div class="progressSelection active" data-electronic="thankTruth">
-                            Thanks truth
-                        </div>
-                        <div class="progressSelection" data-electronic="doTruth">
-                            Do truth
-                        </div>
-                        <div class="progressSelection" data-electronic="doingTruth">
-                            Doing Truth
-                        </div>
-                        <div class="progressSelection" data-electronic="closeTruth">
-                            Close truth
-                        </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal check -->
+    <div class="modal fade" id="popUpShowDetailTruth" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="exampleModalLongTitle">Chi tiết ý kiến của <span class="font-weight-b" id="NameSender"> </span></div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="font-weight-b">Tiêu đề:</div>
+                    <div id="TitleRealTalk">
+                        sadf
                     </div>
-
-                    @* conten *@
-
-                    <div id="thankTruth" class="truthConten active">
-
-                        @{bool check = false;
-                            foreach (var item in ListTruth)
-                            {
-                                var randomColorInfoTruth = colors.OrderBy(x => rnd.Next()).First();
-                                if (item.TruthStatus == 5)
-                                {
-                                    check = true;
-                                    <div class="BoxInfoTruth">
-                                        <div>
-                                            <div style="background-color: @randomColorInfoTruth" class="avatarInfotruth">
-                                                @item.NameSender[0].ToString().ToUpper()
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span style="font-weight: bold">@item.NameSender</span><span style="font-size: 14px; color: #707070;"> - @item.NameFieldRealTalk</span>
-                                            <div style="font-weight: bold; color: #707070; margin-top: 10px">Hiện trạng: </div><span>@Html.Raw(item.Reality)</span>
-                                            <div style="font-weight: bold; color: #707070;">Đề xuất: </div><span>@Html.Raw(item.Suggestion)</span>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            if (check == false)
-                            {
-                                <div class="nocontent">
-                                    Không có dữ liệu
-                                </div>
-                            }
-                        }
+                    <br />
+                    <div class="font-weight-b">Thực trạng:</div>
+                    <div id="Reality">
+                        ádf
                     </div>
-                    <div id="doTruth" class="truthConten">
-                        @{bool checkDoTruth = false;
-                            foreach (var item in ListTruth)
-                            {
-                                var randomColorInfoTruth = colors.OrderBy(x => rnd.Next()).First();
-                                if (item.TruthStatus == 2)
-                                {
-                                    checkDoTruth = true;
-                                    <div class="BoxInfoTruth">
-                                        <div>
-                                            <div style="background-color: @randomColorInfoTruth" class="avatarInfotruth">
-                                                @item.NameSender[0].ToString().ToUpper()
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span style="font-weight: bold">@item.NameSender</span><span style="font-size: 14px; color: #707070;"> - @item.NameFieldRealTalk</span>
-                                            <div style="font-weight: bold; color: #707070; margin-top: 10px">Hiện trạng: </div><span>@Html.Raw(item.Reality)</span>
-                                            <div style="font-weight: bold; color: #707070;">Đề xuất: </div><span>@Html.Raw(item.Suggestion)</span>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            if (checkDoTruth == false)
-                            {
-                                <div class="nocontent">
-                                    Không có dữ liệu
-                                </div>
-                            }
-                        }
+                    <br />
+                    <div class="font-weight-b">Đề xuất:</div>
+                    <div id="Suggestion">
+                        ádf
                     </div>
-                    <div id="doingTruth" class="truthConten">
-                        @{bool checkDoingTruth = false;
-                            foreach (var item in ListTruth)
-                            {
-                                var randomColorInfoTruth = colors.OrderBy(x => rnd.Next()).First();
-                                if (item.TruthStatus == 3)
-                                {
-                                    checkDoingTruth = true;
-                                    <div class="BoxInfoTruth">
-                                        <div>
-                                            <div style="background-color: @randomColorInfoTruth" class="avatarInfotruth">
-                                                @item.NameSender[0].ToString().ToUpper()
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span style="font-weight: bold">@item.NameSender</span><span style="font-size: 14px; color: #707070;"> - @item.NameFieldRealTalk</span>
-                                            <div style="font-weight: bold; color: #707070; margin-top: 10px">Hiện trạng: </div><span>@Html.Raw(item.Reality)</span>
-                                            <div style="font-weight: bold; color: #707070;">Đề xuất: </div><span>@Html.Raw(item.Suggestion)</span>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            if (checkDoingTruth == false)
-                            {
-                                <div class="nocontent">
-                                    Không có dữ liệu
-                                </div>
-                            }
-                        }
-                    </div>
-                    <div id="closeTruth" class="truthConten">
-                        @{bool checkCloseTruth = false;
-                            foreach (var item in ListTruth)
-                            {
-
-                                var randomColorInfoTruth = colors.OrderBy(x => rnd.Next()).First();
-                                if (item.TruthStatus == 4)
-                                {
-                                    checkCloseTruth = true;
-                                    <div class="BoxInfoTruth">
-                                        <div>
-                                            <div style="background-color: @randomColorInfoTruth" class="avatarInfotruth">
-                                                @item.NameSender[0].ToString().ToUpper()
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span style="font-weight: bold">@item.NameSender</span><span style="font-size: 14px; color: #707070;"> - @item.NameFieldRealTalk</span>
-                                            <div style="font-weight: bold; color: #707070; margin-top: 10px">Hiện trạng: </div><span>@Html.Raw(item.Reality)</span>
-                                            <div style="font-weight: bold; color: #707070;">Đề xuất: </div><span>@Html.Raw(item.Suggestion)</span>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            if (checkCloseTruth == false)
-                            {
-                                <div class="nocontent">
-                                    Không có dữ liệu
-                                </div>
-                            }
-                        }
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div type="button" data-dismiss="modal" style="color: #fff; background-color: #d70f31; padding: 6px 16px; border-radius: 10px; ">Xong</div>
                 </div>
             </div>
         </div>
@@ -657,7 +522,43 @@
 @section scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
     <script type="text/javascript">
-        //load more
+
+        //filter top like comment
+        $("#topLike").click(function () {
+            $("#setValueInterate").val("2")
+            $("#topLike").addClass("topFinterActive")
+            $("#topCmt").removeClass("topFinterActive")
+            $("#btnSearch").click();
+        })
+
+        $("#topCmt").click(function () {
+            $("#setValueInterate").val("1")
+            $("#topCmt").addClass("topFinterActive")
+            $("#topLike").removeClass("topFinterActive")
+            $("#btnSearch").click();
+        })
+
+        //show modal detail truth
+        function convertToPlain(html) {
+            var tempDivElement = document.createElement("div");
+            tempDivElement.innerHTML = html;
+            return tempDivElement.textContent || tempDivElement.innerText || "";
+        }
+
+        function showModalDetailTruth(idTruth) {
+            var listTruthPost = @Html.Raw(Json.Encode(ListTruth))
+                listTruthPost.forEach(item => {
+                    if (item.id == idTruth) {
+                        $('#NameSender').text( " " + item.NameSender)
+                        $('#TitleRealTalk').text(item.TitleRealTalk)
+                        $('#Reality').text(convertToPlain(item.Reality))
+                        $('#Suggestion').text(convertToPlain(item.Suggestion))
+                        $('#popUpShowDetailTruth').modal('show');
+                    }
+                })
+        }
+
+        //load more cmt
         function clickLoadMore(idPost) {
             var counted = $(`#couted_${idPost}`).text().trim();
             var nowCount = counted - (-4)
@@ -669,7 +570,6 @@
                 contentType: "application/json; charset=utf-8",
                 data: `{"idPost": "${idPost}", "couted": "${counted}"}`,
                 success: function (data) {
-                    console.log(data)
                     if (data) {
                         data.forEach(item => {
                             var randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -780,24 +680,5 @@
                 $(`#${id} .boxCmt`).css('display', 'none');
             }
         }
-        const progressSelection = document.querySelectorAll(".progressSelection");
-        const truthConten = document.querySelectorAll(".truthConten");
-
-        progressSelection.forEach(function (el) {
-            el.addEventListener('click', opentab);
-        })
-        function opentab(el) {
-            let btn = el.currentTarget;
-            var electronic = btn.dataset.electronic;
-            truthConten.forEach(function (el) {
-                el.classList.remove('active')
-            })
-            progressSelection.forEach(function (el) {
-                el.classList.remove('active')
-            })
-            document.querySelector("#" + electronic).classList.add("active");
-            btn.classList.add("active");
-        }
-
     </script>
 }

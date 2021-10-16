@@ -12,7 +12,8 @@ namespace vss_portal_web.Models
 {
     public class EmailService
     {
-
+        //private string EMAIL = "trangltq7@viettelimex.vn";
+        //private string PWD = "VssPLDT8@F";
         private string EMAIL = "hotro@viettelsoftware.net";
         private string PWD = "V2dhVFsjPbqF5VvOW0lL";
         //private string EMAIL = "iutube99445@gmail.com";
@@ -39,8 +40,8 @@ namespace vss_portal_web.Models
 
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
-                //smtp.Host = "smtp.office365.com";
-                smtp.Host = "smtp.gmail.com";
+                smtp.Host = "smtp.office365.com";
+                //smtp.Host = "smtp.gmail.com";
                 smtp.Port = 587;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new System.Net.NetworkCredential(EMAIL, PWD);
@@ -68,8 +69,8 @@ namespace vss_portal_web.Models
                 mail.Body = body;
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
-                //smtp.Host = "smtp.office365.com";
-                smtp.Host = "smtp.gmail.com";
+                smtp.Host = "smtp.office365.com";
+                //smtp.Host = "smtp.gmail.com";
                 smtp.Port = 587;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new System.Net.NetworkCredential(EMAIL, PWD);
@@ -147,8 +148,8 @@ namespace vss_portal_web.Models
 
                 mail.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
-                //smtp.Host = "smtp.office365.com";
-                smtp.Host = "smtp.gmail.com";
+                smtp.Host = "smtp.office365.com";
+                //smtp.Host = "smtp.gmail.com";
                 smtp.Port = 587;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new System.Net.NetworkCredential(EMAIL, PWD);

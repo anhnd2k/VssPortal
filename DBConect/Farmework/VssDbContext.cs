@@ -15,6 +15,8 @@ namespace DBConect.Farmework
         public virtual DbSet<AccountAdmin> AccountAdmins { get; set; }
         public virtual DbSet<ManageRegisterIdea> ManageRegisterIdeas { get; set; }
         public virtual DbSet<CategoryPost> CategoryPosts { get; set; }
+        public virtual DbSet<CommentCountTruth> CommentCountTruths { get; set; }
+        public virtual DbSet<CommentDetailTruth> CommentDetailTruths { get; set; }
         public virtual DbSet<CommentIdeaPost> CommentIdeaPosts { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }

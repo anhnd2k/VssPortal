@@ -49,60 +49,26 @@
         margin-right: 10px
     }
 
-    .overlay {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.7);
-        transition: opacity 500ms;
-        visibility: hidden;
-        opacity: 0;
-        z-index: 99
+    .boxInfoField {
+        width: 100%;
+        padding: 10px 20px;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0px 0px 20px #00000020;
+        border-radius: 10px
     }
 
-        .overlay:target {
-            visibility: visible;
-            opacity: 1;
-        }
-
-    .popup {
-        margin: 200px auto;
-        padding: 20px;
-        background: #fff;
-        border-radius: 5px;
-        position: relative;
-        transition: all 2s ease-in-out;
-        width: 50%;
+    .textInputChangeField {
+        display: block;
+        border: none;
+        outline: none;
+        font-size: 20px;
+        font-weight: bold;
+        color: rgb(97 64 67);
     }
-
-        .popup h2 {
-            margin-top: 0;
-            color: #333;
-            font-family: Tahoma, Arial, sans-serif;
-        }
-
-        .popup .close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            transition: all 200ms;
-            font-size: 30px;
-            font-weight: bold;
-            text-decoration: none;
-            color: #333;
-        }
-
-            .popup .close:hover {
-                color: red;
-            }
-
-        .popup .content {
-            max-height: 30%;
-            overflow: auto;
-        }
 </style>
+
 @* popup regerter *@
 <div id="popup1" class="overlay">
     <div class="popup">
@@ -125,7 +91,7 @@
                     <div style="width: 50%" class="form-group col-sm-6">
                         <label for="myPassword">Mail Viettel <strong style="color:red">*</strong></label>
                         <input style="position: relative; padding:25px 35px;" type="text" class="form-control"
-                               id="emailPersion" placeholder="Email Viettel" name="EmailManage">
+                                id="emailPersion" placeholder="Email Viettel" name="EmailManage">
                         <i style="position: absolute; top: 50px; left: 24px;" class="fas fa-pen"></i>
                     </div>
                 </div>
@@ -133,7 +99,7 @@
                     <div style="width: 50%" class="form-group col-sm-6">
                         <label for="myPassword">Họ và tên <strong style="color:red">*</strong></label>
                         <input style="position: relative; padding:25px 35px;" type="text" class="form-control"
-                               id="namePersion" placeholder="Email Viettel" name="FullNameManage">
+                                id="namePersion" placeholder="Email Viettel" name="FullNameManage">
                         <i style="position: absolute; top: 50px; left: 24px;" class="fas fa-pen"></i>
                     </div>
                     <div style="width: 50%" class="form-group col-sm-6">
@@ -171,7 +137,7 @@
         <div style="color: black; font-size: 20px">Quản lý người xét duyệt Truth</div>
     </div>
     <div style="margin-top: 40px; padding: 0 24px;" class="col-lg-12 mb-4">
-        <div class="card" style="min-height: 70vh">
+        <div id="boxShowInfo" class="card" style="min-height: 70vh">
             <div style="width: 100%; margin: 20px 0; padding: 10px 0; display: flex; align-items:center; justify-content:space-between">
                 <h4 style=" margin: 0 0 0 20px; color: #dc3545; font-weight:bold; margin-bottom: 15px; flex: 1">Quản lý người xét duyệt Truth</h4>
                 <a href="#popup1" id="openPopUp" style="width: max-content;cursor:pointer; padding: 5px 10px; background-color: #254646; border-radius: 10px; display: flex; align-items:center; margin-right: 20px">
@@ -186,9 +152,19 @@
             @foreach (var Field in Model.ListFieldRealTalk)
             {
                 <div style="width: 100%; padding: 0 20px">
-                    <div style="width: 100%; padding: 10px 20px; align-items: center; display: flex; justify-content: space-between; box-shadow: 0px 0px 20px #00000020; border-radius: 10px">
-                        <div style="font-size: 20px; font-weight: bold; color: #dc3545; ">@Field.NameFieldRealTalk</div>
-
+                    <div class="boxInfoField">
+                        <div style="display: flex; align-items:center">
+                            <div id="nameField_@Field.IdFieldRealTalk" style="font-size: 20px; font-weight: bold; color: #dc3545; ">@Field.NameFieldRealTalk</div>
+                            <input class="textInputChangeField" placeholder="Nhập tên lĩnh vực" style="display: none" id="changeNameField_@Field.IdFieldRealTalk" value="@Field.NameFieldRealTalk" />
+                            @* edit field *@
+                            <div id="onChangeTextField_@Field.IdFieldRealTalk" onclick="onChangeNameField(@Field.IdFieldRealTalk)" style="margin-left: 30px; cursor: pointer">
+                                <i style="color: #dc3545" class="fas fa-edit"></i>
+                            </div>
+                            @* confirm change text *@
+                            <div id="btnConfirmText_@Field.IdFieldRealTalk" onclick="onConfirmText(@Field.IdFieldRealTalk)" style="margin-left: 30px; cursor: pointer; display: none">
+                                <i style="color: #dc3545; font-size: 24px;" class="far fa-check-circle"></i>
+                            </div>
+                        </div>
                     </div>
                     <div style="float: right; width: 90% ">
                         <table class="table" style="width: 100%">
@@ -237,6 +213,12 @@
                 </div>
             }
         </div>
+        <div style="width: 100%; justify-content: center; align-items: center; margin-top: 40px; display:flex">
+            <div onclick="AddNewField()" style="width: max-content; cursor: pointer">
+                <i style="font-size: 30px; color: #dc3545;" class="fas fa-folder-plus"></i>
+                <span style="color: #dc3545; margin-left: 10px">Thêm mới lĩnh vực</span>
+            </div>
+        </div>
     </div>
 </div>
 @* spinner *@
@@ -271,114 +253,196 @@
 
     <script type="text/javascript">
 
-        function DeletePersion(id) {
-            if (confirm("Bạn có muốn xoá người này ra khỏi danh sách người xử lý?")) {
-                $('.spinner').css('display', 'block');
-                $.ajax({
-                    url: "/ManageTalkReal/DeletePersion",
-                    type: "POST",
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    data: `{"idpersiondelete": "${id}"}`,
-                    success: function (data) {
-                        $('.spinner').css('display', 'none');
-                        if (data) {
-                            $('.contenModels').text("Xoá người xử lý thành công")
-                            $('#exampleModalCenter').modal('show');
-                        } else {
-                            $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
-                            $('#exampleModalCenter').modal('show');
-                        }
-                    }
-                })
-            } else {
-                return false;
+        function AddNewField() {
+            if (document.getElementById("newNameField")) {
+                $('.contenModelsNoneReload').text("Hãy hoàn thành thêm mới lĩnh vực trước đó!")
+                $('#exampleModalCenterNoneReload').modal('show');
+                return
             }
+            $("#boxShowInfo").append('<div style="width: 100%; padding: 0 20px" >'
+                + '<div class="boxInfoField">'
+                + '<div style="display: flex; align-items:center">'
+                + '<div style="font-size: 20px; font-weight: bold; color: #dc3545; "></div>'
+                + '<input id="newNameField" class="textInputChangeField" placeholder="Nhập tên lĩnh vực" />'
+                + '<div onclick="btnConfirmAddNewField()" style="margin-left: 30px; cursor: pointer">'
+                + '<i style="color: #dc3545; font-size: 24px;" class="far fa-check-circle"></i>'
+                + '</div>'
+                + '</div>'
+                + '</div>'
+                + '</div>'
+            )
         }
 
-        $("#exampleModalCenter").on('hidden.bs.modal', function () {
-            location.reload()
-        });
-        function callAjaxAutocompelete(id) {
-            $(`#${id}`).autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "/ThanksCard/autocompeleteMail",
-                        type: "POST",
-                        dataType: "json",
-                        data: { value: $(`#${id}`).val() },
-                        success: function (data) {
-                            response($.map(data, function (item, index) {
-                                if (index < 6) {
-                                    return { label: item.Email, value: item.Email };
-                                }
-                            }))
-                        }
-                    })
-                },
-                messages: {
-                    noResults: "", results: ""
-                }
-            });
-        }
-
-        function autoFindNameWhenOnBlur(idName, idemail) {
-            var ListDepartments = @Html.Raw(Json.Encode(Model.ListDepartment));
-            $(`#${idemail}`).blur(function () {
-                const email = $(`#${idemail}`).val()
-                const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
-                if (regex.test(email)) {
-                    $.ajax({
-                        url: "/ThanksCard/findName",
-                        type: "POST",
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                        data: `{"e": "${email}"}`,
-                        success: function (data) {
-                            $(`#${idName}`).val(data.Name);
-                            if (idemail == "emailPersion") {
-                                let idDepaerment
-                                ListDepartments.map(item => {
-                                    if (item.NameDepartment == data.Department) {
-                                        idDepaerment = item.Id
-                                    }
-                                })
-                                $("#department").val(idDepaerment);
-                            }
-                        }
-                    })
+        function btnConfirmAddNewField() {
+            var nameNewFile = document.getElementById("newNameField").value;
+            if (nameNewFile == "") {
+                $('.contenModelsNoneReload').text("Vui lòng điền tên lĩnh vực muốn thêm mới!")
+                $('#exampleModalCenterNoneReload').modal('show');
+                return;
+            }
+            $.ajax({
+                url: "/ManageTalkReal/addNewField",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: `{"nameField": "${nameNewFile}"}`,
+                success: function (data) {
+                    $('.spinner').css('display', 'none');
+                    if (data) {
+                        $('.contenModels').text("Thêm mới lĩnh vực thành công")
+                        $('#exampleModalCenter').modal('show');
+                    } else {
+                        $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                        $('#exampleModalCenter').modal('show');
+                    }
                 }
             })
         }
 
-        $(document).ready(function () {
-            callAjaxAutocompelete("emailPersion")
-            autoFindNameWhenOnBlur("namePersion", "emailPersion")
-        })
+    function onChangeNameField(idFieldChange) {
+        $(`#changeNameField_${idFieldChange}`).css("display", "block")
+        $(`#nameField_${idFieldChange}`).css("display", "none")
+        $(`#btnConfirmText_${idFieldChange}`).css("display", "block")
+        $(`#onChangeTextField_${idFieldChange}`).css("display", "none")
+    }
 
-        function validateInput() {
-            var mailPersion = document.getElementById("emailPersion").value;
-            var namePersion = document.getElementById("namePersion").value
-
-            const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
-
-            if (mailPersion == "") {
-                $("#notyfiText").html("Vui lòng nhập email Viettel")
-                $("#notyfiText").css("display", "block")
-                return false
-            }
-            if (!regex.test(mailPersion)) {
-                $('#notyfiText').html("Vui lòng nhập đúng định dạng email Viettel (vd: nguoixuly@viettel.com.vn)")
-                $('#notyfiText').css("display", "block");
-                return false
-            }
-            if (namePersion == "") {
-                $("#notyfiText").html("Vui lòng nhập Họ Và Tên")
-                $("#notyfiText").css("display", "block")
-                return false;
-            }
-            $('.spinner').css('display', 'block');
-            return true
+    function onConfirmText(id) {
+        $(`#changeNameField_${id}`).css("display", "none")
+        $(`#nameField_${id}`).css("display", "block")
+        $(`#btnConfirmText_${id}`).css("display", "none")
+        $(`#onChangeTextField_${id}`).css("display", "block")
+        var textChange = document.getElementById(`changeNameField_${id}`).value;
+        var defautNameField = document.getElementById(`nameField_${id}`).innerHTML;
+        if (textChange != defautNameField) {
+            $.ajax({
+                url: "/ManageTalkReal/changeFieldName",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: `{"name": "${textChange}", "idField":"${id}"}`,
+                success: function (data) {
+                    $('.spinner').css('display', 'none');
+                    if (data) {
+                        $(`#nameField_${id}`).html(textChange)
+                        $('.contenModels').text("Thay đổi tên lĩnh vực thành công")
+                        $('#exampleModalCenter').modal('show');
+                    } else {
+                        $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                        $('#exampleModalCenter').modal('show');
+                    }
+                }
+            })
         }
+    }
+
+    function DeletePersion(id) {
+        if (confirm("Bạn có muốn xoá người này ra khỏi danh sách người xử lý?")) {
+            $('.spinner').css('display', 'block');
+            $.ajax({
+                url: "/ManageTalkReal/DeletePersion",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: `{"idpersiondelete": "${id}"}`,
+                success: function (data) {
+                    $('.spinner').css('display', 'none');
+                    if (data) {
+                        $('.contenModels').text("Xoá người xử lý thành công")
+                        $('#exampleModalCenter').modal('show');
+                    } else {
+                        $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                        $('#exampleModalCenter').modal('show');
+                    }
+                }
+            })
+        } else {
+            return false;
+        }
+    }
+
+    $("#exampleModalCenter").on('hidden.bs.modal', function () {
+        location.reload()
+    });
+    function callAjaxAutocompelete(id) {
+        $(`#${id}`).autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/ThanksCard/autocompeleteMail",
+                    type: "POST",
+                    dataType: "json",
+                    data: { value: $(`#${id}`).val() },
+                    success: function (data) {
+                        response($.map(data, function (item, index) {
+                            if (index < 6) {
+                                return { label: item.Email, value: item.Email };
+                            }
+                        }))
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    }
+
+    function autoFindNameWhenOnBlur(idName, idemail) {
+        var ListDepartments = @Html.Raw(Json.Encode(Model.ListDepartment));
+        $(`#${idemail}`).blur(function () {
+            const email = $(`#${idemail}`).val()
+            const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+            if (regex.test(email)) {
+                $.ajax({
+                    url: "/ThanksCard/findName",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: `{"e": "${email}"}`,
+                    success: function (data) {
+                        $(`#${idName}`).val(data.Name);
+                        if (idemail == "emailPersion") {
+                            let idDepaerment
+                            ListDepartments.map(item => {
+                                if (item.NameDepartment == data.Department) {
+                                    idDepaerment = item.Id
+                                }
+                            })
+                            $("#department").val(idDepaerment);
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    $(document).ready(function () {
+        callAjaxAutocompelete("emailPersion")
+        autoFindNameWhenOnBlur("namePersion", "emailPersion")
+    })
+
+    function validateInput() {
+        var mailPersion = document.getElementById("emailPersion").value;
+        var namePersion = document.getElementById("namePersion").value
+
+        const regex = new RegExp(/^[+a-zA-Z0-9._-]+@@viettel.com.vn$/i);
+
+        if (mailPersion == "") {
+            $("#notyfiText").html("Vui lòng nhập email Viettel")
+            $("#notyfiText").css("display", "block")
+            return false
+        }
+        if (!regex.test(mailPersion)) {
+            $('#notyfiText').html("Vui lòng nhập đúng định dạng email Viettel (vd: nguoixuly@viettel.com.vn)")
+            $('#notyfiText').css("display", "block");
+            return false
+        }
+        if (namePersion == "") {
+            $("#notyfiText").html("Vui lòng nhập Họ Và Tên")
+            $("#notyfiText").css("display", "block")
+            return false;
+        }
+        $('.spinner').css('display', 'block');
+        return true
+    }
     </script>
 }

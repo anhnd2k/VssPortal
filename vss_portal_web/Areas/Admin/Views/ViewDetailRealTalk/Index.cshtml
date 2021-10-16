@@ -4,9 +4,107 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin1.cshtml";
 }
 @model DBConect.model.GetListRealTalk
+@using DBConect.Farmework
+@{
+    List<CommentDetailTruth> cmtDetailTruth = ViewData["processTruth"] as List<CommentDetailTruth>;
+}
 <style>
     .imgRedirect {
         margin-right: 10px
+    }
+
+    .disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.4;
+    }
+
+    .avatar {
+        width: 130px;
+        height: 130px;
+        border-radius: 65px;
+        background-color: #ccc;
+        color: #fff;
+        margin: 20px 30px 20px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px
+    }
+
+    .infoSender {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 130px
+    }
+
+    .boxmain {
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    .box {
+        display: flex;
+        align-items: center
+    }
+
+    .action {
+        width: max-content;
+        margin-right: 50px
+    }
+
+    .cussion {
+        cursor: pointer
+    }
+
+    .field {
+        padding: 5px 18px;
+        border-radius: 10px;
+        background-color: #ee2846;
+        color: #fff;
+        font-size: 14px;
+        box-sizing: border-box;
+        width: max-content;
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .process {
+        margin: 20px 0 20px 0;
+        width: 100%;
+    }
+
+    .process_item {
+        margin-top: 20px;
+        height: 30px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .arrowCustom {
+        right: -15px;
+        top: 0px;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+    }
+
+    .arrowCustom2 {
+        left: 0px;
+        top: 0px;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-left: 15px solid #fff;
     }
 </style>
 <div class="row table_post">
@@ -17,7 +115,7 @@
         <div class="imgRedirect">
             <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
         </div>
-        <a href="@Url.Action("Index", "ManageTalkReal")" style="color: black; font-size: 20px ; margin-right: 10px">Quản lý nói thật đi</a>
+        <a href="@(ViewData["tabBarSelection"] == "responsibleTruth" ? Url.Action("Index", "HandleTruth") : Url.Action("Index", "ManageTalkReal"))" style="color: black; font-size: 20px ; margin-right: 10px">@(ViewData["tabBarSelection"] == "responsibleTruth" ? "Chịu trách nhiệm xử lý truth" : "Quản lý nói thật đi")</a>
         <div class="imgRedirect">
             <img src="~/Areas/Admin/assets_admin/assets/img/ic_arrow_right.png" />
         </div>
@@ -25,14 +123,32 @@
     </div>
     <div style="margin-top: 40px; padding: 0 24px;" class="col-lg-12 mb-4">
         <div class="card" style="min-height: 65vh">
-            <div style="display: flex; align-items:center">
-                <div style="width: 130px; height: 130px; border-radius: 65px; background-color:#ccc; color: #fff; margin: 20px 30px 20px 30px; display:flex; align-items:center; justify-content:center; font-size: 30px">
-                    @Model.NameSender[0].ToString().ToUpper()
+            <div class="boxmain">
+                <div class="box">
+                    <div class="avatar">
+                        @(Model.NameSender != null ? Model.NameSender[0].ToString().ToUpper() : "?")
+                    </div>
+                    <div class="infoSender">
+                        <div style="text-transform:uppercase; color: black;font-size: 30px">@(Model.NameSender != null ? Model.NameSender : "ẩn danh")</div>
+                        <div style="font-size: 16px;">@(Model.MailSender != null ? Model.MailSender : "ẩn danh" )</div>
+                        <div style="display: flex">
+                            <div class="field">@Model.NameFieldRealTalk</div>
+                            <div class="statusTruth_@Model.TruthStatus" style="padding: 7px; display:flex; align-items:center; justify-content:center; border-radius: 10px; color: #fff">
+                                @Model.TruthStatusName
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div style="display:flex; flex-direction:column;justify-content:space-between; height: 130px">
-                    <div style="text-transform:uppercase; color: black;font-size: 30px">@Model.NameSender</div>
-                    <div style="font-size: 16px;">@Model.MailSender</div>
-                    <div style="padding: 5px 18px; border-radius: 10px; background-color: #ccc; color: #fff; font-size: 14px; box-sizing: border-box; width: max-content;">@Model.NameFieldRealTalk</div>
+                <div class="action">
+                    <div onclick="setStatusFlag(@Model.id)" class="@(!Model.ShowInNewFeed ? "btn btn-sm btn-danger" : "btn btn-sm btn-secondary")">
+                        @(Model.ShowInNewFeed ? "Ẩn khỏi bảng tin" : "Hiển thị lên bảng tin")
+                    </div>
+                    <div onclick="ApproveTruth(@Model.id)" class="@(Model.Status != 1 ? "btn btn-sm btn-success disabled" : "btn btn-sm btn-success cussion")">
+                        Phê duyệt
+                    </div>
+                    <div onclick="RejectTruth(@Model.id)" class="@(Model.Status != 1 ? "btn btn-sm btn btn-sm btn-danger disabled" : "btn btn-sm btn-danger cussion")">
+                        Từ chối
+                    </div>
                 </div>
             </div>
             <div style="display: flex; padding: 20px 0 20px 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc">
@@ -59,8 +175,166 @@
                     @Html.Raw(Model.Suggestion)
                 </div>
             </div>
-        </div>
+            <h3 style="margin-top: 20px; margin-left: 27px">Tiến trình xử lý:</h3>
+            <div style="display:flex; margin-left: 20px">
+                @if (Model.Status == 1)
+                {
+                    <div class="col-md-3 col-sm-3">
+                        <div style="background-color: #B5A13D " class="process_item">
+                            <p style="font-size: 14px; font-weight: bold; line-height: 20px; margin: 0; color: #fff;">Pending</p>
+                            <div style="border-left: 15px solid #B5A13D; " class="arrowCustom"></div>
+                        </div>
+                        <div style="margin-top: 20px">
+                            <div style="margin-bottom: 10px; font-size: 12px;">@Model.TimeSend</div>
+                            <div>
+                                Ý kiến đang chờ phê duyệt bởi người quản lý
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Status == 2)
+                {
+                    <div class="col-md-3 col-sm-3">
+                        <div style="background-color: #4267b2 " class="process_item">
+                            <p style="font-size: 14px; font-weight: bold; line-height: 20px; margin: 0; color: #fff;">Do Truth</p>
+                            <div style="border-left: 15px solid #4267b2; " class="arrowCustom"></div>
+                        </div>
+                        <div style="margin-top: 20px">
+                            <div style="margin-bottom: 10px; font-size: 12px;">@Model.TimeApproval</div>
+                            <div>
+                                Ý kiến đã được bàn giao cho cá nhân, phòng ban chịu trách nghiệm quản lý
+                            </div>
+                        </div>
+                    </div>
+                }
+                @foreach (var item in cmtDetailTruth)
+                {
+                    if (item.StatusTruth == 3)
+                    {
+                        <div class="col-md-3 col-sm-3">
+                            <div style="margin-left: -7px; background-color: #32A4D7" class="process_item">
+                                <div class="arrowCustom2"></div>
+                                <p style="font-size: 14px; font-weight: bold; line-height: 20px; margin: 0; color: #fff;">Doing Truth</p>
+                                <div style="border-left: 15px solid #32A4D7;" class="arrowCustom"></div>
+                            </div>
+                            <div style="margin-top: 20px; margin-left: 2px;">
+                                <div style="margin-bottom: 10px; font-size: 12px;">@item.TimeCmt</div>
+                                <div>
+                                    @item.CommentTruth
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (item.StatusTruth == 4)
+                    {
+                        <div class="col-md-3 col-sm-3">
+                            <div style="margin-left: -7px; background-color: #32D74B; " class="process_item">
+                                <div class="arrowCustom2"></div>
+                                <p style="font-size: 14px; font-weight: bold; line-height: 20px; margin: 0; color: #fff;">Close Truth</p>
+                                <div style="border-left: 15px solid #32D74B;" class="arrowCustom"></div>
+                            </div>
+                            <div style="margin-top: 20px; margin-left: 2px;">
+                                <div style="margin-bottom: 10px; font-size: 12px;">@item.TimeCmt</div>
+                                <div>
+                                    @item.CommentTruth
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (item.StatusTruth == 5)
+                    {
+                        <div class="col-md-3 col-sm-3">
+                            <div style="margin-left: -7px; background-color: #FF375F; " class="process_item">
+                                <div class="arrowCustom2"></div>
+                                <p style="font-size: 14px; font-weight: bold; line-height: 20px; margin: 0; color: #fff;">Thank Truth</p>
+                                <div style="border-left: 15px solid #FF375F;" class="arrowCustom"></div>
+                            </div>
+                            <div style="margin-top: 20px; margin-left: 2px;">
+                                <div style="margin-bottom: 10px; font-size: 12px;">@item.TimeCmt</div>
+                                <div>
+                                    @item.CommentTruth
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                }
+                </div>
+            </div>
     </div>
-</div>
+    @section scripts{
+        <script type="text/javascript">
+            function ApproveTruth(id) {
+                if (confirm("Bạn có muốn phê duyệt Truth này?")) {
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        url: "/ManageTalkReal/ApproveTruth",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: `{"id": "${id}"}`,
+                        success: function (data) {
+                            $('.spinner').css('display', 'none');
+                            if (data) {
+                                $('.contenModels').text(`Xét duyệt Truth - nói thật đê thành công. Ý kiến sẽ được bàn giao đến người phụ trách quản lý `)
+                                $('#exampleModalCenter').modal('show');
+                            } else {
+                                $('.contenModels').text("Có lỗi xảy ra, xét duyệt không thành công. Vui lòng thử lại sau ít phút!")
+                                $('#exampleModalCenter').modal('show');
+                            }
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            }
+
+            function RejectTruth(id) {
+                if (confirm("Bạn có muốn từ chối Truth - nói thật đê này?")) {
+                    $('.spinner').css('display', 'block');
+                    $.ajax({
+                        url: "/ManageTalkReal/RejectTruth",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: `{"id": "${id}"}`,
+                        success: function (data) {
+                            $('.spinner').css('display', 'none');
+                            if (data) {
+                                $('.contenModels').text("Từ chối yêu cầu Truth - nói thật đi thành công")
+                                $('#exampleModalCenter').modal('show');
+                            } else {
+                                $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                                $('#exampleModalCenter').modal('show');
+                            }
+                        }
+                    })
+                } else {
+                    return false;
+                }
+            }
+
+            function setStatusFlag(id) {
+                $('.spinner').css('display', 'block');
+                $.ajax({
+                    url: "/ManageTalkReal/setStatusFlag",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: `{"id": "${id}"}`,
+                    success: function (data) {
+                        $('.spinner').css('display', 'none');
+                        if (data) {
+                            $('.contenModels').text("Thay đổi trạng thái hiển thị ý kiến thành công")
+                            $('#exampleModalCenter').modal('show');
+                        } else {
+                            $('.contenModels').text("Có lỗi xảy ra. Vui lòng thử lại sau ít phút!")
+                            $('#exampleModalCenter').modal('show');
+                        }
+                    }
+                })
+            }
+        </script>
+    }
 
 

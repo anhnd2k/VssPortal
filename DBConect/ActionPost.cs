@@ -25,9 +25,9 @@ namespace DBConect
         public void AddAuthUser(string emailVt, string fullName)
         {
             bool checkPersion = false;
-            foreach(var item in context.AccountAdmins)
+            foreach (var item in context.AccountAdmins)
             {
-                if(item.EmailVt == emailVt)
+                if (item.EmailVt == emailVt)
                 {
                     checkPersion = true;
                 }
@@ -40,7 +40,7 @@ namespace DBConect
                 DBAdmin.UserName = username;
                 DBAdmin.EmailVt = emailVt;
                 DBAdmin.FullName = fullName;
-                DBAdmin.Role = "ADMIN";
+                DBAdmin.Role = "RESOLVER_TRUTH";
                 context.AccountAdmins.Add(DBAdmin);
                 context.SaveChanges();
             }
@@ -92,7 +92,7 @@ namespace DBConect
         public IEnumerable<GetListPosts> GetListPostsNew(string searchString, int idStatus, int page, int pageSize)
         {
             IEnumerable<GetListPosts> modelHomeAdmin = context.Database.SqlQuery<GetListPosts>("Sp_ListProducts");
-            if(idStatus != 0)
+            if (idStatus != 0)
             {
                 modelHomeAdmin = modelHomeAdmin.Where(x => x.Category == idStatus);
             }
@@ -165,7 +165,7 @@ namespace DBConect
             context.SaveChanges();
         }
 
-        public bool UpdatePost(int id ,string postTitle, string postConten, string Description, string userName, string ThumbNail, int Status, int category)
+        public bool UpdatePost(int id, string postTitle, string postConten, string Description, string userName, string ThumbNail, int Status, int category)
         {
             try
             {
@@ -181,7 +181,7 @@ namespace DBConect
                 context.SaveChanges();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -196,7 +196,7 @@ namespace DBConect
                 context.SaveChanges();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -243,6 +243,7 @@ namespace DBConect
                 DB.Field = model.Field;
                 DB.TimeSend = DateTime.Now;
                 DB.TimeApproval = DateTimeApprove;
+                DB.TimeUpdateStatus = DateTime.Now;
                 DB.Status = 1;
                 DB.TruthStatus = 1;
                 context.TalkReals.Add(DB);
@@ -254,6 +255,67 @@ namespace DBConect
                 return false;
             }
         }
+        
+        public List<GetListRealTalk> ListTruth()
+        {
+            return context.Database.SqlQuery<GetListRealTalk>("Sp_getListRealTalk").ToList();
+        }
+
+        public CommentDetailTruth getInfoTruth(int idTruth)
+        {
+            var list = context.CommentDetailTruths.Where(x => x.IdTruth == idTruth).OrderByDescending(x => x.TimeCmt).ToList();
+            CommentDetailTruth res = new CommentDetailTruth();
+            if (list != null)
+            {
+                res = list[0];
+            }
+            return res;
+        }
+
+        public string findDepartment(string email)
+        {
+            var res = context.PersionManageRealTalks.Where(x => x.EmailManage == email).FirstOrDefault();
+
+            return res.Department;
+        }
+
+        public string findPersionHandelToField (int idField)
+        {
+            List<string> persion = new List<string>();
+            var list = context.PersionManageRealTalks.Where(x => x.IdField == idField).ToList();
+            if(list != null)
+            {
+                for (var i = 0; i < list.Count; i++)
+                {
+                    persion.Add(list[i].FullNameManage);
+                }
+            }
+            else
+            {
+                return "";
+            }
+
+            return string.Join(",", persion);
+        }
+
+        public string mailHandelToFiend(int idField)
+        {
+            List<string> persion = new List<string>();
+            var list = context.PersionManageRealTalks.Where(x => x.IdField == idField).ToList();
+            if (list != null)
+            {
+                for (var i = 0; i < list.Count; i++)
+                {
+                    persion.Add(list[i].EmailManage);
+                }
+            }
+            else
+            {
+                return "";
+            }
+
+            return string.Join(",", persion);
+        }
 
         public IEnumerable<GetListThankCard> GetListThankCard(int page, int pageSize)
         {
@@ -261,11 +323,11 @@ namespace DBConect
             return res;
         }
 
-        public IEnumerable<GetListRealTalk> GetListTalkRealAdmin( string searchString, int finterTruthid, int page, int pageSize)
+        public IEnumerable<GetListRealTalk> GetListTalkRealAdmin(string searchString, int finterTruthid, int page, int pageSize)
         {
             IEnumerable<GetListRealTalk> modelReal = context.Database.SqlQuery<GetListRealTalk>("Sp_getListRealTalk");
 
-            if(finterTruthid != 0)
+            if (finterTruthid != 0)
             {
                 modelReal = modelReal.Where(x => x.TruthStatus == finterTruthid);
             }
@@ -291,23 +353,24 @@ namespace DBConect
             IEnumerable<GetListRealTalk> model = context.Database.SqlQuery<GetListRealTalk>("Sp_getListRealTalk");
             if (!string.IsNullOrEmpty(searchString))
             {
-                model = model.Where(x => x.Reality.ToLower().Contains(searchString) && (x.Status != 3) && (x.TruthStatus != 1));
+                model = model.Where(x => x.Reality.ToLower().Contains(searchString) && (x.ShowInNewFeed) && (x.TruthStatus != 1));
             }
-            if(idTruhStatusFinter != 0)
+            if (idTruhStatusFinter != 0)
             {
-                model = model.Where(x => x.TruthStatus == idTruhStatusFinter && (x.Status != 3) && (x.TruthStatus != 1));
+                model = model.Where(x => x.TruthStatus == idTruhStatusFinter && (x.ShowInNewFeed) && (x.TruthStatus != 1));
             }
             else
             {
-                model = model.Where(x => (x.Status != 3) && (x.TruthStatus != 1));
+                model = model.Where(x => (x.ShowInNewFeed) && (x.TruthStatus != 1));
             }
             //sắp xếp theo ngày gần nhất
             var res = model.OrderByDescending(x => x.TimeApproval).ToPagedList(page, pageSize);
-            //sắp xếp theo thứ tự muộn nhất
-            if(idInterate == 1)
+            //sắp xếp theo bài viết có nhiều bình luận nhất
+            if (idInterate == 1)
             {
-                res = model.OrderBy(x => x.TimeApproval).ToPagedList(page, pageSize);
+                res = model.OrderByDescending(x => x.UserNameComment?.Count()).ToPagedList(page, pageSize);
             }
+            //sắp xếp theo bài viết có nhiều like nhất
             if (idInterate == 2)
             {
                 res = model.OrderByDescending(x => x.UserNameLike?.Count()).ToPagedList(page, pageSize);
@@ -383,7 +446,7 @@ namespace DBConect
             try
             {
                 var persion = context.PersionManageRealTalks.Find(id);
-                if(persion != null)
+                if (persion != null)
                 {
                     context.PersionManageRealTalks.Remove(persion);
                     context.SaveChanges();
@@ -398,16 +461,17 @@ namespace DBConect
             }
         }
 
+
         // thêm mới người quản lý từng lĩnh vực trong real talk
-        public int addNewPersionInFieldRealTalk (PersionManageRealTalk model)
+        public int addNewPersionInFieldRealTalk(PersionManageRealTalk model)
         {
-            //status = 0 : đã tồn tại người quản lý
+            // status = 0 : đã tồn tại người quản lý
             // status = 1 : thêm mới người quản lý thành công
             // status = 2 : có lỗi
             try
             {
                 PersionManageRealTalk resPersion = context.PersionManageRealTalks.Where(x => x.IdField == model.IdField && x.EmailManage == model.EmailManage).FirstOrDefault();
-                if(resPersion != null)
+                if (resPersion != null)
                 {
                     return 0;
                 }
@@ -442,7 +506,7 @@ namespace DBConect
             return res;
         }
 
-        public List<Employee> autocompleteEmail (string mail)
+        public List<Employee> autocompleteEmail(string mail)
         {
             //var res = context.Employees.Find(mail);
             //var listEmployee = context.Employees.ToList();
@@ -472,7 +536,7 @@ namespace DBConect
         public void PostResigterIdea(ManageRegisterIdea model)
         {
             var dateString = "1/1/2000 0:00:00 AM";
-            DateTime DateTimeApprove = DateTime.Parse(dateString,System.Globalization.CultureInfo.InvariantCulture);
+            DateTime DateTimeApprove = DateTime.Parse(dateString, System.Globalization.CultureInfo.InvariantCulture);
             ManageRegisterIdea DBIdea = new ManageRegisterIdea();
             DBIdea.NameIdea = model.NameIdea;
             DBIdea.contenIdea = model.contenIdea;
@@ -498,7 +562,7 @@ namespace DBConect
 
         //get status idea
 
-        public List<StatusIdeaInitative> getStatusIdea ()
+        public List<StatusIdeaInitative> getStatusIdea()
         {
             return context.StatusIdeaInitatives.ToList();
         }
@@ -507,7 +571,7 @@ namespace DBConect
         public IEnumerable<GetListIdeaRegester> GetListIdeaRegester(string searchString, int idStatus, int page, int pageSize)
         {
             IEnumerable<GetListIdeaRegester> modelGetListIdea = context.Database.SqlQuery<GetListIdeaRegester>("Sp_getListIdeaRegester");
-            if(idStatus != 0)
+            if (idStatus != 0)
             {
                 modelGetListIdea = modelGetListIdea.Where(x => x.Status == idStatus);
             }
@@ -560,6 +624,7 @@ namespace DBConect
                 Truth.Status = 2;
                 Truth.TruthStatus = 2;
                 Truth.TimeApproval = DateTime.Now;
+                Truth.TimeUpdateStatus = DateTime.Now;
                 context.SaveChanges();
                 return true;
             }
@@ -570,12 +635,13 @@ namespace DBConect
         }
 
         //change doing truth
-        public bool DoingTruth (int id)
+        public bool DoingTruth(int id)
         {
             try
             {
                 var truth = context.TalkReals.Find(id);
                 truth.TruthStatus = 3;
+                truth.TimeUpdateStatus = DateTime.Now;
                 context.SaveChanges();
                 return true;
             }
@@ -591,6 +657,7 @@ namespace DBConect
             {
                 var truth = context.TalkReals.Find(id);
                 truth.TruthStatus = 4;
+                truth.TimeUpdateStatus = DateTime.Now;
                 context.SaveChanges();
                 return true;
             }
@@ -599,13 +666,14 @@ namespace DBConect
                 return false;
             }
         }
-        //change doing truth
+        //change thanks truth
         public bool ThanksTruth(int id)
         {
             try
             {
                 var truth = context.TalkReals.Find(id);
                 truth.TruthStatus = 5;
+                truth.TimeUpdateStatus = DateTime.Now;
                 context.SaveChanges();
                 return true;
             }
@@ -613,6 +681,28 @@ namespace DBConect
             {
                 return false;
             }
+        }
+
+        //create comment truth
+
+        public void CreateCommentTruth(int idTruth, string commentDetail, int truthStatus, string namePersion, string mailPersion)
+        {
+            CommentDetailTruth cmt = new CommentDetailTruth();
+            cmt.IdTruth = idTruth;
+            cmt.StatusTruth = truthStatus;
+            cmt.CommentTruth = commentDetail;
+            cmt.NameManagerCmt = namePersion;
+            cmt.EmailManagerCmt = mailPersion;
+            cmt.TimeCmt = DateTime.Now;
+            context.CommentDetailTruths.Add(cmt);
+            context.SaveChanges();
+        }
+
+        //get cmt truth
+
+        public List<CommentDetailTruth> GetCmtProcess(int id)
+        {
+            return context.CommentDetailTruths.Where(x => x.IdTruth == id).ToList();
         }
 
         //arrpore idea 
@@ -658,10 +748,62 @@ namespace DBConect
                 Truth.Status = 3;
                 Truth.TruthStatus = 5;
                 Truth.TimeApproval = DateTime.Now;
+                Truth.TimeUpdateStatus = DateTime.Now;
                 context.SaveChanges();
                 return true;
             }
             catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        //set hiển thị truh trên bảng tin
+        public bool setStatusFlag(int id)
+        {
+            try
+            {
+                var Truth = context.TalkReals.Find(id);
+                bool nowStatus = Truth.ShowInNewFeed;
+                Truth.ShowInNewFeed = !nowStatus;
+                context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        //thay đổi tên lĩnh vực
+        public bool changeNameField(int id , string newNameField)
+        {
+            try
+            {
+                var field = context.FieldRealTalks.Find(id);
+                field.NameFieldRealTalk = newNameField;
+                context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
+        //thêm mới lĩnh vực
+
+        public bool addNewField (string nameFiled)
+        {
+            try
+            {
+                FieldRealTalk listField = new FieldRealTalk();
+                listField.NameFieldRealTalk = nameFiled;
+                context.FieldRealTalks.Add(listField);
+                context.SaveChanges();
+                return true;
+            }
+            catch
             {
                 return false;
             }
